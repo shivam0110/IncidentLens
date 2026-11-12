@@ -1,0 +1,160 @@
+[
+  {
+    "incidentId": "inc-001",
+    "acceptableCauses": [
+      {
+        "causeClass": "software_regression",
+        "component": "checkout-api"
+      }
+    ],
+    "relevantEvidenceIds": [
+      "ev-001-001",
+      "ev-001-002",
+      "ev-001-003",
+      "ev-001-011",
+      "ev-001-012"
+    ],
+    "expectedInconclusive": false
+  },
+  {
+    "incidentId": "inc-002",
+    "acceptableCauses": [
+      {
+        "causeClass": "resource_exhaustion",
+        "component": "payments-db"
+      }
+    ],
+    "relevantEvidenceIds": [
+      "ev-002-001",
+      "ev-002-002",
+      "ev-002-003",
+      "ev-002-007"
+    ],
+    "expectedInconclusive": false
+  },
+  {
+    "incidentId": "inc-003",
+    "acceptableCauses": [
+      {
+        "causeClass": "configuration",
+        "component": "session-api"
+      }
+    ],
+    "relevantEvidenceIds": [
+      "ev-003-002",
+      "ev-003-003",
+      "ev-003-008",
+      "ev-003-009"
+    ],
+    "expectedInconclusive": false
+  },
+  {
+    "incidentId": "inc-004",
+    "acceptableCauses": [
+      {
+        "causeClass": "dependency_degradation",
+        "component": "pricing-api"
+      }
+    ],
+    "relevantEvidenceIds": [
+      "ev-004-001",
+      "ev-004-002",
+      "ev-004-003",
+      "ev-004-008"
+    ],
+    "expectedInconclusive": false
+  },
+  {
+    "incidentId": "inc-005",
+    "acceptableCauses": [
+      {
+        "causeClass": "traffic_saturation",
+        "component": "edge-gateway"
+      }
+    ],
+    "relevantEvidenceIds": [
+      "ev-005-001",
+      "ev-005-002",
+      "ev-005-004",
+      "ev-005-005",
+      "ev-005-007"
+    ],
+    "expectedInconclusive": false
+  },
+  {
+    "incidentId": "inc-006",
+    "acceptableCauses": [
+      {
+        "causeClass": "network",
+        "component": "eu-west-dns"
+      }
+    ],
+    "relevantEvidenceIds": [
+      "ev-006-001",
+      "ev-006-002",
+      "ev-006-005",
+      "ev-006-007"
+    ],
+    "expectedInconclusive": false
+  },
+  {
+    "incidentId": "inc-007",
+    "acceptableCauses": [
+      {
+        "causeClass": "configuration",
+        "component": "billing-connector"
+      }
+    ],
+    "relevantEvidenceIds": [
+      "ev-007-001",
+      "ev-007-002",
+      "ev-007-003",
+      "ev-007-010"
+    ],
+    "expectedInconclusive": false
+  },
+  {
+    "incidentId": "inc-008",
+    "acceptableCauses": [
+      {
+        "causeClass": "software_regression",
+        "component": "search-api"
+      }
+    ],
+    "relevantEvidenceIds": [
+      "ev-008-001",
+      "ev-008-002",
+      "ev-008-003",
+      "ev-008-008",
+      "ev-008-009"
+    ],
+    "expectedInconclusive": false
+  },
+  {
+    "incidentId": "inc-009",
+    "acceptableCauses": [
+      {
+        "causeClass": "configuration",
+        "component": "queue-worker"
+      }
+    ],
+    "relevantEvidenceIds": [
+      "ev-009-001",
+      "ev-009-002",
+      "ev-009-003",
+      "ev-009-007",
+      "ev-009-008"
+    ],
+    "expectedInconclusive": false
+  },
+  {
+    "incidentId": "inc-010",
+    "acceptableCauses": [],
+    "relevantEvidenceIds": [
+      "ev-010-001",
+      "ev-010-002",
+      "ev-010-003"
+    ],
+    "expectedInconclusive": true
+  }
+]

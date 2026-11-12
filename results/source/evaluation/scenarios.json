@@ -1,0 +1,72 @@
+[
+  {
+    "incidentId": "inc-001",
+    "toolFailures": [],
+    "agentFailures": []
+  },
+  {
+    "incidentId": "inc-002",
+    "toolFailures": [],
+    "agentFailures": []
+  },
+  {
+    "incidentId": "inc-003",
+    "toolFailures": [],
+    "agentFailures": []
+  },
+  {
+    "incidentId": "inc-004",
+    "toolFailures": [],
+    "agentFailures": []
+  },
+  {
+    "incidentId": "inc-005",
+    "toolFailures": [],
+    "agentFailures": []
+  },
+  {
+    "incidentId": "inc-006",
+    "toolFailures": [],
+    "agentFailures": []
+  },
+  {
+    "incidentId": "inc-007",
+    "toolFailures": [],
+    "agentFailures": []
+  },
+  {
+    "incidentId": "inc-008",
+    "toolFailures": [
+      {
+        "tool": "query_logs",
+        "mode": "first_timeout"
+      }
+    ],
+    "agentFailures": []
+  },
+  {
+    "incidentId": "inc-009",
+    "toolFailures": [
+      {
+        "tool": "query_metrics",
+        "mode": "persistent_error"
+      },
+      {
+        "tool": "query_logs",
+        "mode": "truncate",
+        "maxRecords": 2
+      }
+    ],
+    "agentFailures": [
+      {
+        "role": "Reasoning",
+        "attempt": 1
+      }
+    ]
+  },
+  {
+    "incidentId": "inc-010",
+    "toolFailures": [],
+    "agentFailures": []
+  }
+]

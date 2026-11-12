@@ -1,0 +1,1043 @@
+{
+  "runId": "27f7120b-3903-40da-b623-f4a316c80705",
+  "createdAt": "2026-11-12T10:54:45.961Z",
+  "mode": "multi-agent",
+  "provider": "gemini-developer-api",
+  "configuration": {
+    "model": "gemini-3.5-flash-lite",
+    "thinkingLevel": "low",
+    "limits": {
+      "maxOutputTokens": 2048,
+      "maxRunTokens": 64000,
+      "maxRounds": 2,
+      "maxModelAttempts": 20,
+      "maxToolAttempts": 20,
+      "deadlineMs": 120000,
+      "requestTimeoutMs": 20000,
+      "reportReserveMs": 25000,
+      "reportReserveTokens": 12288,
+      "reportReserveModelAttempts": 3,
+      "modelIntervalMs": 4500,
+      "retryDelayMs": 1000,
+      "recursionLimit": 11
+    },
+    "sampling": "provider defaults",
+    "tier": "free; operator-recorded policy: AI Studio free tier verified 2026-11-12: 15 RPM, 250000 input TPM, 500 RPD, midnight Pacific reset; 3 daily requests displayed before testing, UI may lag 15 min. Synthetic assignment data only; no billing changes or paid fallback.",
+    "inputReservation": "UTF-8 prompt/schema bytes divided by three; estimate, not provider tokenization"
+  },
+  "state": {
+    "incident": {
+      "id": "inc-009",
+      "title": "Background jobs are delayed",
+      "description": "Job completion has slowed and the queue is growing. Some operational dashboards are not responding.",
+      "service": "queue-worker",
+      "start": "2026-10-09T09:50:00Z",
+      "end": "2026-10-09T10:15:00Z",
+      "reportedAt": "2026-10-09T10:05:00Z"
+    },
+    "round": 1,
+    "plan": {
+      "questions": [
+        "What is the current queue length and processing rate for the queue-worker service?",
+        "Are there any database connection errors or resource exhaustion logs related to the queue-worker service during the incident window?"
+      ],
+      "tasks": [
+        {
+          "id": "t1",
+          "role": "Observability",
+          "question": "What is the current queue length and processing rate for the queue-worker service?",
+          "dependsOn": [],
+          "status": "pending"
+        },
+        {
+          "id": "t2",
+          "role": "Dependency",
+          "question": "Are there any database connection errors or resource exhaustion logs related to the queue-worker service during the incident window?",
+          "dependsOn": [],
+          "status": "pending"
+        }
+      ],
+      "rationale": "We need to inspect the queue-worker metrics to determine the extent of the job delay and check downstream dependencies like the database for bottlenecks causing both job slowdowns and dashboard unresponsiveness."
+    },
+    "tasks": [
+      {
+        "id": "t1",
+        "role": "Observability",
+        "question": "What is the current queue length and processing rate for the queue-worker service?",
+        "dependsOn": [],
+        "status": "completed"
+      },
+      {
+        "id": "t2",
+        "role": "Dependency",
+        "question": "Are there any database connection errors or resource exhaustion logs related to the queue-worker service during the incident window?",
+        "dependsOn": [],
+        "status": "completed"
+      }
+    ],
+    "evidence": {
+      "ev-009-009": {
+        "id": "ev-009-009",
+        "timestamp": "2026-10-09T00:00:00Z",
+        "service": "queue-worker",
+        "source": "dependencies",
+        "raw": {
+          "dependency": "job-queue",
+          "relationship": "synchronous",
+          "critical": true,
+          "validUntil": null
+        }
+      },
+      "ev-009-001": {
+        "id": "ev-009-001",
+        "timestamp": "2026-10-09T09:55:00Z",
+        "service": "queue-worker",
+        "source": "logs",
+        "raw": {
+          "severity": "info",
+          "message": "connected endpoint=queue.internal:5672 jobs_per_minute=600",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-009-003": {
+        "id": "ev-009-003",
+        "timestamp": "2026-10-09T10:00:00Z",
+        "service": "queue-worker",
+        "source": "logs",
+        "raw": {
+          "severity": "error",
+          "message": "connect ECONNREFUSED endpoint=queue.internal:5673 retry_count=1",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-009-002": {
+        "id": "ev-009-002",
+        "timestamp": "2026-10-09T09:59:00Z",
+        "service": "queue-worker",
+        "source": "changes",
+        "raw": {
+          "kind": "configuration",
+          "revision": "config-73",
+          "key": "QUEUE_ENDPOINT",
+          "before": "queue.internal:5672",
+          "after": "queue.internal:5673",
+          "actor": "release-automation"
+        }
+      },
+      "ev-009-007": {
+        "id": "ev-009-007",
+        "timestamp": "2026-10-09T10:08:00Z",
+        "service": "queue-worker",
+        "source": "changes",
+        "raw": {
+          "kind": "configuration",
+          "revision": "config-74",
+          "key": "QUEUE_ENDPOINT",
+          "before": "queue.internal:5673",
+          "after": "queue.internal:5672",
+          "actor": "release-automation"
+        }
+      }
+    },
+    "findings": [
+      {
+        "statement": "Queue-worker logs show connection to queue.internal:5672 with 600 jobs per minute at 09:55:00Z.",
+        "evidenceIds": [
+          "ev-009-001"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      },
+      {
+        "statement": "Queue-worker logs show an ECONNREFUSED error to queue.internal:5673 at 10:00:00Z.",
+        "evidenceIds": [
+          "ev-009-003"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      },
+      {
+        "statement": "No database connection errors or resource exhaustion logs were found related to the queue-worker service during the incident window, though a configuration change on the queue endpoint occurred at 09:59 UTC.",
+        "evidenceIds": [
+          "ev-009-002",
+          "ev-009-007",
+          "ev-009-009"
+        ],
+        "contradictions": [],
+        "taskId": "t2",
+        "role": "Dependency"
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "h1",
+        "causeClass": "configuration",
+        "component": "queue-worker",
+        "explanation": "A configuration change updated the queue endpoint port incorrectly, causing connection refused errors and queue delays.",
+        "support": [
+          "ev-009-002",
+          "ev-009-003"
+        ],
+        "contradictions": [],
+        "confidence": "high",
+        "rationale": "Configuration revision config-73 changed QUEUE_ENDPOINT to port 5673 right before the connection refused error occurred on that exact port.",
+        "assumptions": [
+          "The configuration change was applied to the queue-worker service."
+        ],
+        "unknowns": [
+          "Exact queue length metrics during the peak of the incident."
+        ]
+      }
+    ],
+    "assumptions": [
+      "The queue endpoint configuration change directly caused the connectivity failures."
+    ],
+    "unknowns": [
+      "query_metrics: source data unavailable on attempt 1.",
+      "Results truncated; narrow the query to retrieve omitted records.",
+      "query_metrics: source data unavailable on attempt 2.",
+      "Metrics service is unavailable, so exact queue length and processing rate metrics could not be queried.",
+      "Log results were truncated.",
+      "Lack of direct database log search tool for detailed query error analysis.",
+      "Exact queue length and processing rate metrics."
+    ],
+    "critic": {
+      "recommendation": "stop",
+      "rationale": "Evidence is sufficient to identify that a configuration change (config-73) incorrectly updated the queue endpoint port causing connection refused errors and queue delays, which was subsequently reverted by config-74.",
+      "requests": []
+    },
+    "errors": [
+      {
+        "scope": "tool",
+        "name": "query_metrics",
+        "message": "Source is unavailable.",
+        "retryable": false
+      },
+      {
+        "scope": "tool",
+        "name": "query_metrics",
+        "message": "Source is unavailable.",
+        "retryable": false
+      }
+    ],
+    "events": [
+      {
+        "sequence": 1,
+        "elapsedMs": 5.338584000011906,
+        "type": "round",
+        "role": null,
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Evidence round 1.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 2,
+        "elapsedMs": 5.438584000105038,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Orchestrator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 3,
+        "elapsedMs": 2835.573417000007,
+        "type": "error",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 1,
+        "message": "Orchestrator attempt failed: Gemini HTTP 503. Provider request failed; check service availability.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 4,
+        "elapsedMs": 10660.48137500009,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Orchestrator completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 5,
+        "elapsedMs": 10660.722209000029,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "pending",
+        "round": 1,
+        "message": "What is the current queue length and processing rate for the queue-worker service?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 6,
+        "elapsedMs": 10660.740542000043,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "pending",
+        "round": 1,
+        "message": "Are there any database connection errors or resource exhaustion logs related to the queue-worker service during the incident window?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 7,
+        "elapsedMs": 10663.104250000091,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "What is the current queue length and processing rate for the queue-worker service?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 8,
+        "elapsedMs": 10664.981834000093,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Observability started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 9,
+        "elapsedMs": 10666,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Are there any database connection errors or resource exhaustion logs related to the queue-worker service during the incident window?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 10,
+        "elapsedMs": 10666.058416999993,
+        "type": "role",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Dependency started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 11,
+        "elapsedMs": 17940.497709000017,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_dependencies",
+        "status": "running",
+        "round": 1,
+        "message": "query_dependencies started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 12,
+        "elapsedMs": 17941.036625000066,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_dependencies",
+        "status": "completed",
+        "round": 1,
+        "message": "query_dependencies: ok (1 records).",
+        "evidenceIds": [
+          "ev-009-009"
+        ]
+      },
+      {
+        "sequence": 13,
+        "elapsedMs": 17941.060000000056,
+        "type": "evidence",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_dependencies",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-009-009"
+        ]
+      },
+      {
+        "sequence": 14,
+        "elapsedMs": 20688.782084000064,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 1,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 15,
+        "elapsedMs": 20689.097625000053,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "failed",
+        "round": 1,
+        "message": "query_metrics: error (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 16,
+        "elapsedMs": 23404.241917000036,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "search_incidents",
+        "status": "running",
+        "round": 1,
+        "message": "search_incidents started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 17,
+        "elapsedMs": 23404.566125000012,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "search_incidents",
+        "status": "completed",
+        "round": 1,
+        "message": "search_incidents: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 18,
+        "elapsedMs": 26152.8128340001,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 19,
+        "elapsedMs": 26153.659291999997,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: partial (2 records).",
+        "evidenceIds": [
+          "ev-009-001",
+          "ev-009-003"
+        ]
+      },
+      {
+        "sequence": 20,
+        "elapsedMs": 26153.688042000053,
+        "type": "evidence",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-009-001",
+          "ev-009-003"
+        ]
+      },
+      {
+        "sequence": 21,
+        "elapsedMs": 29955.75354200008,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 1,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 22,
+        "elapsedMs": 29956.034334000084,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "failed",
+        "round": 1,
+        "message": "query_metrics: error (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 23,
+        "elapsedMs": 35794.417334,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_changes",
+        "status": "running",
+        "round": 1,
+        "message": "query_changes started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 24,
+        "elapsedMs": 35795.016584000085,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_changes",
+        "status": "completed",
+        "round": 1,
+        "message": "query_changes: ok (2 records).",
+        "evidenceIds": [
+          "ev-009-002",
+          "ev-009-007"
+        ]
+      },
+      {
+        "sequence": 25,
+        "elapsedMs": 35795.03250000009,
+        "type": "evidence",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_changes",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-009-002",
+          "ev-009-007"
+        ]
+      },
+      {
+        "sequence": 26,
+        "elapsedMs": 39274.89570900006,
+        "type": "error",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "failed",
+        "round": 1,
+        "message": "Observability attempt failed: Specialist findings require retrieved evidence citations.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 27,
+        "elapsedMs": 43437.18120900006,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Observability completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 28,
+        "elapsedMs": 48788.2635,
+        "type": "role",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Dependency completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 29,
+        "elapsedMs": 48788.61508400005,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "t1 completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 30,
+        "elapsedMs": 48788.65862500004,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "t2 completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 31,
+        "elapsedMs": 48792.66525000008,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Reasoning started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 32,
+        "elapsedMs": 51173.50029200001,
+        "type": "error",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 1,
+        "message": "Reasoning attempt failed: Injected transient agent failure.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 33,
+        "elapsedMs": 57613.31079200003,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Reasoning completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 34,
+        "elapsedMs": 57616.81320900004,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Critic started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 35,
+        "elapsedMs": 61908.783209000016,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Critic completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 36,
+        "elapsedMs": 61912.36550000007,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Reporting started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 37,
+        "elapsedMs": 67849.584042,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Reporting completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 38,
+        "elapsedMs": 67850.0074590001,
+        "type": "complete",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Investigation concluded: Evidence is sufficient to identify that a configuration change (config-73) incorrectly updated the queue endpoint port causing connection refused errors and queue delays, which was subsequently reverted by config-74.",
+        "evidenceIds": []
+      }
+    ],
+    "stats": {
+      "toolAttempts": 6,
+      "modelAttempts": 15,
+      "elapsedMs": 67851.88991700008,
+      "usage": {
+        "input": 25003,
+        "output": 2261,
+        "total": 27264,
+        "visibleOutput": 2109,
+        "thinking": 152,
+        "cacheRead": null,
+        "toolUsePrompt": null,
+        "availability": "partial"
+      }
+    },
+    "stopReason": "Evidence is sufficient to identify that a configuration change (config-73) incorrectly updated the queue endpoint port causing connection refused errors and queue delays, which was subsequently reverted by config-74.",
+    "report": {
+      "incidentId": "inc-009",
+      "outcome": "concluded",
+      "summary": "Background job delays and connection refused errors were caused by an incorrect configuration change to the queue endpoint port, which was subsequently reverted.",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "causeClass": "configuration",
+          "component": "queue-worker",
+          "explanation": "A configuration change updated the queue endpoint port incorrectly, causing connection refused errors and queue delays.",
+          "support": [
+            "ev-009-002",
+            "ev-009-003"
+          ],
+          "contradictions": [],
+          "confidence": "high",
+          "rationale": "Configuration revision config-73 changed QUEUE_ENDPOINT to port 5673 right before the connection refused error occurred on that exact port.",
+          "assumptions": [
+            "The configuration change was applied to the queue-worker service."
+          ],
+          "unknowns": [
+            "Exact queue length metrics during the peak of the incident."
+          ]
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "Queue-worker logs show connection to queue.internal:5672 with 600 jobs per minute at 09:55:00Z.",
+          "evidenceIds": [
+            "ev-009-001"
+          ]
+        },
+        {
+          "statement": "A configuration change updated QUEUE_ENDPOINT from queue.internal:5672 to queue.internal:5673 via config-73 at 09:59:00Z.",
+          "evidenceIds": [
+            "ev-009-002"
+          ]
+        },
+        {
+          "statement": "Queue-worker logs show an ECONNREFUSED error to queue.internal:5673 at 10:00:00Z.",
+          "evidenceIds": [
+            "ev-009-003"
+          ]
+        },
+        {
+          "statement": "A configuration change reverted QUEUE_ENDPOINT back to queue.internal:5672 via config-74 at 10:08:00Z.",
+          "evidenceIds": [
+            "ev-009-007"
+          ]
+        }
+      ],
+      "assumptions": [
+        "The queue endpoint configuration change directly caused the connectivity failures."
+      ],
+      "unknowns": [
+        "Exact queue length and processing rate metrics due to metrics service unavailability."
+      ],
+      "actions": [
+        {
+          "action": "Verify queue-worker connectivity to queue.internal:5672 following the rollback of config-73.",
+          "evidenceIds": [
+            "ev-009-007"
+          ],
+          "rationale": "Ensure service has fully recovered after reverting the incorrect endpoint configuration."
+        }
+      ],
+      "limitations": [
+        "Metrics service was unavailable, preventing direct querying of queue length and processing rate metrics.",
+        "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+        "query_metrics: source data unavailable on attempt 1.",
+        "Results truncated; narrow the query to retrieve omitted records.",
+        "query_metrics: source data unavailable on attempt 2.",
+        "Metrics service is unavailable, so exact queue length and processing rate metrics could not be queried.",
+        "Log results were truncated.",
+        "Lack of direct database log search tool for detailed query error analysis.",
+        "Exact queue length and processing rate metrics.",
+        "query_metrics: Source is unavailable."
+      ],
+      "failures": [
+        {
+          "scope": "tool",
+          "name": "query_metrics",
+          "message": "Source is unavailable.",
+          "retryable": false
+        },
+        {
+          "scope": "tool",
+          "name": "query_metrics",
+          "message": "Source is unavailable.",
+          "retryable": false
+        }
+      ],
+      "stopReason": "Evidence is sufficient to identify that a configuration change (config-73) incorrectly updated the queue endpoint port causing connection refused errors and queue delays, which was subsequently reverted by config-74.",
+      "stats": {
+        "toolAttempts": 6,
+        "modelAttempts": 15,
+        "elapsedMs": 67851.88991700008,
+        "usage": {
+          "input": 25003,
+          "output": 2261,
+          "total": 27264,
+          "visibleOutput": 2109,
+          "thinking": 152,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "partial"
+        }
+      }
+    }
+  },
+  "toolHistory": [
+    {
+      "tool": "query_dependencies",
+      "args": {
+        "direction": "downstream",
+        "limit": 50,
+        "at": "2026-10-09T09:50:00Z",
+        "service": "queue-worker"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_dependencies",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-009-009",
+            "timestamp": "2026-10-09T00:00:00Z",
+            "service": "queue-worker",
+            "source": "dependencies",
+            "raw": {
+              "dependency": "job-queue",
+              "relationship": "synchronous",
+              "critical": true,
+              "validUntil": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 1,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "end": "2026-10-09T10:15:00Z",
+        "limit": 50,
+        "service": "queue-worker",
+        "start": "2026-10-09T09:50:00Z"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_metrics",
+        "status": "error",
+        "evidence": [],
+        "completeness": "unavailable",
+        "matched": null,
+        "warnings": [],
+        "error": {
+          "code": "unavailable",
+          "message": "Source is unavailable.",
+          "retryable": false
+        }
+      }
+    },
+    {
+      "tool": "search_incidents",
+      "args": {
+        "before": "2026-10-09T10:15:00Z",
+        "terms": [
+          "database",
+          "connection"
+        ],
+        "limit": 50,
+        "service": "queue-worker"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "search_incidents",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_logs",
+      "args": {
+        "service": "queue-worker",
+        "end": "2026-10-09T10:15:00Z",
+        "start": "2026-10-09T09:50:00Z",
+        "limit": 50
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_logs",
+        "status": "partial",
+        "evidence": [
+          {
+            "id": "ev-009-001",
+            "timestamp": "2026-10-09T09:55:00Z",
+            "service": "queue-worker",
+            "source": "logs",
+            "raw": {
+              "severity": "info",
+              "message": "connected endpoint=queue.internal:5672 jobs_per_minute=600",
+              "region": "eu-west",
+              "traceId": null
+            }
+          },
+          {
+            "id": "ev-009-003",
+            "timestamp": "2026-10-09T10:00:00Z",
+            "service": "queue-worker",
+            "source": "logs",
+            "raw": {
+              "severity": "error",
+              "message": "connect ECONNREFUSED endpoint=queue.internal:5673 retry_count=1",
+              "region": "eu-west",
+              "traceId": null
+            }
+          }
+        ],
+        "completeness": "truncated",
+        "matched": 4,
+        "warnings": [
+          "Results truncated; narrow the query to retrieve omitted records."
+        ],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "metric": "queue_length",
+        "limit": 50,
+        "end": "2026-10-09T10:15:00Z",
+        "start": "2026-10-09T09:50:00Z",
+        "service": "queue-worker"
+      },
+      "attempt": 2,
+      "result": {
+        "tool": "query_metrics",
+        "status": "error",
+        "evidence": [],
+        "completeness": "unavailable",
+        "matched": null,
+        "warnings": [],
+        "error": {
+          "code": "unavailable",
+          "message": "Source is unavailable.",
+          "retryable": false
+        }
+      }
+    },
+    {
+      "tool": "query_changes",
+      "args": {
+        "limit": 50,
+        "end": "2026-10-09T10:15:00Z",
+        "service": "queue-worker",
+        "start": "2026-10-09T09:00:00Z"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_changes",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-009-002",
+            "timestamp": "2026-10-09T09:59:00Z",
+            "service": "queue-worker",
+            "source": "changes",
+            "raw": {
+              "kind": "configuration",
+              "revision": "config-73",
+              "key": "QUEUE_ENDPOINT",
+              "before": "queue.internal:5672",
+              "after": "queue.internal:5673",
+              "actor": "release-automation"
+            }
+          },
+          {
+            "id": "ev-009-007",
+            "timestamp": "2026-10-09T10:08:00Z",
+            "service": "queue-worker",
+            "source": "changes",
+            "raw": {
+              "kind": "configuration",
+              "revision": "config-74",
+              "key": "QUEUE_ENDPOINT",
+              "before": "queue.internal:5673",
+              "after": "queue.internal:5672",
+              "actor": "release-automation"
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 2,
+        "warnings": [],
+        "error": null
+      }
+    }
+  ],
+  "failureSchedule": {
+    "toolFailures": [
+      {
+        "tool": "query_metrics",
+        "mode": "persistent_error"
+      },
+      {
+        "tool": "query_logs",
+        "mode": "truncate",
+        "maxRecords": 2
+      }
+    ],
+    "agentFailures": [
+      {
+        "role": "Reasoning",
+        "attempt": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,810 @@
+{
+  "version": 1,
+  "fingerprint": "1bcabdcde796e6dd81678a4051435db35d3f425fe0062e53e04c55834b08d017",
+  "key": "inc-005.single-agent",
+  "result": {
+    "runId": "620d00bf-7d79-41e3-901d-a063e904cb85",
+    "report": {
+      "incidentId": "inc-005",
+      "outcome": "concluded",
+      "summary": "Requests to edge-gateway timed out due to traffic saturation exceeding replica capacity, causing CPU exhaustion and queue saturation.",
+      "hypotheses": [
+        {
+          "id": "hyp-1",
+          "causeClass": "traffic_saturation",
+          "component": "edge-gateway",
+          "explanation": "Traffic surge exceeded capacity limits while autoscaling was constrained at max replicas.",
+          "support": [
+            "ev-005-002",
+            "ev-005-004",
+            "ev-005-007"
+          ],
+          "contradictions": [],
+          "confidence": "high",
+          "rationale": "High RPS and 99% CPU utilization along with queue full logs at max replicas explain the gateway timeouts.",
+          "assumptions": [
+            "Traffic campaign generated legitimate client requests."
+          ],
+          "unknowns": [
+            "Whether higher max replica limits would have fully prevented queue saturation."
+          ]
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "Requests per second reached 4600 at 2026-10-05T10:02:00Z.",
+          "evidenceIds": [
+            "ev-005-002"
+          ]
+        },
+        {
+          "statement": "CPU utilization reached 99% at 2026-10-05T10:02:00Z.",
+          "evidenceIds": [
+            "ev-005-004"
+          ]
+        },
+        {
+          "statement": "Queue depth reached 1800 requests at 2026-10-05T10:02:00Z.",
+          "evidenceIds": [
+            "ev-005-005"
+          ]
+        },
+        {
+          "statement": "Autoscaler desired 12 replicas but current and max was capped at 4 replicas.",
+          "evidenceIds": [
+            "ev-005-006",
+            "ev-005-007"
+          ]
+        }
+      ],
+      "assumptions": [
+        "Traffic campaign generated legitimate client requests."
+      ],
+      "unknowns": [
+        "Whether higher max replica limits would have fully prevented queue saturation."
+      ],
+      "actions": [
+        {
+          "action": "Increase the maximum replica limit for edge-gateway to handle higher peak traffic.",
+          "evidenceIds": [
+            "ev-005-007"
+          ],
+          "rationale": "Enables scaling up beyond current limits to absorb traffic spikes."
+        }
+      ],
+      "limitations": [
+        "Analysis limited to metrics and logs available in the provided window.",
+        "Whether higher max replica limits would have fully prevented queue saturation."
+      ],
+      "failures": [],
+      "stopReason": "General investigator selected a supported conclusion.",
+      "stats": {
+        "toolAttempts": 4,
+        "modelAttempts": 4,
+        "elapsedMs": 18431.12849999999,
+        "usage": {
+          "input": 13717,
+          "output": 1449,
+          "total": 15166,
+          "visibleOutput": 1449,
+          "thinking": null,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "complete"
+        }
+      }
+    },
+    "state": {
+      "incident": {
+        "id": "inc-005",
+        "title": "Intermittent gateway timeouts",
+        "description": "Requests across several endpoints are timing out during a busy period. Failures fluctuate minute to minute.",
+        "service": "edge-gateway",
+        "start": "2026-10-05T09:50:00Z",
+        "end": "2026-10-05T10:15:00Z",
+        "reportedAt": "2026-10-05T10:05:00Z"
+      },
+      "round": 1,
+      "plan": null,
+      "tasks": [],
+      "evidence": {
+        "ev-005-001": {
+          "id": "ev-005-001",
+          "timestamp": "2026-10-05T09:54:00Z",
+          "service": "edge-gateway",
+          "source": "metrics",
+          "raw": {
+            "metric": "requests_per_second",
+            "value": 900,
+            "unit": "requests/s",
+            "region": "global",
+            "windowSeconds": 60
+          }
+        },
+        "ev-005-003": {
+          "id": "ev-005-003",
+          "timestamp": "2026-10-05T09:54:00Z",
+          "service": "edge-gateway",
+          "source": "metrics",
+          "raw": {
+            "metric": "cpu_utilization",
+            "value": 35,
+            "unit": "percent",
+            "region": "global",
+            "windowSeconds": 60
+          }
+        },
+        "ev-005-002": {
+          "id": "ev-005-002",
+          "timestamp": "2026-10-05T10:02:00Z",
+          "service": "edge-gateway",
+          "source": "metrics",
+          "raw": {
+            "metric": "requests_per_second",
+            "value": 4600,
+            "unit": "requests/s",
+            "region": "global",
+            "windowSeconds": 60
+          }
+        },
+        "ev-005-004": {
+          "id": "ev-005-004",
+          "timestamp": "2026-10-05T10:02:00Z",
+          "service": "edge-gateway",
+          "source": "metrics",
+          "raw": {
+            "metric": "cpu_utilization",
+            "value": 99,
+            "unit": "percent",
+            "region": "global",
+            "windowSeconds": 60
+          }
+        },
+        "ev-005-005": {
+          "id": "ev-005-005",
+          "timestamp": "2026-10-05T10:02:00Z",
+          "service": "edge-gateway",
+          "source": "metrics",
+          "raw": {
+            "metric": "queue_depth",
+            "value": 1800,
+            "unit": "requests",
+            "region": "global",
+            "windowSeconds": 60
+          }
+        },
+        "ev-005-006": {
+          "id": "ev-005-006",
+          "timestamp": "2026-10-05T10:02:00Z",
+          "service": "edge-gateway",
+          "source": "metrics",
+          "raw": {
+            "metric": "replicas",
+            "value": 4,
+            "unit": "replicas",
+            "region": "global",
+            "windowSeconds": 60
+          }
+        },
+        "ev-005-011": {
+          "id": "ev-005-011",
+          "timestamp": "2026-10-05T09:56:00Z",
+          "service": "edge-gateway",
+          "source": "changes",
+          "raw": {
+            "kind": "deployment",
+            "revision": "release-16",
+            "key": null,
+            "before": "3.2",
+            "after": "3.2; telemetry tags",
+            "actor": "release-automation"
+          }
+        },
+        "ev-005-007": {
+          "id": "ev-005-007",
+          "timestamp": "2026-10-05T10:03:00Z",
+          "service": "edge-gateway",
+          "source": "logs",
+          "raw": {
+            "severity": "warn",
+            "message": "admission queue full; autoscaler desired=12 current=4 max=4",
+            "region": "eu-west",
+            "traceId": null
+          }
+        },
+        "ev-005-008": {
+          "id": "ev-005-008",
+          "timestamp": "2026-10-05T10:03:00Z",
+          "service": "edge-gateway",
+          "source": "logs",
+          "raw": {
+            "severity": "info",
+            "message": "traffic campaign=autumn client_count=3600 cache_hit_ratio=0.91",
+            "region": "eu-west",
+            "traceId": null
+          }
+        }
+      },
+      "findings": [
+        {
+          "statement": "Requests per second reached 4600 at 2026-10-05T10:02:00Z.",
+          "evidenceIds": [
+            "ev-005-002"
+          ],
+          "contradictions": [],
+          "taskId": "round-1",
+          "role": "Investigator"
+        },
+        {
+          "statement": "CPU utilization reached 99% at 2026-10-05T10:02:00Z.",
+          "evidenceIds": [
+            "ev-005-004"
+          ],
+          "contradictions": [],
+          "taskId": "round-1",
+          "role": "Investigator"
+        },
+        {
+          "statement": "Queue depth reached 1800 requests at 2026-10-05T10:02:00Z.",
+          "evidenceIds": [
+            "ev-005-005"
+          ],
+          "contradictions": [],
+          "taskId": "round-1",
+          "role": "Investigator"
+        },
+        {
+          "statement": "Autoscaler desired 12 replicas but current and max was capped at 4 replicas.",
+          "evidenceIds": [
+            "ev-005-006",
+            "ev-005-007"
+          ],
+          "contradictions": [],
+          "taskId": "round-1",
+          "role": "Investigator"
+        }
+      ],
+      "hypotheses": [
+        {
+          "id": "hyp-1",
+          "causeClass": "traffic_saturation",
+          "component": "edge-gateway",
+          "explanation": "Traffic surge exceeded capacity limits while autoscaling was constrained at max replicas.",
+          "support": [
+            "ev-005-002",
+            "ev-005-004",
+            "ev-005-007"
+          ],
+          "contradictions": [],
+          "confidence": "high",
+          "rationale": "High RPS and 99% CPU utilization along with queue full logs at max replicas explain the gateway timeouts.",
+          "assumptions": [
+            "Traffic campaign generated legitimate client requests."
+          ],
+          "unknowns": [
+            "Whether higher max replica limits would have fully prevented queue saturation."
+          ]
+        }
+      ],
+      "assumptions": [
+        "Traffic campaign generated legitimate client requests."
+      ],
+      "unknowns": [
+        "Whether higher max replica limits would have fully prevented queue saturation."
+      ],
+      "critic": null,
+      "errors": [],
+      "events": [
+        {
+          "sequence": 1,
+          "elapsedMs": 0.6657499999855645,
+          "type": "round",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "running",
+          "round": 1,
+          "message": "Evidence round 1.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 2,
+          "elapsedMs": 0.7764169999863952,
+          "type": "role",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "running",
+          "round": 1,
+          "message": "Investigator started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 3,
+          "elapsedMs": 2430.767374999996,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": "running",
+          "round": 1,
+          "message": "query_logs started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 4,
+          "elapsedMs": 2431.111208999995,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_metrics",
+          "status": "running",
+          "round": 1,
+          "message": "query_metrics started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 5,
+          "elapsedMs": 2431.5254589999677,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": "completed",
+          "round": 1,
+          "message": "query_logs: ok (0 records).",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 6,
+          "elapsedMs": 2431.538084,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_metrics",
+          "status": "completed",
+          "round": 1,
+          "message": "query_metrics: ok (6 records).",
+          "evidenceIds": [
+            "ev-005-001",
+            "ev-005-003",
+            "ev-005-002",
+            "ev-005-004",
+            "ev-005-005",
+            "ev-005-006"
+          ]
+        },
+        {
+          "sequence": 7,
+          "elapsedMs": 2431.5520419999957,
+          "type": "evidence",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_metrics",
+          "status": null,
+          "round": 1,
+          "message": "Retrieved evidence.",
+          "evidenceIds": [
+            "ev-005-001",
+            "ev-005-003",
+            "ev-005-002",
+            "ev-005-004",
+            "ev-005-005",
+            "ev-005-006"
+          ]
+        },
+        {
+          "sequence": 8,
+          "elapsedMs": 7112.261708999984,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_changes",
+          "status": "running",
+          "round": 1,
+          "message": "query_changes started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 9,
+          "elapsedMs": 7113.062458999979,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": "running",
+          "round": 1,
+          "message": "query_logs started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 10,
+          "elapsedMs": 7113.275333999947,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_changes",
+          "status": "completed",
+          "round": 1,
+          "message": "query_changes: ok (1 records).",
+          "evidenceIds": [
+            "ev-005-011"
+          ]
+        },
+        {
+          "sequence": 11,
+          "elapsedMs": 7113.3159589999705,
+          "type": "evidence",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_changes",
+          "status": null,
+          "round": 1,
+          "message": "Retrieved evidence.",
+          "evidenceIds": [
+            "ev-005-011"
+          ]
+        },
+        {
+          "sequence": 12,
+          "elapsedMs": 7113.325666999968,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": "completed",
+          "round": 1,
+          "message": "query_logs: ok (2 records).",
+          "evidenceIds": [
+            "ev-005-007",
+            "ev-005-008"
+          ]
+        },
+        {
+          "sequence": 13,
+          "elapsedMs": 7113.3337089999695,
+          "type": "evidence",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": null,
+          "round": 1,
+          "message": "Retrieved evidence.",
+          "evidenceIds": [
+            "ev-005-007",
+            "ev-005-008"
+          ]
+        },
+        {
+          "sequence": 14,
+          "elapsedMs": 18429.650458999968,
+          "type": "role",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "completed",
+          "round": 1,
+          "message": "Investigator completed.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 15,
+          "elapsedMs": 18430.87183399999,
+          "type": "complete",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "completed",
+          "round": 1,
+          "message": "Investigation concluded: General investigator selected a supported conclusion.",
+          "evidenceIds": []
+        }
+      ],
+      "stats": {
+        "toolAttempts": 4,
+        "modelAttempts": 4,
+        "elapsedMs": 18431.12849999999,
+        "usage": {
+          "input": 13717,
+          "output": 1449,
+          "total": 15166,
+          "visibleOutput": 1449,
+          "thinking": null,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "complete"
+        }
+      },
+      "stopReason": "General investigator selected a supported conclusion.",
+      "report": {
+        "incidentId": "inc-005",
+        "outcome": "concluded",
+        "summary": "Requests to edge-gateway timed out due to traffic saturation exceeding replica capacity, causing CPU exhaustion and queue saturation.",
+        "hypotheses": [
+          {
+            "id": "hyp-1",
+            "causeClass": "traffic_saturation",
+            "component": "edge-gateway",
+            "explanation": "Traffic surge exceeded capacity limits while autoscaling was constrained at max replicas.",
+            "support": [
+              "ev-005-002",
+              "ev-005-004",
+              "ev-005-007"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "High RPS and 99% CPU utilization along with queue full logs at max replicas explain the gateway timeouts.",
+            "assumptions": [
+              "Traffic campaign generated legitimate client requests."
+            ],
+            "unknowns": [
+              "Whether higher max replica limits would have fully prevented queue saturation."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "Requests per second reached 4600 at 2026-10-05T10:02:00Z.",
+            "evidenceIds": [
+              "ev-005-002"
+            ]
+          },
+          {
+            "statement": "CPU utilization reached 99% at 2026-10-05T10:02:00Z.",
+            "evidenceIds": [
+              "ev-005-004"
+            ]
+          },
+          {
+            "statement": "Queue depth reached 1800 requests at 2026-10-05T10:02:00Z.",
+            "evidenceIds": [
+              "ev-005-005"
+            ]
+          },
+          {
+            "statement": "Autoscaler desired 12 replicas but current and max was capped at 4 replicas.",
+            "evidenceIds": [
+              "ev-005-006",
+              "ev-005-007"
+            ]
+          }
+        ],
+        "assumptions": [
+          "Traffic campaign generated legitimate client requests."
+        ],
+        "unknowns": [
+          "Whether higher max replica limits would have fully prevented queue saturation."
+        ],
+        "actions": [
+          {
+            "action": "Increase the maximum replica limit for edge-gateway to handle higher peak traffic.",
+            "evidenceIds": [
+              "ev-005-007"
+            ],
+            "rationale": "Enables scaling up beyond current limits to absorb traffic spikes."
+          }
+        ],
+        "limitations": [
+          "Analysis limited to metrics and logs available in the provided window.",
+          "Whether higher max replica limits would have fully prevented queue saturation."
+        ],
+        "failures": [],
+        "stopReason": "General investigator selected a supported conclusion.",
+        "stats": {
+          "toolAttempts": 4,
+          "modelAttempts": 4,
+          "elapsedMs": 18431.12849999999,
+          "usage": {
+            "input": 13717,
+            "output": 1449,
+            "total": 15166,
+            "visibleOutput": 1449,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "complete"
+          }
+        }
+      }
+    },
+    "tracePath": "/Users/shivam/Desktop/Code/IncidentLens/results/live-2026-11-12-v3/traces/inc-005-620d00bf-7d79-41e3-901d-a063e904cb85.json",
+    "toolHistory": [
+      {
+        "tool": "query_logs",
+        "args": {
+          "limit": 50,
+          "search": "timeout",
+          "start": "2026-10-05T09:50:00Z",
+          "service": "edge-gateway",
+          "end": "2026-10-05T10:15:00Z"
+        },
+        "attempt": 1,
+        "result": {
+          "tool": "query_logs",
+          "status": "ok",
+          "evidence": [],
+          "completeness": "complete",
+          "matched": 0,
+          "warnings": [],
+          "error": null
+        }
+      },
+      {
+        "tool": "query_metrics",
+        "args": {
+          "service": "edge-gateway",
+          "limit": 50,
+          "end": "2026-10-05T10:15:00Z",
+          "start": "2026-10-05T09:50:00Z"
+        },
+        "attempt": 1,
+        "result": {
+          "tool": "query_metrics",
+          "status": "ok",
+          "evidence": [
+            {
+              "id": "ev-005-001",
+              "timestamp": "2026-10-05T09:54:00Z",
+              "service": "edge-gateway",
+              "source": "metrics",
+              "raw": {
+                "metric": "requests_per_second",
+                "value": 900,
+                "unit": "requests/s",
+                "region": "global",
+                "windowSeconds": 60
+              }
+            },
+            {
+              "id": "ev-005-003",
+              "timestamp": "2026-10-05T09:54:00Z",
+              "service": "edge-gateway",
+              "source": "metrics",
+              "raw": {
+                "metric": "cpu_utilization",
+                "value": 35,
+                "unit": "percent",
+                "region": "global",
+                "windowSeconds": 60
+              }
+            },
+            {
+              "id": "ev-005-002",
+              "timestamp": "2026-10-05T10:02:00Z",
+              "service": "edge-gateway",
+              "source": "metrics",
+              "raw": {
+                "metric": "requests_per_second",
+                "value": 4600,
+                "unit": "requests/s",
+                "region": "global",
+                "windowSeconds": 60
+              }
+            },
+            {
+              "id": "ev-005-004",
+              "timestamp": "2026-10-05T10:02:00Z",
+              "service": "edge-gateway",
+              "source": "metrics",
+              "raw": {
+                "metric": "cpu_utilization",
+                "value": 99,
+                "unit": "percent",
+                "region": "global",
+                "windowSeconds": 60
+              }
+            },
+            {
+              "id": "ev-005-005",
+              "timestamp": "2026-10-05T10:02:00Z",
+              "service": "edge-gateway",
+              "source": "metrics",
+              "raw": {
+                "metric": "queue_depth",
+                "value": 1800,
+                "unit": "requests",
+                "region": "global",
+                "windowSeconds": 60
+              }
+            },
+            {
+              "id": "ev-005-006",
+              "timestamp": "2026-10-05T10:02:00Z",
+              "service": "edge-gateway",
+              "source": "metrics",
+              "raw": {
+                "metric": "replicas",
+                "value": 4,
+                "unit": "replicas",
+                "region": "global",
+                "windowSeconds": 60
+              }
+            }
+          ],
+          "completeness": "complete",
+          "matched": 6,
+          "warnings": [],
+          "error": null
+        }
+      },
+      {
+        "tool": "query_changes",
+        "args": {
+          "service": "edge-gateway",
+          "limit": 50,
+          "start": "2026-10-05T09:00:00Z",
+          "end": "2026-10-05T10:15:00Z"
+        },
+        "attempt": 1,
+        "result": {
+          "tool": "query_changes",
+          "status": "ok",
+          "evidence": [
+            {
+              "id": "ev-005-011",
+              "timestamp": "2026-10-05T09:56:00Z",
+              "service": "edge-gateway",
+              "source": "changes",
+              "raw": {
+                "kind": "deployment",
+                "revision": "release-16",
+                "key": null,
+                "before": "3.2",
+                "after": "3.2; telemetry tags",
+                "actor": "release-automation"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "matched": 1,
+          "warnings": [],
+          "error": null
+        }
+      },
+      {
+        "tool": "query_logs",
+        "args": {
+          "service": "edge-gateway",
+          "limit": 50,
+          "end": "2026-10-05T10:15:00Z",
+          "start": "2026-10-05T09:50:00Z"
+        },
+        "attempt": 2,
+        "result": {
+          "tool": "query_logs",
+          "status": "ok",
+          "evidence": [
+            {
+              "id": "ev-005-007",
+              "timestamp": "2026-10-05T10:03:00Z",
+              "service": "edge-gateway",
+              "source": "logs",
+              "raw": {
+                "severity": "warn",
+                "message": "admission queue full; autoscaler desired=12 current=4 max=4",
+                "region": "eu-west",
+                "traceId": null
+              }
+            },
+            {
+              "id": "ev-005-008",
+              "timestamp": "2026-10-05T10:03:00Z",
+              "service": "edge-gateway",
+              "source": "logs",
+              "raw": {
+                "severity": "info",
+                "message": "traffic campaign=autumn client_count=3600 cache_hit_ratio=0.91",
+                "region": "eu-west",
+                "traceId": null
+              }
+            }
+          ],
+          "completeness": "complete",
+          "matched": 2,
+          "warnings": [],
+          "error": null
+        }
+      }
+    ]
+  }
+}

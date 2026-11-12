@@ -1,0 +1,18 @@
+node_modules/
+.next/
+out/
+build/
+coverage/
+.env*
+!.env.example
+*.tsbuildinfo
+next-env.d.ts
+*.log
+*.pem
+.DS_Store
+.vercel/
+.tmp/
+tmp/
+*.zip
+AGENTS.md
+# Keep assignment results and readable transcripts.

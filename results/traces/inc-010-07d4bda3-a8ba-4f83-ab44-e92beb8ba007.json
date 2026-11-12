@@ -1,0 +1,769 @@
+{
+  "runId": "07d4bda3-a8ba-4f83-ab44-e92beb8ba007",
+  "createdAt": "2026-11-12T10:57:50.072Z",
+  "mode": "single-agent",
+  "provider": "gemini-developer-api",
+  "configuration": {
+    "model": "gemini-3.5-flash-lite",
+    "thinkingLevel": "low",
+    "limits": {
+      "maxOutputTokens": 2048,
+      "maxRunTokens": 64000,
+      "maxRounds": 2,
+      "maxModelAttempts": 20,
+      "maxToolAttempts": 20,
+      "deadlineMs": 120000,
+      "requestTimeoutMs": 20000,
+      "reportReserveMs": 25000,
+      "reportReserveTokens": 12288,
+      "reportReserveModelAttempts": 3,
+      "modelIntervalMs": 4500,
+      "retryDelayMs": 1000,
+      "recursionLimit": 11
+    },
+    "sampling": "provider defaults",
+    "tier": "free; operator-recorded policy: AI Studio free tier verified 2026-11-12: 15 RPM, 250000 input TPM, 500 RPD, midnight Pacific reset; 3 daily requests displayed before testing, UI may lag 15 min. Synthetic assignment data only; no billing changes or paid fallback.",
+    "inputReservation": "UTF-8 prompt/schema bytes divided by three; estimate, not provider tokenization"
+  },
+  "state": {
+    "incident": {
+      "id": "inc-010",
+      "title": "Occasional export request failures",
+      "description": "Two users reported failed exports around 10:00 UTC. The failures could not be reproduced immediately.",
+      "service": "export-api",
+      "start": "2026-10-10T09:50:00Z",
+      "end": "2026-10-10T10:15:00Z",
+      "reportedAt": "2026-10-10T10:05:00Z"
+    },
+    "round": 2,
+    "plan": null,
+    "tasks": [],
+    "evidence": {
+      "ev-010-001": {
+        "id": "ev-010-001",
+        "timestamp": "2026-10-10T10:01:00Z",
+        "service": "export-api",
+        "source": "logs",
+        "raw": {
+          "severity": "error",
+          "message": "POST /export status=504 request deadline reached; downstream span not recorded",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-010-002": {
+        "id": "ev-010-002",
+        "timestamp": "2026-10-10T10:02:00Z",
+        "service": "export-api",
+        "source": "logs",
+        "raw": {
+          "severity": "warn",
+          "message": "trace exporter dropped batch; no sampled child spans available for export requests",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-010-004": {
+        "id": "ev-010-004",
+        "timestamp": "2026-10-10T00:00:00Z",
+        "service": "export-api",
+        "source": "dependencies",
+        "raw": {
+          "dependency": "export-store",
+          "relationship": "datastore",
+          "critical": true,
+          "validUntil": null
+        }
+      },
+      "ev-010-005": {
+        "id": "ev-010-005",
+        "timestamp": "2026-10-10T00:00:00Z",
+        "service": "export-api",
+        "source": "dependencies",
+        "raw": {
+          "dependency": "object-storage",
+          "relationship": "synchronous",
+          "critical": true,
+          "validUntil": null
+        }
+      }
+    },
+    "findings": [
+      {
+        "statement": "export-api logged POST /export status=504 request deadline reached; downstream span not recorded",
+        "evidenceIds": [
+          "ev-010-001"
+        ],
+        "contradictions": [],
+        "taskId": "round-1",
+        "role": "Investigator"
+      },
+      {
+        "statement": "export-api trace exporter dropped batch; no sampled child spans available for export requests",
+        "evidenceIds": [
+          "ev-010-002"
+        ],
+        "contradictions": [],
+        "taskId": "round-1",
+        "role": "Investigator"
+      },
+      {
+        "statement": "export-api depends on export-store and object-storage",
+        "evidenceIds": [
+          "ev-010-004",
+          "ev-010-005"
+        ],
+        "contradictions": [],
+        "taskId": "round-1",
+        "role": "Investigator"
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "hyp-1",
+        "causeClass": "dependency_degradation",
+        "component": "export-store",
+        "explanation": "Downstream dependency degradation or slowness caused the request deadline to be reached on export-api.",
+        "support": [
+          "ev-010-001"
+        ],
+        "contradictions": [],
+        "confidence": "low",
+        "rationale": "Logs show request timeout with downstream span not recorded, pointing to potential dependency issues.",
+        "assumptions": [
+          "Export store is experiencing slowness"
+        ],
+        "unknowns": [
+          "Exact response times and errors from export-store"
+        ]
+      }
+    ],
+    "assumptions": [
+      "Downstream dependencies caused latency leading to timeouts"
+    ],
+    "unknowns": [
+      "Exact health and performance metrics of export-store and object-storage during the incident window"
+    ],
+    "critic": null,
+    "errors": [
+      {
+        "scope": "agent",
+        "name": "Investigator",
+        "message": "Gemini HTTP 503. Provider request failed; check service availability.",
+        "retryable": false
+      }
+    ],
+    "events": [
+      {
+        "sequence": 1,
+        "elapsedMs": 0.7838750000810251,
+        "type": "round",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Evidence round 1.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 2,
+        "elapsedMs": 0.9083330000285059,
+        "type": "role",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Investigator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 3,
+        "elapsedMs": 9512.112708,
+        "type": "error",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 1,
+        "message": "Investigator attempt failed: Gemini HTTP 503. Provider request failed; check service availability.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 4,
+        "elapsedMs": 16823.196916999994,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 5,
+        "elapsedMs": 16823.428333000047,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (2 records).",
+        "evidenceIds": [
+          "ev-010-001",
+          "ev-010-002"
+        ]
+      },
+      {
+        "sequence": 6,
+        "elapsedMs": 16823.441792000085,
+        "type": "evidence",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-010-001",
+          "ev-010-002"
+        ]
+      },
+      {
+        "sequence": 7,
+        "elapsedMs": 18493.420042000012,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 1,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 8,
+        "elapsedMs": 18493.748625000007,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_metrics",
+        "status": "completed",
+        "round": 1,
+        "message": "query_metrics: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 9,
+        "elapsedMs": 22916.560917000053,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_dependencies",
+        "status": "running",
+        "round": 1,
+        "message": "query_dependencies started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 10,
+        "elapsedMs": 22917.230749999988,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_dependencies",
+        "status": "completed",
+        "round": 1,
+        "message": "query_dependencies: ok (2 records).",
+        "evidenceIds": [
+          "ev-010-004",
+          "ev-010-005"
+        ]
+      },
+      {
+        "sequence": 11,
+        "elapsedMs": 22917.256042000023,
+        "type": "evidence",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_dependencies",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-010-004",
+          "ev-010-005"
+        ]
+      },
+      {
+        "sequence": 12,
+        "elapsedMs": 27854.736000000034,
+        "type": "error",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 1,
+        "message": "Investigator attempt failed: Gemini HTTP 503. Provider request failed; check service availability.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 13,
+        "elapsedMs": 32394.43212500005,
+        "type": "role",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Investigator completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 14,
+        "elapsedMs": 32394.714833000093,
+        "type": "round",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Evidence round 2.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 15,
+        "elapsedMs": 32394.94000000006,
+        "type": "role",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Investigator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 16,
+        "elapsedMs": 36194.265625,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "running",
+        "round": 2,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 17,
+        "elapsedMs": 36194.675792000024,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 2,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 18,
+        "elapsedMs": 36194.77641699999,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 2,
+        "message": "query_logs: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 19,
+        "elapsedMs": 36194.791000000085,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_metrics",
+        "status": "completed",
+        "round": 2,
+        "message": "query_metrics: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 20,
+        "elapsedMs": 40582.116500000004,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_changes",
+        "status": "running",
+        "round": 2,
+        "message": "query_changes started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 21,
+        "elapsedMs": 40582.26699999999,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_changes",
+        "status": "completed",
+        "round": 2,
+        "message": "query_changes: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 22,
+        "elapsedMs": 52882.93025000009,
+        "type": "error",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 2,
+        "message": "Investigator attempt failed: Observed facts and actions require retrieved evidence citations.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 23,
+        "elapsedMs": 58112.58104200009,
+        "type": "error",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 2,
+        "message": "Investigator attempt failed: Gemini HTTP 503. Provider request failed; check service availability.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 24,
+        "elapsedMs": 63363.868917000014,
+        "type": "error",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 2,
+        "message": "Investigator attempt failed: Gemini HTTP 503. Provider request failed; check service availability.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 25,
+        "elapsedMs": 63363.93987500004,
+        "type": "role",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 2,
+        "message": "Investigator failed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 26,
+        "elapsedMs": 63364.16558300005,
+        "type": "error",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 2,
+        "message": "Investigator: Gemini HTTP 503. Provider request failed; check service availability.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 27,
+        "elapsedMs": 63366.50887500006,
+        "type": "complete",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 2,
+        "message": "Investigation inconclusive: General investigator failed.",
+        "evidenceIds": []
+      }
+    ],
+    "stats": {
+      "toolAttempts": 6,
+      "modelAttempts": 12,
+      "elapsedMs": 63366.787625,
+      "usage": {
+        "input": 26448,
+        "output": 1873,
+        "total": 28321,
+        "visibleOutput": 1873,
+        "thinking": null,
+        "cacheRead": 2008,
+        "toolUsePrompt": null,
+        "availability": "partial"
+      }
+    },
+    "stopReason": "General investigator failed.",
+    "report": {
+      "incidentId": "inc-010",
+      "outcome": "inconclusive",
+      "summary": "Two users reported failed exports around 10:00 UTC. The failures could not be reproduced immediately.",
+      "hypotheses": [
+        {
+          "id": "hyp-1",
+          "causeClass": "dependency_degradation",
+          "component": "export-store",
+          "explanation": "Downstream dependency degradation or slowness caused the request deadline to be reached on export-api.",
+          "support": [
+            "ev-010-001"
+          ],
+          "contradictions": [],
+          "confidence": "low",
+          "rationale": "Logs show request timeout with downstream span not recorded, pointing to potential dependency issues.",
+          "assumptions": [
+            "Export store is experiencing slowness"
+          ],
+          "unknowns": [
+            "Exact response times and errors from export-store"
+          ]
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "export-api logged POST /export status=504 request deadline reached; downstream span not recorded",
+          "evidenceIds": [
+            "ev-010-001"
+          ]
+        },
+        {
+          "statement": "export-api trace exporter dropped batch; no sampled child spans available for export requests",
+          "evidenceIds": [
+            "ev-010-002"
+          ]
+        },
+        {
+          "statement": "export-api depends on export-store and object-storage",
+          "evidenceIds": [
+            "ev-010-004",
+            "ev-010-005"
+          ]
+        }
+      ],
+      "assumptions": [
+        "Downstream dependencies caused latency leading to timeouts"
+      ],
+      "unknowns": [
+        "Exact health and performance metrics of export-store and object-storage during the incident window"
+      ],
+      "actions": [],
+      "limitations": [
+        "Reporting unavailable; report assembled deterministically from validated state.",
+        "A decision-making agent or the run failed; the investigation is incomplete.",
+        "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+        "Exact health and performance metrics of export-store and object-storage during the incident window",
+        "Investigator: Gemini HTTP 503. Provider request failed; check service availability."
+      ],
+      "failures": [
+        {
+          "scope": "agent",
+          "name": "Investigator",
+          "message": "Gemini HTTP 503. Provider request failed; check service availability.",
+          "retryable": false
+        }
+      ],
+      "stopReason": "General investigator failed.",
+      "stats": {
+        "toolAttempts": 6,
+        "modelAttempts": 12,
+        "elapsedMs": 63366.787625,
+        "usage": {
+          "input": 26448,
+          "output": 1873,
+          "total": 28321,
+          "visibleOutput": 1873,
+          "thinking": null,
+          "cacheRead": 2008,
+          "toolUsePrompt": null,
+          "availability": "partial"
+        }
+      }
+    }
+  },
+  "toolHistory": [
+    {
+      "tool": "query_logs",
+      "args": {
+        "start": "2026-10-10T09:50:00Z",
+        "limit": 50,
+        "end": "2026-10-10T10:15:00Z",
+        "service": "export-api"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-010-001",
+            "timestamp": "2026-10-10T10:01:00Z",
+            "service": "export-api",
+            "source": "logs",
+            "raw": {
+              "severity": "error",
+              "message": "POST /export status=504 request deadline reached; downstream span not recorded",
+              "region": "eu-west",
+              "traceId": null
+            }
+          },
+          {
+            "id": "ev-010-002",
+            "timestamp": "2026-10-10T10:02:00Z",
+            "service": "export-api",
+            "source": "logs",
+            "raw": {
+              "severity": "warn",
+              "message": "trace exporter dropped batch; no sampled child spans available for export requests",
+              "region": "eu-west",
+              "traceId": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 2,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "service": "export-api",
+        "end": "2026-10-10T10:15:00Z",
+        "start": "2026-10-10T09:50:00Z",
+        "limit": 50,
+        "metric": "error_rate",
+        "region": "eu-west"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_metrics",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_dependencies",
+      "args": {
+        "service": "export-api",
+        "direction": "downstream",
+        "at": "2026-10-10T10:00:00Z",
+        "limit": 50
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_dependencies",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-010-004",
+            "timestamp": "2026-10-10T00:00:00Z",
+            "service": "export-api",
+            "source": "dependencies",
+            "raw": {
+              "dependency": "export-store",
+              "relationship": "datastore",
+              "critical": true,
+              "validUntil": null
+            }
+          },
+          {
+            "id": "ev-010-005",
+            "timestamp": "2026-10-10T00:00:00Z",
+            "service": "export-api",
+            "source": "dependencies",
+            "raw": {
+              "dependency": "object-storage",
+              "relationship": "synchronous",
+              "critical": true,
+              "validUntil": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 2,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_logs",
+      "args": {
+        "limit": 50,
+        "service": "export-store",
+        "start": "2026-10-10T09:50:00Z",
+        "end": "2026-10-10T10:15:00Z"
+      },
+      "attempt": 2,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "end": "2026-10-10T10:15:00Z",
+        "limit": 50,
+        "metric": "latency",
+        "service": "export-api",
+        "start": "2026-10-10T09:50:00Z",
+        "region": "eu-west"
+      },
+      "attempt": 2,
+      "result": {
+        "tool": "query_metrics",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_changes",
+      "args": {
+        "end": "2026-10-10T10:15:00Z",
+        "limit": 50,
+        "service": "export-api",
+        "start": "2026-10-10T09:50:00Z"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_changes",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    }
+  ],
+  "failureSchedule": {
+    "toolFailures": [],
+    "agentFailures": []
+  }
+}

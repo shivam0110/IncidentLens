@@ -1,0 +1,793 @@
+{
+  "runId": "b2e27764-f5c9-444e-8df8-029d9c7a0503",
+  "createdAt": "2026-11-12T10:41:07.005Z",
+  "mode": "single-agent",
+  "provider": "gemini-developer-api",
+  "configuration": {
+    "model": "gemini-3.5-flash-lite",
+    "thinkingLevel": "low",
+    "limits": {
+      "maxOutputTokens": 2048,
+      "maxRunTokens": 64000,
+      "maxRounds": 2,
+      "maxModelAttempts": 20,
+      "maxToolAttempts": 20,
+      "deadlineMs": 120000,
+      "requestTimeoutMs": 20000,
+      "reportReserveMs": 25000,
+      "reportReserveTokens": 12288,
+      "reportReserveModelAttempts": 3,
+      "modelIntervalMs": 4500,
+      "retryDelayMs": 1000,
+      "recursionLimit": 11
+    },
+    "sampling": "provider defaults",
+    "tier": "free; operator-recorded policy: AI Studio free tier verified 2026-11-12: 15 RPM, 250000 input TPM, 500 RPD, midnight Pacific reset; 3 daily requests displayed before testing, UI may lag 15 min. Synthetic assignment data only; no billing changes or paid fallback.",
+    "inputReservation": "UTF-8 prompt/schema bytes divided by three; estimate, not provider tokenization"
+  },
+  "state": {
+    "incident": {
+      "id": "inc-002",
+      "title": "Payment requests waiting and failing",
+      "description": "Payment requests take several seconds and some return 503. A release notification was posted shortly before the alert.",
+      "service": "payments-api",
+      "start": "2026-10-02T09:50:00Z",
+      "end": "2026-10-02T10:15:00Z",
+      "reportedAt": "2026-10-02T10:05:00Z"
+    },
+    "round": 1,
+    "plan": null,
+    "tasks": [],
+    "evidence": {
+      "ev-002-002": {
+        "id": "ev-002-002",
+        "timestamp": "2026-10-02T09:58:00Z",
+        "service": "payments-api",
+        "source": "changes",
+        "raw": {
+          "kind": "deployment",
+          "revision": "release-88",
+          "key": null,
+          "before": "7.3 image-base=18",
+          "after": "7.3 image-base=19; application artifact unchanged",
+          "actor": "release-automation"
+        }
+      },
+      "ev-002-011": {
+        "id": "ev-002-011",
+        "timestamp": "2026-10-02T00:00:00Z",
+        "service": "payments-api",
+        "source": "dependencies",
+        "raw": {
+          "dependency": "payments-db",
+          "relationship": "datastore",
+          "critical": true,
+          "validUntil": null
+        }
+      },
+      "ev-002-013": {
+        "id": "ev-002-013",
+        "timestamp": "2026-10-02T00:00:00Z",
+        "service": "payments-api",
+        "source": "dependencies",
+        "raw": {
+          "dependency": "payment-processor",
+          "relationship": "synchronous",
+          "critical": true,
+          "validUntil": null
+        }
+      },
+      "ev-002-001": {
+        "id": "ev-002-001",
+        "timestamp": "2026-10-02T09:54:00Z",
+        "service": "payments-api",
+        "source": "logs",
+        "raw": {
+          "severity": "error",
+          "message": "AcquireConnectionTimeout pool=100 active=100 waiters=41 version=7.3",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-002-008": {
+        "id": "ev-002-008",
+        "timestamp": "2026-10-02T10:03:00Z",
+        "service": "payments-api",
+        "source": "logs",
+        "raw": {
+          "severity": "error",
+          "message": "AcquireConnectionTimeout pool=100 active=100 waiters=57 version=7.3",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-002-007": {
+        "id": "ev-002-007",
+        "timestamp": "2026-10-02T10:01:00Z",
+        "service": "payments-db",
+        "source": "logs",
+        "raw": {
+          "severity": "warn",
+          "message": "session=sync-72 application=batch-worker transaction_age_seconds=1600 lock_waiters=38",
+          "region": "eu-west",
+          "traceId": null
+        }
+      }
+    },
+    "findings": [
+      {
+        "statement": "payments-api experienced connection pool timeout errors with active connections reaching the limit of 100.",
+        "evidenceIds": [
+          "ev-002-001",
+          "ev-002-008"
+        ],
+        "contradictions": [],
+        "taskId": "round-1",
+        "role": "Investigator"
+      },
+      {
+        "statement": "payments-db logged long transaction age and lock waiters.",
+        "evidenceIds": [
+          "ev-002-007"
+        ],
+        "contradictions": [],
+        "taskId": "round-1",
+        "role": "Investigator"
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "hyp-01",
+        "causeClass": "resource_exhaustion",
+        "component": "payments-db",
+        "explanation": "Long-running batch worker transaction on payments-db caused lock contention and held database connections, leading to connection pool exhaustion and request timeouts in payments-api.",
+        "support": [
+          "ev-002-001",
+          "ev-002-007",
+          "ev-002-008"
+        ],
+        "contradictions": [],
+        "confidence": "high",
+        "rationale": "Connection pool timeout logs on payments-api correspond directly with database lock waiter logs on payments-db.",
+        "assumptions": [],
+        "unknowns": []
+      }
+    ],
+    "assumptions": [],
+    "unknowns": [],
+    "critic": null,
+    "errors": [],
+    "events": [
+      {
+        "sequence": 1,
+        "elapsedMs": 1.0223750000004657,
+        "type": "round",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Evidence round 1.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 2,
+        "elapsedMs": 1.1844999999884749,
+        "type": "role",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Investigator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 3,
+        "elapsedMs": 8024.5431249999965,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_changes",
+        "status": "running",
+        "round": 1,
+        "message": "query_changes started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 4,
+        "elapsedMs": 8025.369874999989,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 5,
+        "elapsedMs": 8025.611582999991,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_dependencies",
+        "status": "running",
+        "round": 1,
+        "message": "query_dependencies started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 6,
+        "elapsedMs": 8041.706665999998,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_changes",
+        "status": "completed",
+        "round": 1,
+        "message": "query_changes: ok (1 records).",
+        "evidenceIds": [
+          "ev-002-002"
+        ]
+      },
+      {
+        "sequence": 7,
+        "elapsedMs": 8041.73324999999,
+        "type": "evidence",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_changes",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-002-002"
+        ]
+      },
+      {
+        "sequence": 8,
+        "elapsedMs": 8041.743457999997,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 9,
+        "elapsedMs": 8041.751332999993,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_dependencies",
+        "status": "completed",
+        "round": 1,
+        "message": "query_dependencies: ok (2 records).",
+        "evidenceIds": [
+          "ev-002-011",
+          "ev-002-013"
+        ]
+      },
+      {
+        "sequence": 10,
+        "elapsedMs": 8041.765374999988,
+        "type": "evidence",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_dependencies",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-002-011",
+          "ev-002-013"
+        ]
+      },
+      {
+        "sequence": 11,
+        "elapsedMs": 17340.545332999987,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 12,
+        "elapsedMs": 17341.138457999987,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 13,
+        "elapsedMs": 17341.76466599999,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 1,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 14,
+        "elapsedMs": 17341.981040999992,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (2 records).",
+        "evidenceIds": [
+          "ev-002-001",
+          "ev-002-008"
+        ]
+      },
+      {
+        "sequence": 15,
+        "elapsedMs": 17342.00091599999,
+        "type": "evidence",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-002-001",
+          "ev-002-008"
+        ]
+      },
+      {
+        "sequence": 16,
+        "elapsedMs": 17342.016957999993,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 17,
+        "elapsedMs": 17342.03624999999,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_metrics",
+        "status": "completed",
+        "round": 1,
+        "message": "query_metrics: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 18,
+        "elapsedMs": 19402.807457999996,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 19,
+        "elapsedMs": 19403.235749999993,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 1,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 20,
+        "elapsedMs": 19403.363499999992,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (1 records).",
+        "evidenceIds": [
+          "ev-002-007"
+        ]
+      },
+      {
+        "sequence": 21,
+        "elapsedMs": 19403.385040999987,
+        "type": "evidence",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-002-007"
+        ]
+      },
+      {
+        "sequence": 22,
+        "elapsedMs": 19403.397207999995,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_metrics",
+        "status": "completed",
+        "round": 1,
+        "message": "query_metrics: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 23,
+        "elapsedMs": 25376.205624999988,
+        "type": "role",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Investigator completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 24,
+        "elapsedMs": 25376.75283299999,
+        "type": "complete",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Investigation concluded: General investigator selected a supported conclusion.",
+        "evidenceIds": []
+      }
+    ],
+    "stats": {
+      "toolAttempts": 8,
+      "modelAttempts": 4,
+      "elapsedMs": 25377.064790999997,
+      "usage": {
+        "input": 13313,
+        "output": 1067,
+        "total": 14380,
+        "visibleOutput": 1067,
+        "thinking": null,
+        "cacheRead": null,
+        "toolUsePrompt": null,
+        "availability": "complete"
+      }
+    },
+    "stopReason": "General investigator selected a supported conclusion.",
+    "report": {
+      "incidentId": "inc-002",
+      "outcome": "concluded",
+      "summary": "payments-api experienced connection pool exhaustion resulting in 503 errors and waiting requests due to database lock contention caused by a long-running batch worker transaction in payments-db.",
+      "hypotheses": [
+        {
+          "id": "hyp-01",
+          "causeClass": "resource_exhaustion",
+          "component": "payments-db",
+          "explanation": "Long-running batch worker transaction on payments-db caused lock contention and held database connections, leading to connection pool exhaustion and request timeouts in payments-api.",
+          "support": [
+            "ev-002-001",
+            "ev-002-007",
+            "ev-002-008"
+          ],
+          "contradictions": [],
+          "confidence": "high",
+          "rationale": "Connection pool timeout logs on payments-api correspond directly with database lock waiter logs on payments-db.",
+          "assumptions": [],
+          "unknowns": []
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "payments-api experienced connection pool timeout errors with active connections reaching the limit of 100.",
+          "evidenceIds": [
+            "ev-002-001",
+            "ev-002-008"
+          ]
+        },
+        {
+          "statement": "payments-db logged long transaction age and lock waiters.",
+          "evidenceIds": [
+            "ev-002-007"
+          ]
+        }
+      ],
+      "assumptions": [],
+      "unknowns": [],
+      "actions": [
+        {
+          "action": "Investigate and terminate the long-running batch worker transaction on payments-db.",
+          "evidenceIds": [
+            "ev-002-007"
+          ],
+          "rationale": "Resolving database locks will free up connections and alleviate the connection pool exhaustion on payments-api."
+        }
+      ],
+      "limitations": [],
+      "failures": [],
+      "stopReason": "General investigator selected a supported conclusion.",
+      "stats": {
+        "toolAttempts": 8,
+        "modelAttempts": 4,
+        "elapsedMs": 25377.064790999997,
+        "usage": {
+          "input": 13313,
+          "output": 1067,
+          "total": 14380,
+          "visibleOutput": 1067,
+          "thinking": null,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "complete"
+        }
+      }
+    }
+  },
+  "toolHistory": [
+    {
+      "tool": "query_changes",
+      "args": {
+        "start": "2026-10-02T09:30:00Z",
+        "limit": 10,
+        "service": "payments-api",
+        "end": "2026-10-02T10:15:00Z"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_changes",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-002-002",
+            "timestamp": "2026-10-02T09:58:00Z",
+            "service": "payments-api",
+            "source": "changes",
+            "raw": {
+              "kind": "deployment",
+              "revision": "release-88",
+              "key": null,
+              "before": "7.3 image-base=18",
+              "after": "7.3 image-base=19; application artifact unchanged",
+              "actor": "release-automation"
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 1,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_logs",
+      "args": {
+        "start": "2026-10-02T09:50:00Z",
+        "service": "payments-api",
+        "search": "503",
+        "end": "2026-10-02T10:15:00Z",
+        "limit": 20
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_dependencies",
+      "args": {
+        "service": "payments-api",
+        "at": "2026-10-02T10:00:00Z",
+        "limit": 20,
+        "direction": "downstream"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_dependencies",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-002-011",
+            "timestamp": "2026-10-02T00:00:00Z",
+            "service": "payments-api",
+            "source": "dependencies",
+            "raw": {
+              "dependency": "payments-db",
+              "relationship": "datastore",
+              "critical": true,
+              "validUntil": null
+            }
+          },
+          {
+            "id": "ev-002-013",
+            "timestamp": "2026-10-02T00:00:00Z",
+            "service": "payments-api",
+            "source": "dependencies",
+            "raw": {
+              "dependency": "payment-processor",
+              "relationship": "synchronous",
+              "critical": true,
+              "validUntil": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 2,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_logs",
+      "args": {
+        "limit": 20,
+        "end": "2026-10-02T10:15:00Z",
+        "start": "2026-10-02T09:50:00Z",
+        "service": "payments-api"
+      },
+      "attempt": 2,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-002-001",
+            "timestamp": "2026-10-02T09:54:00Z",
+            "service": "payments-api",
+            "source": "logs",
+            "raw": {
+              "severity": "error",
+              "message": "AcquireConnectionTimeout pool=100 active=100 waiters=41 version=7.3",
+              "region": "eu-west",
+              "traceId": null
+            }
+          },
+          {
+            "id": "ev-002-008",
+            "timestamp": "2026-10-02T10:03:00Z",
+            "service": "payments-api",
+            "source": "logs",
+            "raw": {
+              "severity": "error",
+              "message": "AcquireConnectionTimeout pool=100 active=100 waiters=57 version=7.3",
+              "region": "eu-west",
+              "traceId": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 2,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_logs",
+      "args": {
+        "limit": 20,
+        "start": "2026-10-02T09:50:00Z",
+        "service": "payment-processor",
+        "end": "2026-10-02T10:15:00Z"
+      },
+      "attempt": 3,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "start": "2026-10-02T09:30:00Z",
+        "end": "2026-10-02T10:15:00Z",
+        "limit": 20,
+        "metric": "error_rate",
+        "service": "payment-processor"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_metrics",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_logs",
+      "args": {
+        "end": "2026-10-02T10:15:00Z",
+        "limit": 20,
+        "start": "2026-10-02T09:30:00Z",
+        "service": "payments-db"
+      },
+      "attempt": 4,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-002-007",
+            "timestamp": "2026-10-02T10:01:00Z",
+            "service": "payments-db",
+            "source": "logs",
+            "raw": {
+              "severity": "warn",
+              "message": "session=sync-72 application=batch-worker transaction_age_seconds=1600 lock_waiters=38",
+              "region": "eu-west",
+              "traceId": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 1,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "service": "payments-api",
+        "end": "2026-10-02T10:15:00Z",
+        "metric": "connection_count",
+        "limit": 20,
+        "start": "2026-10-02T09:30:00Z"
+      },
+      "attempt": 2,
+      "result": {
+        "tool": "query_metrics",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    }
+  ],
+  "failureSchedule": {
+    "toolFailures": [],
+    "agentFailures": []
+  }
+}

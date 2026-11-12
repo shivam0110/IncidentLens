@@ -1,0 +1,1854 @@
+[
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-001",
+      "source": "logs",
+      "timestamp": "2026-10-01T09:54:00Z",
+      "service": "checkout-api",
+      "raw": {
+        "severity": "info",
+        "message": "POST /checkout status=200 version=4.1 basket.coupon=null",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-002",
+      "source": "changes",
+      "timestamp": "2026-10-01T09:58:00Z",
+      "service": "checkout-api",
+      "raw": {
+        "kind": "deployment",
+        "revision": "release-42",
+        "key": null,
+        "before": "4.1",
+        "after": "4.2; added coupon response mapper",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-003",
+      "source": "logs",
+      "timestamp": "2026-10-01T10:01:00Z",
+      "service": "checkout-api",
+      "raw": {
+        "severity": "error",
+        "message": "POST /checkout status=500 version=4.2 TypeError: coupon.code on null at CouponMapper.map",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-004",
+      "source": "logs",
+      "timestamp": "2026-10-01T10:02:00Z",
+      "service": "checkout-api",
+      "raw": {
+        "severity": "warn",
+        "message": "pricing-api retry completed in 81ms",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-005",
+      "source": "metrics",
+      "timestamp": "2026-10-01T09:55:00Z",
+      "service": "checkout-api",
+      "raw": {
+        "metric": "error_rate",
+        "value": 0.1,
+        "unit": "percent",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-006",
+      "source": "metrics",
+      "timestamp": "2026-10-01T10:02:00Z",
+      "service": "checkout-api",
+      "raw": {
+        "metric": "error_rate",
+        "value": 29,
+        "unit": "percent",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-007",
+      "source": "metrics",
+      "timestamp": "2026-10-01T09:55:00Z",
+      "service": "checkout-api",
+      "raw": {
+        "metric": "requests_per_second",
+        "value": 105,
+        "unit": "requests/s",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-008",
+      "source": "metrics",
+      "timestamp": "2026-10-01T10:02:00Z",
+      "service": "checkout-api",
+      "raw": {
+        "metric": "requests_per_second",
+        "value": 107,
+        "unit": "requests/s",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-009",
+      "source": "metrics",
+      "timestamp": "2026-10-01T10:02:00Z",
+      "service": "orders-db",
+      "raw": {
+        "metric": "connections_active",
+        "value": 23,
+        "unit": "connections",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-010",
+      "source": "metrics",
+      "timestamp": "2026-10-01T10:02:00Z",
+      "service": "pricing-api",
+      "raw": {
+        "metric": "latency_p95",
+        "value": 80,
+        "unit": "ms",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-011",
+      "source": "changes",
+      "timestamp": "2026-10-01T10:09:00Z",
+      "service": "checkout-api",
+      "raw": {
+        "kind": "deployment",
+        "revision": "release-43",
+        "key": null,
+        "before": "4.2",
+        "after": "4.1",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-012",
+      "source": "logs",
+      "timestamp": "2026-10-01T10:11:00Z",
+      "service": "checkout-api",
+      "raw": {
+        "severity": "info",
+        "message": "POST /checkout status=200 version=4.1 basket.coupon=null",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-013",
+      "source": "dependencies",
+      "timestamp": "2026-10-01T00:00:00Z",
+      "service": "checkout-api",
+      "raw": {
+        "dependency": "orders-db",
+        "relationship": "datastore",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-014",
+      "source": "dependencies",
+      "timestamp": "2026-10-01T00:00:00Z",
+      "service": "checkout-api",
+      "raw": {
+        "dependency": "pricing-api",
+        "relationship": "synchronous",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-001",
+    "evidence": {
+      "id": "ev-001-015",
+      "source": "history",
+      "timestamp": "2026-09-15T12:00:00Z",
+      "service": "checkout-api",
+      "raw": {
+        "reference": "archive-001",
+        "title": "Basket submissions failed",
+        "symptoms": "Checkout 500 responses during a promotion.",
+        "resolution": "A gateway rate limit was raised after admission rejections.",
+        "components": [
+          "checkout-api",
+          "edge-gateway"
+        ]
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-001",
+      "source": "logs",
+      "timestamp": "2026-10-02T09:54:00Z",
+      "service": "payments-api",
+      "raw": {
+        "severity": "error",
+        "message": "AcquireConnectionTimeout pool=100 active=100 waiters=41 version=7.3",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-002",
+      "source": "changes",
+      "timestamp": "2026-10-02T09:58:00Z",
+      "service": "payments-api",
+      "raw": {
+        "kind": "deployment",
+        "revision": "release-88",
+        "key": null,
+        "before": "7.3 image-base=18",
+        "after": "7.3 image-base=19; application artifact unchanged",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-003",
+      "source": "metrics",
+      "timestamp": "2026-10-02T09:53:00Z",
+      "service": "payments-db",
+      "raw": {
+        "metric": "connections_active",
+        "value": 100,
+        "unit": "connections",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-004",
+      "source": "metrics",
+      "timestamp": "2026-10-02T09:50:00Z",
+      "service": "payments-db",
+      "raw": {
+        "metric": "connections_active",
+        "value": 97,
+        "unit": "connections",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-005",
+      "source": "metrics",
+      "timestamp": "2026-10-02T10:02:00Z",
+      "service": "payments-db",
+      "raw": {
+        "metric": "connections_limit",
+        "value": 100,
+        "unit": "connections",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-006",
+      "source": "metrics",
+      "timestamp": "2026-10-02T10:02:00Z",
+      "service": "payments-api",
+      "raw": {
+        "metric": "cpu_utilization",
+        "value": 31,
+        "unit": "percent",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-007",
+      "source": "logs",
+      "timestamp": "2026-10-02T10:01:00Z",
+      "service": "payments-db",
+      "raw": {
+        "severity": "warn",
+        "message": "session=sync-72 application=batch-worker transaction_age_seconds=1600 lock_waiters=38",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-008",
+      "source": "logs",
+      "timestamp": "2026-10-02T10:03:00Z",
+      "service": "payments-api",
+      "raw": {
+        "severity": "error",
+        "message": "AcquireConnectionTimeout pool=100 active=100 waiters=57 version=7.3",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-009",
+      "source": "metrics",
+      "timestamp": "2026-10-02T10:03:00Z",
+      "service": "payment-processor",
+      "raw": {
+        "metric": "latency_p95",
+        "value": 110,
+        "unit": "ms",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-010",
+      "source": "metrics",
+      "timestamp": "2026-10-02T10:03:00Z",
+      "service": "payments-api",
+      "raw": {
+        "metric": "requests_per_second",
+        "value": 62,
+        "unit": "requests/s",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-011",
+      "source": "dependencies",
+      "timestamp": "2026-10-02T00:00:00Z",
+      "service": "payments-api",
+      "raw": {
+        "dependency": "payments-db",
+        "relationship": "datastore",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-012",
+      "source": "dependencies",
+      "timestamp": "2026-10-02T00:00:00Z",
+      "service": "batch-worker",
+      "raw": {
+        "dependency": "payments-db",
+        "relationship": "datastore",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-013",
+      "source": "dependencies",
+      "timestamp": "2026-10-02T00:00:00Z",
+      "service": "payments-api",
+      "raw": {
+        "dependency": "payment-processor",
+        "relationship": "synchronous",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-002",
+    "evidence": {
+      "id": "ev-002-014",
+      "source": "history",
+      "timestamp": "2026-09-15T12:00:00Z",
+      "service": "payments-api",
+      "raw": {
+        "reference": "archive-002",
+        "title": "Payment submission delays",
+        "symptoms": "Payments returned 503 while waiting for downstream processing.",
+        "resolution": "Provider-side throttling cleared after its quota was increased.",
+        "components": [
+          "payments-api",
+          "payment-processor"
+        ]
+      }
+    }
+  },
+  {
+    "incidentId": "inc-003",
+    "evidence": {
+      "id": "ev-003-001",
+      "source": "logs",
+      "timestamp": "2026-10-03T09:55:00Z",
+      "service": "session-api",
+      "raw": {
+        "severity": "info",
+        "message": "refresh status=200 token.aud=web-client",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-003",
+    "evidence": {
+      "id": "ev-003-002",
+      "source": "changes",
+      "timestamp": "2026-10-03T09:59:00Z",
+      "service": "session-api",
+      "raw": {
+        "kind": "configuration",
+        "revision": "config-19",
+        "key": "TOKEN_AUDIENCE",
+        "before": "web-client",
+        "after": "mobile-client",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-003",
+    "evidence": {
+      "id": "ev-003-003",
+      "source": "logs",
+      "timestamp": "2026-10-03T10:00:00Z",
+      "service": "session-api",
+      "raw": {
+        "severity": "error",
+        "message": "refresh status=401 InvalidAudience expected=mobile-client received=web-client signature=valid",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-003",
+    "evidence": {
+      "id": "ev-003-004",
+      "source": "metrics",
+      "timestamp": "2026-10-03T10:02:00Z",
+      "service": "session-api",
+      "raw": {
+        "metric": "error_rate",
+        "value": 84,
+        "unit": "percent",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-003",
+    "evidence": {
+      "id": "ev-003-005",
+      "source": "metrics",
+      "timestamp": "2026-10-03T10:02:00Z",
+      "service": "identity-api",
+      "raw": {
+        "metric": "latency_p95",
+        "value": 45,
+        "unit": "ms",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-003",
+    "evidence": {
+      "id": "ev-003-006",
+      "source": "logs",
+      "timestamp": "2026-10-03T10:03:00Z",
+      "service": "identity-api",
+      "raw": {
+        "severity": "info",
+        "message": "JWKS current key=k-12 signature validation successful",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-003",
+    "evidence": {
+      "id": "ev-003-007",
+      "source": "changes",
+      "timestamp": "2026-10-03T09:52:00Z",
+      "service": "identity-api",
+      "raw": {
+        "kind": "deployment",
+        "revision": "release-51",
+        "key": null,
+        "before": "2.0",
+        "after": "2.1; health endpoint metadata",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-003",
+    "evidence": {
+      "id": "ev-003-008",
+      "source": "changes",
+      "timestamp": "2026-10-03T10:08:00Z",
+      "service": "session-api",
+      "raw": {
+        "kind": "configuration",
+        "revision": "config-20",
+        "key": "TOKEN_AUDIENCE",
+        "before": "mobile-client",
+        "after": "web-client",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-003",
+    "evidence": {
+      "id": "ev-003-009",
+      "source": "logs",
+      "timestamp": "2026-10-03T10:10:00Z",
+      "service": "session-api",
+      "raw": {
+        "severity": "info",
+        "message": "refresh status=200 token.aud=web-client",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-003",
+    "evidence": {
+      "id": "ev-003-010",
+      "source": "dependencies",
+      "timestamp": "2026-10-03T00:00:00Z",
+      "service": "session-api",
+      "raw": {
+        "dependency": "identity-api",
+        "relationship": "synchronous",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-003",
+    "evidence": {
+      "id": "ev-003-011",
+      "source": "history",
+      "timestamp": "2026-09-15T12:00:00Z",
+      "service": "session-api",
+      "raw": {
+        "reference": "archive-003",
+        "title": "Session refresh rejected",
+        "symptoms": "Users received 401 responses on refresh.",
+        "resolution": "An expired signing key was rotated.",
+        "components": [
+          "session-api",
+          "identity-api"
+        ]
+      }
+    }
+  },
+  {
+    "incidentId": "inc-004",
+    "evidence": {
+      "id": "ev-004-001",
+      "source": "logs",
+      "timestamp": "2026-10-04T10:01:00Z",
+      "service": "catalog-api",
+      "raw": {
+        "severity": "warn",
+        "message": "GET /product total_ms=2840 pricing-api_ms=2740 local_ms=21 cache_ms=4",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-004",
+    "evidence": {
+      "id": "ev-004-002",
+      "source": "metrics",
+      "timestamp": "2026-10-04T09:55:00Z",
+      "service": "pricing-api",
+      "raw": {
+        "metric": "latency_p95",
+        "value": 75,
+        "unit": "ms",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-004",
+    "evidence": {
+      "id": "ev-004-003",
+      "source": "metrics",
+      "timestamp": "2026-10-04T10:02:00Z",
+      "service": "pricing-api",
+      "raw": {
+        "metric": "latency_p95",
+        "value": 2800,
+        "unit": "ms",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-004",
+    "evidence": {
+      "id": "ev-004-004",
+      "source": "metrics",
+      "timestamp": "2026-10-04T10:02:00Z",
+      "service": "catalog-api",
+      "raw": {
+        "metric": "cpu_utilization",
+        "value": 26,
+        "unit": "percent",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-004",
+    "evidence": {
+      "id": "ev-004-005",
+      "source": "metrics",
+      "timestamp": "2026-10-04T10:02:00Z",
+      "service": "catalog-api",
+      "raw": {
+        "metric": "requests_per_second",
+        "value": 120,
+        "unit": "requests/s",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-004",
+    "evidence": {
+      "id": "ev-004-006",
+      "source": "metrics",
+      "timestamp": "2026-10-04T09:55:00Z",
+      "service": "catalog-api",
+      "raw": {
+        "metric": "requests_per_second",
+        "value": 118,
+        "unit": "requests/s",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-004",
+    "evidence": {
+      "id": "ev-004-007",
+      "source": "metrics",
+      "timestamp": "2026-10-04T10:02:00Z",
+      "service": "catalog-cache",
+      "raw": {
+        "metric": "latency_p95",
+        "value": 4,
+        "unit": "ms",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-004",
+    "evidence": {
+      "id": "ev-004-008",
+      "source": "logs",
+      "timestamp": "2026-10-04T10:03:00Z",
+      "service": "pricing-api",
+      "raw": {
+        "severity": "warn",
+        "message": "request duration_ms=2761 internal_queue_ms=2690 handler_ms=71",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-004",
+    "evidence": {
+      "id": "ev-004-009",
+      "source": "changes",
+      "timestamp": "2026-10-04T09:57:00Z",
+      "service": "catalog-api",
+      "raw": {
+        "kind": "deployment",
+        "revision": "release-66",
+        "key": null,
+        "before": "6.0",
+        "after": "6.0; container labels updated",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-004",
+    "evidence": {
+      "id": "ev-004-010",
+      "source": "dependencies",
+      "timestamp": "2026-10-04T00:00:00Z",
+      "service": "catalog-api",
+      "raw": {
+        "dependency": "pricing-api",
+        "relationship": "synchronous",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-004",
+    "evidence": {
+      "id": "ev-004-011",
+      "source": "dependencies",
+      "timestamp": "2026-10-04T00:00:00Z",
+      "service": "catalog-api",
+      "raw": {
+        "dependency": "catalog-cache",
+        "relationship": "datastore",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-004",
+    "evidence": {
+      "id": "ev-004-012",
+      "source": "history",
+      "timestamp": "2026-09-15T12:00:00Z",
+      "service": "catalog-api",
+      "raw": {
+        "reference": "archive-004",
+        "title": "Product details slow",
+        "symptoms": "Product pages loaded slowly after a release.",
+        "resolution": "Template rendering was optimized after profiling.",
+        "components": [
+          "catalog-api"
+        ]
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-001",
+      "source": "metrics",
+      "timestamp": "2026-10-05T09:54:00Z",
+      "service": "edge-gateway",
+      "raw": {
+        "metric": "requests_per_second",
+        "value": 900,
+        "unit": "requests/s",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-002",
+      "source": "metrics",
+      "timestamp": "2026-10-05T10:02:00Z",
+      "service": "edge-gateway",
+      "raw": {
+        "metric": "requests_per_second",
+        "value": 4600,
+        "unit": "requests/s",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-003",
+      "source": "metrics",
+      "timestamp": "2026-10-05T09:54:00Z",
+      "service": "edge-gateway",
+      "raw": {
+        "metric": "cpu_utilization",
+        "value": 35,
+        "unit": "percent",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-004",
+      "source": "metrics",
+      "timestamp": "2026-10-05T10:02:00Z",
+      "service": "edge-gateway",
+      "raw": {
+        "metric": "cpu_utilization",
+        "value": 99,
+        "unit": "percent",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-005",
+      "source": "metrics",
+      "timestamp": "2026-10-05T10:02:00Z",
+      "service": "edge-gateway",
+      "raw": {
+        "metric": "queue_depth",
+        "value": 1800,
+        "unit": "requests",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-006",
+      "source": "metrics",
+      "timestamp": "2026-10-05T10:02:00Z",
+      "service": "edge-gateway",
+      "raw": {
+        "metric": "replicas",
+        "value": 4,
+        "unit": "replicas",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-007",
+      "source": "logs",
+      "timestamp": "2026-10-05T10:03:00Z",
+      "service": "edge-gateway",
+      "raw": {
+        "severity": "warn",
+        "message": "admission queue full; autoscaler desired=12 current=4 max=4",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-008",
+      "source": "logs",
+      "timestamp": "2026-10-05T10:03:00Z",
+      "service": "edge-gateway",
+      "raw": {
+        "severity": "info",
+        "message": "traffic campaign=autumn client_count=3600 cache_hit_ratio=0.91",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-009",
+      "source": "metrics",
+      "timestamp": "2026-10-05T10:03:00Z",
+      "service": "catalog-api",
+      "raw": {
+        "metric": "latency_p95",
+        "value": 85,
+        "unit": "ms",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-010",
+      "source": "metrics",
+      "timestamp": "2026-10-05T10:03:00Z",
+      "service": "accounts-api",
+      "raw": {
+        "metric": "latency_p95",
+        "value": 70,
+        "unit": "ms",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-011",
+      "source": "changes",
+      "timestamp": "2026-10-05T09:56:00Z",
+      "service": "edge-gateway",
+      "raw": {
+        "kind": "deployment",
+        "revision": "release-16",
+        "key": null,
+        "before": "3.2",
+        "after": "3.2; telemetry tags",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-012",
+      "source": "dependencies",
+      "timestamp": "2026-10-05T00:00:00Z",
+      "service": "edge-gateway",
+      "raw": {
+        "dependency": "catalog-api",
+        "relationship": "synchronous",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-013",
+      "source": "dependencies",
+      "timestamp": "2026-10-05T00:00:00Z",
+      "service": "edge-gateway",
+      "raw": {
+        "dependency": "accounts-api",
+        "relationship": "synchronous",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-005",
+    "evidence": {
+      "id": "ev-005-014",
+      "source": "history",
+      "timestamp": "2026-09-15T12:00:00Z",
+      "service": "edge-gateway",
+      "raw": {
+        "reference": "archive-005",
+        "title": "Gateway timeouts",
+        "symptoms": "A subset of requests returned 504.",
+        "resolution": "A faulty upstream route was reverted.",
+        "components": [
+          "edge-gateway",
+          "catalog-api"
+        ]
+      }
+    }
+  },
+  {
+    "incidentId": "inc-006",
+    "evidence": {
+      "id": "ev-006-001",
+      "source": "metrics",
+      "timestamp": "2026-10-06T10:02:00Z",
+      "service": "profile-api",
+      "raw": {
+        "metric": "error_rate",
+        "value": 0.8,
+        "unit": "percent",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-006",
+    "evidence": {
+      "id": "ev-006-002",
+      "source": "metrics",
+      "timestamp": "2026-10-06T10:02:00Z",
+      "service": "profile-api",
+      "raw": {
+        "metric": "error_rate",
+        "value": 72,
+        "unit": "percent",
+        "region": "eu-west",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-006",
+    "evidence": {
+      "id": "ev-006-003",
+      "source": "metrics",
+      "timestamp": "2026-10-06T10:02:00Z",
+      "service": "profile-api",
+      "raw": {
+        "metric": "error_rate",
+        "value": 0.1,
+        "unit": "percent",
+        "region": "us-east",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-006",
+    "evidence": {
+      "id": "ev-006-004",
+      "source": "metrics",
+      "timestamp": "2026-10-06T10:02:00Z",
+      "service": "profile-api",
+      "raw": {
+        "metric": "request_share",
+        "value": 1,
+        "unit": "percent",
+        "region": "eu-west",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-006",
+    "evidence": {
+      "id": "ev-006-005",
+      "source": "logs",
+      "timestamp": "2026-10-06T10:01:00Z",
+      "service": "profile-api",
+      "raw": {
+        "severity": "error",
+        "message": "GET /profile status=503 resolver=eu-west-dns host=profile-store.internal error=SERVFAIL",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-006",
+    "evidence": {
+      "id": "ev-006-006",
+      "source": "logs",
+      "timestamp": "2026-10-06T10:01:00Z",
+      "service": "profile-api",
+      "raw": {
+        "severity": "info",
+        "message": "GET /profile status=200 host=profile-store.internal",
+        "region": "us-east",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-006",
+    "evidence": {
+      "id": "ev-006-007",
+      "source": "logs",
+      "timestamp": "2026-10-06T10:03:00Z",
+      "service": "eu-west-dns",
+      "raw": {
+        "severity": "error",
+        "message": "upstream resolver request timed out; SERVFAIL profile-store.internal",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-006",
+    "evidence": {
+      "id": "ev-006-008",
+      "source": "metrics",
+      "timestamp": "2026-10-06T10:03:00Z",
+      "service": "profile-store",
+      "raw": {
+        "metric": "latency_p95",
+        "value": 8,
+        "unit": "ms",
+        "region": "eu-west",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-006",
+    "evidence": {
+      "id": "ev-006-009",
+      "source": "metrics",
+      "timestamp": "2026-10-06T10:03:00Z",
+      "service": "profile-api",
+      "raw": {
+        "metric": "cpu_utilization",
+        "value": 22,
+        "unit": "percent",
+        "region": "eu-west",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-006",
+    "evidence": {
+      "id": "ev-006-010",
+      "source": "changes",
+      "timestamp": "2026-10-06T09:57:00Z",
+      "service": "profile-api",
+      "raw": {
+        "kind": "deployment",
+        "revision": "release-33",
+        "key": null,
+        "before": "5.4",
+        "after": "5.4; tracing sample rate metadata",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-006",
+    "evidence": {
+      "id": "ev-006-011",
+      "source": "dependencies",
+      "timestamp": "2026-10-06T00:00:00Z",
+      "service": "profile-api",
+      "raw": {
+        "dependency": "profile-store",
+        "relationship": "datastore",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-006",
+    "evidence": {
+      "id": "ev-006-012",
+      "source": "dependencies",
+      "timestamp": "2026-10-06T00:00:00Z",
+      "service": "profile-api",
+      "raw": {
+        "dependency": "eu-west-dns",
+        "relationship": "synchronous",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-006",
+    "evidence": {
+      "id": "ev-006-013",
+      "source": "history",
+      "timestamp": "2026-09-15T12:00:00Z",
+      "service": "profile-api",
+      "raw": {
+        "reference": "archive-006",
+        "title": "Profile reads failing",
+        "symptoms": "Regional profile requests failed while global availability was high.",
+        "resolution": "A regional store replica was replaced after disk errors.",
+        "components": [
+          "profile-api",
+          "profile-store"
+        ]
+      }
+    }
+  },
+  {
+    "incidentId": "inc-007",
+    "evidence": {
+      "id": "ev-007-001",
+      "source": "logs",
+      "timestamp": "2026-10-07T10:00:00Z",
+      "service": "invoice-api",
+      "raw": {
+        "severity": "error",
+        "message": "GET /invoice status=502 billing-connector TLS handshake failed: CERT_HAS_EXPIRED peer=partner.billing.internal",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-007",
+    "evidence": {
+      "id": "ev-007-002",
+      "source": "logs",
+      "timestamp": "2026-10-07T10:02:00Z",
+      "service": "billing-connector",
+      "raw": {
+        "severity": "error",
+        "message": "peer certificate notAfter=2026-10-07T09:59:00Z verification_time=2026-10-07T10:02:00Z",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-007",
+    "evidence": {
+      "id": "ev-007-003",
+      "source": "metrics",
+      "timestamp": "2026-10-07T10:02:00Z",
+      "service": "invoice-api",
+      "raw": {
+        "metric": "heap_used",
+        "value": 210,
+        "unit": "MiB",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-007",
+    "evidence": {
+      "id": "ev-007-004",
+      "source": "metrics",
+      "timestamp": "2026-10-07T10:02:00Z",
+      "service": "invoice-api",
+      "raw": {
+        "metric": "heap_limit",
+        "value": 1024,
+        "unit": "MiB",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-007",
+    "evidence": {
+      "id": "ev-007-005",
+      "source": "metrics",
+      "timestamp": "2026-10-07T10:02:00Z",
+      "service": "invoice-api",
+      "raw": {
+        "metric": "restarts",
+        "value": 0,
+        "unit": "count",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-007",
+    "evidence": {
+      "id": "ev-007-006",
+      "source": "metrics",
+      "timestamp": "2026-10-07T10:03:00Z",
+      "service": "invoice-renderer",
+      "raw": {
+        "metric": "latency_p95",
+        "value": 92,
+        "unit": "ms",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-007",
+    "evidence": {
+      "id": "ev-007-007",
+      "source": "changes",
+      "timestamp": "2026-10-07T09:51:00Z",
+      "service": "invoice-renderer",
+      "raw": {
+        "kind": "deployment",
+        "revision": "release-92",
+        "key": null,
+        "before": "8.1",
+        "after": "8.1; documentation label",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-007",
+    "evidence": {
+      "id": "ev-007-008",
+      "source": "dependencies",
+      "timestamp": "2026-10-07T00:00:00Z",
+      "service": "invoice-api",
+      "raw": {
+        "dependency": "invoice-renderer",
+        "relationship": "synchronous",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-007",
+    "evidence": {
+      "id": "ev-007-009",
+      "source": "dependencies",
+      "timestamp": "2026-10-07T00:00:00Z",
+      "service": "invoice-api",
+      "raw": {
+        "dependency": "billing-connector",
+        "relationship": "synchronous",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-007",
+    "evidence": {
+      "id": "ev-007-010",
+      "source": "history",
+      "timestamp": "2026-09-15T12:00:00Z",
+      "service": "invoice-api",
+      "raw": {
+        "reference": "archive-007",
+        "title": "Invoice downloads returned 502",
+        "symptoms": "Downloads failed with 502 and repeated process restarts.",
+        "resolution": "Renderer v4 leaked buffers; heap reached 1024MiB. Rollback stopped restarts.",
+        "components": [
+          "invoice-api",
+          "invoice-renderer"
+        ]
+      }
+    }
+  },
+  {
+    "incidentId": "inc-008",
+    "evidence": {
+      "id": "ev-008-001",
+      "source": "logs",
+      "timestamp": "2026-10-08T09:55:00Z",
+      "service": "search-api",
+      "raw": {
+        "severity": "info",
+        "message": "query=\"red shoes\" serializer=v2 status=200",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-008",
+    "evidence": {
+      "id": "ev-008-002",
+      "source": "changes",
+      "timestamp": "2026-10-08T09:59:00Z",
+      "service": "search-api",
+      "raw": {
+        "kind": "deployment",
+        "revision": "release-104",
+        "key": null,
+        "before": "serializer=v2",
+        "after": "serializer=v3",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-008",
+    "evidence": {
+      "id": "ev-008-003",
+      "source": "logs",
+      "timestamp": "2026-10-08T10:01:00Z",
+      "service": "search-api",
+      "raw": {
+        "severity": "error",
+        "message": "query=\"red shoes\" serializer=v3 status=500 SyntaxError: unexpected token AND in query parser",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-008",
+    "evidence": {
+      "id": "ev-008-004",
+      "source": "logs",
+      "timestamp": "2026-10-08T10:02:00Z",
+      "service": "search-api",
+      "raw": {
+        "severity": "warn",
+        "message": "cache miss for query=\"red shoes\"",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-008",
+    "evidence": {
+      "id": "ev-008-005",
+      "source": "metrics",
+      "timestamp": "2026-10-08T10:02:00Z",
+      "service": "search-index",
+      "raw": {
+        "metric": "latency_p95",
+        "value": 35,
+        "unit": "ms",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-008",
+    "evidence": {
+      "id": "ev-008-006",
+      "source": "metrics",
+      "timestamp": "2026-10-08T10:02:00Z",
+      "service": "search-api",
+      "raw": {
+        "metric": "cpu_utilization",
+        "value": 24,
+        "unit": "percent",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-008",
+    "evidence": {
+      "id": "ev-008-007",
+      "source": "metrics",
+      "timestamp": "2026-10-08T10:02:00Z",
+      "service": "search-api",
+      "raw": {
+        "metric": "error_rate",
+        "value": 34,
+        "unit": "percent",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-008",
+    "evidence": {
+      "id": "ev-008-008",
+      "source": "changes",
+      "timestamp": "2026-10-08T10:08:00Z",
+      "service": "search-api",
+      "raw": {
+        "kind": "deployment",
+        "revision": "release-105",
+        "key": null,
+        "before": "serializer=v3",
+        "after": "serializer=v2",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-008",
+    "evidence": {
+      "id": "ev-008-009",
+      "source": "logs",
+      "timestamp": "2026-10-08T10:10:00Z",
+      "service": "search-api",
+      "raw": {
+        "severity": "info",
+        "message": "query=\"red shoes\" serializer=v2 status=200",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-008",
+    "evidence": {
+      "id": "ev-008-010",
+      "source": "dependencies",
+      "timestamp": "2026-10-08T00:00:00Z",
+      "service": "search-api",
+      "raw": {
+        "dependency": "search-index",
+        "relationship": "synchronous",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-008",
+    "evidence": {
+      "id": "ev-008-011",
+      "source": "history",
+      "timestamp": "2026-09-15T12:00:00Z",
+      "service": "search-api",
+      "raw": {
+        "reference": "archive-008",
+        "title": "Search returned errors",
+        "symptoms": "Some search terms returned 500.",
+        "resolution": "An index shard was restored from a healthy replica.",
+        "components": [
+          "search-api",
+          "search-index"
+        ]
+      }
+    }
+  },
+  {
+    "incidentId": "inc-009",
+    "evidence": {
+      "id": "ev-009-001",
+      "source": "logs",
+      "timestamp": "2026-10-09T09:55:00Z",
+      "service": "queue-worker",
+      "raw": {
+        "severity": "info",
+        "message": "connected endpoint=queue.internal:5672 jobs_per_minute=600",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-009",
+    "evidence": {
+      "id": "ev-009-002",
+      "source": "changes",
+      "timestamp": "2026-10-09T09:59:00Z",
+      "service": "queue-worker",
+      "raw": {
+        "kind": "configuration",
+        "revision": "config-73",
+        "key": "QUEUE_ENDPOINT",
+        "before": "queue.internal:5672",
+        "after": "queue.internal:5673",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-009",
+    "evidence": {
+      "id": "ev-009-003",
+      "source": "logs",
+      "timestamp": "2026-10-09T10:00:00Z",
+      "service": "queue-worker",
+      "raw": {
+        "severity": "error",
+        "message": "connect ECONNREFUSED endpoint=queue.internal:5673 retry_count=1",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-009",
+    "evidence": {
+      "id": "ev-009-004",
+      "source": "logs",
+      "timestamp": "2026-10-09T10:04:00Z",
+      "service": "queue-worker",
+      "raw": {
+        "severity": "warn",
+        "message": "metrics exporter flush timeout",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-009",
+    "evidence": {
+      "id": "ev-009-005",
+      "source": "metrics",
+      "timestamp": "2026-10-09T10:02:00Z",
+      "service": "job-queue",
+      "raw": {
+        "metric": "queue_depth",
+        "value": 4200,
+        "unit": "jobs",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-009",
+    "evidence": {
+      "id": "ev-009-006",
+      "source": "metrics",
+      "timestamp": "2026-10-09T10:02:00Z",
+      "service": "queue-worker",
+      "raw": {
+        "metric": "cpu_utilization",
+        "value": 15,
+        "unit": "percent",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-009",
+    "evidence": {
+      "id": "ev-009-007",
+      "source": "changes",
+      "timestamp": "2026-10-09T10:08:00Z",
+      "service": "queue-worker",
+      "raw": {
+        "kind": "configuration",
+        "revision": "config-74",
+        "key": "QUEUE_ENDPOINT",
+        "before": "queue.internal:5673",
+        "after": "queue.internal:5672",
+        "actor": "release-automation"
+      }
+    }
+  },
+  {
+    "incidentId": "inc-009",
+    "evidence": {
+      "id": "ev-009-008",
+      "source": "logs",
+      "timestamp": "2026-10-09T10:10:00Z",
+      "service": "queue-worker",
+      "raw": {
+        "severity": "info",
+        "message": "connected endpoint=queue.internal:5672 jobs_per_minute=610",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-009",
+    "evidence": {
+      "id": "ev-009-009",
+      "source": "dependencies",
+      "timestamp": "2026-10-09T00:00:00Z",
+      "service": "queue-worker",
+      "raw": {
+        "dependency": "job-queue",
+        "relationship": "synchronous",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-009",
+    "evidence": {
+      "id": "ev-009-010",
+      "source": "history",
+      "timestamp": "2026-09-15T12:00:00Z",
+      "service": "queue-worker",
+      "raw": {
+        "reference": "archive-009",
+        "title": "Background jobs delayed",
+        "symptoms": "Queue age rose and workers stopped completing jobs.",
+        "resolution": "A datastore lock was released and workers resumed.",
+        "components": [
+          "queue-worker",
+          "jobs-db"
+        ]
+      }
+    }
+  },
+  {
+    "incidentId": "inc-010",
+    "evidence": {
+      "id": "ev-010-001",
+      "source": "logs",
+      "timestamp": "2026-10-10T10:01:00Z",
+      "service": "export-api",
+      "raw": {
+        "severity": "error",
+        "message": "POST /export status=504 request deadline reached; downstream span not recorded",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-010",
+    "evidence": {
+      "id": "ev-010-002",
+      "source": "logs",
+      "timestamp": "2026-10-10T10:02:00Z",
+      "service": "export-api",
+      "raw": {
+        "severity": "warn",
+        "message": "trace exporter dropped batch; no sampled child spans available for export requests",
+        "region": "eu-west",
+        "traceId": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-010",
+    "evidence": {
+      "id": "ev-010-003",
+      "source": "metrics",
+      "timestamp": "2026-10-10T10:03:00Z",
+      "service": "export-api",
+      "raw": {
+        "metric": "cpu_utilization",
+        "value": 42,
+        "unit": "percent",
+        "region": "global",
+        "windowSeconds": 60
+      }
+    }
+  },
+  {
+    "incidentId": "inc-010",
+    "evidence": {
+      "id": "ev-010-004",
+      "source": "dependencies",
+      "timestamp": "2026-10-10T00:00:00Z",
+      "service": "export-api",
+      "raw": {
+        "dependency": "export-store",
+        "relationship": "datastore",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-010",
+    "evidence": {
+      "id": "ev-010-005",
+      "source": "dependencies",
+      "timestamp": "2026-10-10T00:00:00Z",
+      "service": "export-api",
+      "raw": {
+        "dependency": "object-storage",
+        "relationship": "synchronous",
+        "critical": true,
+        "validUntil": null
+      }
+    }
+  },
+  {
+    "incidentId": "inc-010",
+    "evidence": {
+      "id": "ev-010-006",
+      "source": "history",
+      "timestamp": "2026-09-15T12:00:00Z",
+      "service": "export-api",
+      "raw": {
+        "reference": "archive-010",
+        "title": "Export request deadline exceeded",
+        "symptoms": "Occasional exports timed out.",
+        "resolution": "Several simultaneous changes preceded recovery; no cause was established.",
+        "components": [
+          "export-api",
+          "export-store",
+          "object-storage"
+        ]
+      }
+    }
+  }
+]

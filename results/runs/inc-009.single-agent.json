@@ -1,0 +1,514 @@
+{
+  "version": 1,
+  "fingerprint": "1bcabdcde796e6dd81678a4051435db35d3f425fe0062e53e04c55834b08d017",
+  "key": "inc-009.single-agent",
+  "result": {
+    "runId": "5d16c851-cd60-4ce4-b00a-5762f2a37457",
+    "report": {
+      "incidentId": "inc-009",
+      "outcome": "concluded",
+      "summary": "Job delays were caused by a configuration change that altered the queue endpoint port, resulting in connection refusals.",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "causeClass": "configuration",
+          "component": "queue-worker",
+          "explanation": "A configuration change modified the queue endpoint port from 5672 to 5673, leading to connection refusals and job processing delays.",
+          "support": [
+            "ev-009-002",
+            "ev-009-003"
+          ],
+          "contradictions": [],
+          "confidence": "high",
+          "rationale": "Logs showed ECONNREFUSED errors immediately following the configuration revision change.",
+          "assumptions": [],
+          "unknowns": []
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "Configuration revision config-73 changed QUEUE_ENDPOINT to queue.internal:5673.",
+          "evidenceIds": [
+            "ev-009-002"
+          ]
+        },
+        {
+          "statement": "queue-worker logged ECONNREFUSED connecting to queue.internal:5673.",
+          "evidenceIds": [
+            "ev-009-003"
+          ]
+        }
+      ],
+      "assumptions": [],
+      "unknowns": [],
+      "actions": [
+        {
+          "action": "Validate endpoint configurations before automated deployment.",
+          "evidenceIds": [
+            "ev-009-007"
+          ],
+          "rationale": "Prevent incorrect port assignments from breaking connectivity."
+        }
+      ],
+      "limitations": [
+        "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+        "Results truncated; narrow the query to retrieve omitted records."
+      ],
+      "failures": [],
+      "stopReason": "General investigator selected a supported conclusion.",
+      "stats": {
+        "toolAttempts": 2,
+        "modelAttempts": 5,
+        "elapsedMs": 21649.58908299997,
+        "usage": {
+          "input": 12095,
+          "output": 808,
+          "total": 12903,
+          "visibleOutput": 808,
+          "thinking": null,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "partial"
+        }
+      }
+    },
+    "state": {
+      "incident": {
+        "id": "inc-009",
+        "title": "Background jobs are delayed",
+        "description": "Job completion has slowed and the queue is growing. Some operational dashboards are not responding.",
+        "service": "queue-worker",
+        "start": "2026-10-09T09:50:00Z",
+        "end": "2026-10-09T10:15:00Z",
+        "reportedAt": "2026-10-09T10:05:00Z"
+      },
+      "round": 1,
+      "plan": null,
+      "tasks": [],
+      "evidence": {
+        "ev-009-001": {
+          "id": "ev-009-001",
+          "timestamp": "2026-10-09T09:55:00Z",
+          "service": "queue-worker",
+          "source": "logs",
+          "raw": {
+            "severity": "info",
+            "message": "connected endpoint=queue.internal:5672 jobs_per_minute=600",
+            "region": "eu-west",
+            "traceId": null
+          }
+        },
+        "ev-009-003": {
+          "id": "ev-009-003",
+          "timestamp": "2026-10-09T10:00:00Z",
+          "service": "queue-worker",
+          "source": "logs",
+          "raw": {
+            "severity": "error",
+            "message": "connect ECONNREFUSED endpoint=queue.internal:5673 retry_count=1",
+            "region": "eu-west",
+            "traceId": null
+          }
+        },
+        "ev-009-002": {
+          "id": "ev-009-002",
+          "timestamp": "2026-10-09T09:59:00Z",
+          "service": "queue-worker",
+          "source": "changes",
+          "raw": {
+            "kind": "configuration",
+            "revision": "config-73",
+            "key": "QUEUE_ENDPOINT",
+            "before": "queue.internal:5672",
+            "after": "queue.internal:5673",
+            "actor": "release-automation"
+          }
+        },
+        "ev-009-007": {
+          "id": "ev-009-007",
+          "timestamp": "2026-10-09T10:08:00Z",
+          "service": "queue-worker",
+          "source": "changes",
+          "raw": {
+            "kind": "configuration",
+            "revision": "config-74",
+            "key": "QUEUE_ENDPOINT",
+            "before": "queue.internal:5673",
+            "after": "queue.internal:5672",
+            "actor": "release-automation"
+          }
+        }
+      },
+      "findings": [
+        {
+          "statement": "Configuration revision config-73 changed QUEUE_ENDPOINT to queue.internal:5673.",
+          "evidenceIds": [
+            "ev-009-002"
+          ],
+          "contradictions": [],
+          "taskId": "round-1",
+          "role": "Investigator"
+        },
+        {
+          "statement": "queue-worker logged ECONNREFUSED connecting to queue.internal:5673.",
+          "evidenceIds": [
+            "ev-009-003"
+          ],
+          "contradictions": [],
+          "taskId": "round-1",
+          "role": "Investigator"
+        }
+      ],
+      "hypotheses": [
+        {
+          "id": "h1",
+          "causeClass": "configuration",
+          "component": "queue-worker",
+          "explanation": "A configuration change modified the queue endpoint port from 5672 to 5673, leading to connection refusals and job processing delays.",
+          "support": [
+            "ev-009-002",
+            "ev-009-003"
+          ],
+          "contradictions": [],
+          "confidence": "high",
+          "rationale": "Logs showed ECONNREFUSED errors immediately following the configuration revision change.",
+          "assumptions": [],
+          "unknowns": []
+        }
+      ],
+      "assumptions": [],
+      "unknowns": [
+        "Results truncated; narrow the query to retrieve omitted records."
+      ],
+      "critic": null,
+      "errors": [],
+      "events": [
+        {
+          "sequence": 1,
+          "elapsedMs": 0.8341660000151023,
+          "type": "round",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "running",
+          "round": 1,
+          "message": "Evidence round 1.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 2,
+          "elapsedMs": 0.9862910000374541,
+          "type": "role",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "running",
+          "round": 1,
+          "message": "Investigator started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 3,
+          "elapsedMs": 1672.3823750000447,
+          "type": "error",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "failed",
+          "round": 1,
+          "message": "Investigator attempt failed: Injected transient agent failure.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 4,
+          "elapsedMs": 8361.280583000043,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": "running",
+          "round": 1,
+          "message": "query_logs started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 5,
+          "elapsedMs": 8361.511874999967,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": "completed",
+          "round": 1,
+          "message": "query_logs: partial (2 records).",
+          "evidenceIds": [
+            "ev-009-001",
+            "ev-009-003"
+          ]
+        },
+        {
+          "sequence": 6,
+          "elapsedMs": 8361.517083000042,
+          "type": "evidence",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": null,
+          "round": 1,
+          "message": "Retrieved evidence.",
+          "evidenceIds": [
+            "ev-009-001",
+            "ev-009-003"
+          ]
+        },
+        {
+          "sequence": 7,
+          "elapsedMs": 12123.049165999983,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_changes",
+          "status": "running",
+          "round": 1,
+          "message": "query_changes started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 8,
+          "elapsedMs": 12123.941957999952,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_changes",
+          "status": "completed",
+          "round": 1,
+          "message": "query_changes: ok (2 records).",
+          "evidenceIds": [
+            "ev-009-002",
+            "ev-009-007"
+          ]
+        },
+        {
+          "sequence": 9,
+          "elapsedMs": 12123.972707999987,
+          "type": "evidence",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_changes",
+          "status": null,
+          "round": 1,
+          "message": "Retrieved evidence.",
+          "evidenceIds": [
+            "ev-009-002",
+            "ev-009-007"
+          ]
+        },
+        {
+          "sequence": 10,
+          "elapsedMs": 21649.032583000022,
+          "type": "role",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "completed",
+          "round": 1,
+          "message": "Investigator completed.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 11,
+          "elapsedMs": 21649.404040999943,
+          "type": "complete",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "completed",
+          "round": 1,
+          "message": "Investigation concluded: General investigator selected a supported conclusion.",
+          "evidenceIds": []
+        }
+      ],
+      "stats": {
+        "toolAttempts": 2,
+        "modelAttempts": 5,
+        "elapsedMs": 21649.58908299997,
+        "usage": {
+          "input": 12095,
+          "output": 808,
+          "total": 12903,
+          "visibleOutput": 808,
+          "thinking": null,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "partial"
+        }
+      },
+      "stopReason": "General investigator selected a supported conclusion.",
+      "report": {
+        "incidentId": "inc-009",
+        "outcome": "concluded",
+        "summary": "Job delays were caused by a configuration change that altered the queue endpoint port, resulting in connection refusals.",
+        "hypotheses": [
+          {
+            "id": "h1",
+            "causeClass": "configuration",
+            "component": "queue-worker",
+            "explanation": "A configuration change modified the queue endpoint port from 5672 to 5673, leading to connection refusals and job processing delays.",
+            "support": [
+              "ev-009-002",
+              "ev-009-003"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Logs showed ECONNREFUSED errors immediately following the configuration revision change.",
+            "assumptions": [],
+            "unknowns": []
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "Configuration revision config-73 changed QUEUE_ENDPOINT to queue.internal:5673.",
+            "evidenceIds": [
+              "ev-009-002"
+            ]
+          },
+          {
+            "statement": "queue-worker logged ECONNREFUSED connecting to queue.internal:5673.",
+            "evidenceIds": [
+              "ev-009-003"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unknowns": [],
+        "actions": [
+          {
+            "action": "Validate endpoint configurations before automated deployment.",
+            "evidenceIds": [
+              "ev-009-007"
+            ],
+            "rationale": "Prevent incorrect port assignments from breaking connectivity."
+          }
+        ],
+        "limitations": [
+          "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+          "Results truncated; narrow the query to retrieve omitted records."
+        ],
+        "failures": [],
+        "stopReason": "General investigator selected a supported conclusion.",
+        "stats": {
+          "toolAttempts": 2,
+          "modelAttempts": 5,
+          "elapsedMs": 21649.58908299997,
+          "usage": {
+            "input": 12095,
+            "output": 808,
+            "total": 12903,
+            "visibleOutput": 808,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "partial"
+          }
+        }
+      }
+    },
+    "tracePath": "/Users/shivam/Desktop/Code/IncidentLens/results/live-2026-11-12-v3/traces/inc-009-5d16c851-cd60-4ce4-b00a-5762f2a37457.json",
+    "toolHistory": [
+      {
+        "tool": "query_logs",
+        "args": {
+          "end": "2026-10-09T10:15:00Z",
+          "limit": 50,
+          "service": "queue-worker",
+          "start": "2026-10-09T09:50:00Z"
+        },
+        "attempt": 1,
+        "result": {
+          "tool": "query_logs",
+          "status": "partial",
+          "evidence": [
+            {
+              "id": "ev-009-001",
+              "timestamp": "2026-10-09T09:55:00Z",
+              "service": "queue-worker",
+              "source": "logs",
+              "raw": {
+                "severity": "info",
+                "message": "connected endpoint=queue.internal:5672 jobs_per_minute=600",
+                "region": "eu-west",
+                "traceId": null
+              }
+            },
+            {
+              "id": "ev-009-003",
+              "timestamp": "2026-10-09T10:00:00Z",
+              "service": "queue-worker",
+              "source": "logs",
+              "raw": {
+                "severity": "error",
+                "message": "connect ECONNREFUSED endpoint=queue.internal:5673 retry_count=1",
+                "region": "eu-west",
+                "traceId": null
+              }
+            }
+          ],
+          "completeness": "truncated",
+          "matched": 4,
+          "warnings": [
+            "Results truncated; narrow the query to retrieve omitted records."
+          ],
+          "error": null
+        }
+      },
+      {
+        "tool": "query_changes",
+        "args": {
+          "start": "2026-10-09T09:00:00Z",
+          "service": "queue-worker",
+          "limit": 50,
+          "end": "2026-10-09T10:15:00Z"
+        },
+        "attempt": 1,
+        "result": {
+          "tool": "query_changes",
+          "status": "ok",
+          "evidence": [
+            {
+              "id": "ev-009-002",
+              "timestamp": "2026-10-09T09:59:00Z",
+              "service": "queue-worker",
+              "source": "changes",
+              "raw": {
+                "kind": "configuration",
+                "revision": "config-73",
+                "key": "QUEUE_ENDPOINT",
+                "before": "queue.internal:5672",
+                "after": "queue.internal:5673",
+                "actor": "release-automation"
+              }
+            },
+            {
+              "id": "ev-009-007",
+              "timestamp": "2026-10-09T10:08:00Z",
+              "service": "queue-worker",
+              "source": "changes",
+              "raw": {
+                "kind": "configuration",
+                "revision": "config-74",
+                "key": "QUEUE_ENDPOINT",
+                "before": "queue.internal:5673",
+                "after": "queue.internal:5672",
+                "actor": "release-automation"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "matched": 2,
+          "warnings": [],
+          "error": null
+        }
+      }
+    ]
+  }
+}

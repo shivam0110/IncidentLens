@@ -1,0 +1,469 @@
+{
+  "version": 1,
+  "fingerprint": "1bcabdcde796e6dd81678a4051435db35d3f425fe0062e53e04c55834b08d017",
+  "key": "inc-001.single-agent",
+  "result": {
+    "runId": "eea2454f-b9e6-42bf-87b1-562783aa3f1c",
+    "report": {
+      "incidentId": "inc-001",
+      "outcome": "concluded",
+      "summary": "Checkout API requests failed with HTTP 500 errors due to a software regression in version 4.2 where CouponMapper threw a TypeError when coupon data was null.",
+      "hypotheses": [
+        {
+          "id": "hyp-1",
+          "causeClass": "software_regression",
+          "component": "checkout-api",
+          "explanation": "A software regression in version 4.2 introduced a TypeError in CouponMapper when processing null coupons, leading to HTTP 500 errors on checkout requests.",
+          "support": [
+            "ev-001-003",
+            "ev-001-002"
+          ],
+          "contradictions": [],
+          "confidence": "high",
+          "rationale": "Deployment of version 4.2 occurred right before errors started, and logs explicitly show a TypeError in CouponMapper.",
+          "assumptions": [],
+          "unknowns": []
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "Deployment release-42 of checkout-api occurred at 2026-10-01T09:58:00Z.",
+          "evidenceIds": [
+            "ev-001-002"
+          ]
+        },
+        {
+          "statement": "Logs showed POST /checkout returning status 500 with a TypeError in CouponMapper at 2026-10-01T10:01:00Z.",
+          "evidenceIds": [
+            "ev-001-003"
+          ]
+        }
+      ],
+      "assumptions": [],
+      "unknowns": [],
+      "actions": [
+        {
+          "action": "Rollback version 4.2 or patch CouponMapper to safely handle null coupon objects.",
+          "evidenceIds": [
+            "ev-001-002",
+            "ev-001-003"
+          ],
+          "rationale": "Mitigates the Null reference exception introduced in release-42."
+        }
+      ],
+      "limitations": [],
+      "failures": [],
+      "stopReason": "General investigator selected a supported conclusion.",
+      "stats": {
+        "toolAttempts": 2,
+        "modelAttempts": 3,
+        "elapsedMs": 14684.039541999999,
+        "usage": {
+          "input": 8697,
+          "output": 1329,
+          "total": 10026,
+          "visibleOutput": 1329,
+          "thinking": null,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "complete"
+        }
+      }
+    },
+    "state": {
+      "incident": {
+        "id": "inc-001",
+        "title": "Checkout requests returning errors",
+        "description": "Customers report intermittent HTTP 500 responses when submitting baskets beginning around 10:00 UTC.",
+        "service": "checkout-api",
+        "start": "2026-10-01T09:50:00Z",
+        "end": "2026-10-01T10:15:00Z",
+        "reportedAt": "2026-10-01T10:05:00Z"
+      },
+      "round": 1,
+      "plan": null,
+      "tasks": [],
+      "evidence": {
+        "ev-001-003": {
+          "id": "ev-001-003",
+          "timestamp": "2026-10-01T10:01:00Z",
+          "service": "checkout-api",
+          "source": "logs",
+          "raw": {
+            "severity": "error",
+            "message": "POST /checkout status=500 version=4.2 TypeError: coupon.code on null at CouponMapper.map",
+            "region": "eu-west",
+            "traceId": null
+          }
+        },
+        "ev-001-002": {
+          "id": "ev-001-002",
+          "timestamp": "2026-10-01T09:58:00Z",
+          "service": "checkout-api",
+          "source": "changes",
+          "raw": {
+            "kind": "deployment",
+            "revision": "release-42",
+            "key": null,
+            "before": "4.1",
+            "after": "4.2; added coupon response mapper",
+            "actor": "release-automation"
+          }
+        },
+        "ev-001-011": {
+          "id": "ev-001-011",
+          "timestamp": "2026-10-01T10:09:00Z",
+          "service": "checkout-api",
+          "source": "changes",
+          "raw": {
+            "kind": "deployment",
+            "revision": "release-43",
+            "key": null,
+            "before": "4.2",
+            "after": "4.1",
+            "actor": "release-automation"
+          }
+        }
+      },
+      "findings": [
+        {
+          "statement": "Deployment release-42 of checkout-api occurred at 2026-10-01T09:58:00Z.",
+          "evidenceIds": [
+            "ev-001-002"
+          ],
+          "contradictions": [],
+          "taskId": "round-1",
+          "role": "Investigator"
+        },
+        {
+          "statement": "Logs showed POST /checkout returning status 500 with a TypeError in CouponMapper at 2026-10-01T10:01:00Z.",
+          "evidenceIds": [
+            "ev-001-003"
+          ],
+          "contradictions": [],
+          "taskId": "round-1",
+          "role": "Investigator"
+        }
+      ],
+      "hypotheses": [
+        {
+          "id": "hyp-1",
+          "causeClass": "software_regression",
+          "component": "checkout-api",
+          "explanation": "A software regression in version 4.2 introduced a TypeError in CouponMapper when processing null coupons, leading to HTTP 500 errors on checkout requests.",
+          "support": [
+            "ev-001-003",
+            "ev-001-002"
+          ],
+          "contradictions": [],
+          "confidence": "high",
+          "rationale": "Deployment of version 4.2 occurred right before errors started, and logs explicitly show a TypeError in CouponMapper.",
+          "assumptions": [],
+          "unknowns": []
+        }
+      ],
+      "assumptions": [],
+      "unknowns": [],
+      "critic": null,
+      "errors": [],
+      "events": [
+        {
+          "sequence": 1,
+          "elapsedMs": 0.7768340000038734,
+          "type": "round",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "running",
+          "round": 1,
+          "message": "Evidence round 1.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 2,
+          "elapsedMs": 0.9059170000036829,
+          "type": "role",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "running",
+          "round": 1,
+          "message": "Investigator started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 3,
+          "elapsedMs": 4450.527750000001,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": "running",
+          "round": 1,
+          "message": "query_logs started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 4,
+          "elapsedMs": 4451.048416999998,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_changes",
+          "status": "running",
+          "round": 1,
+          "message": "query_changes started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 5,
+          "elapsedMs": 4451.732541999998,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": "completed",
+          "round": 1,
+          "message": "query_logs: ok (1 records).",
+          "evidenceIds": [
+            "ev-001-003"
+          ]
+        },
+        {
+          "sequence": 6,
+          "elapsedMs": 4451.758958999999,
+          "type": "evidence",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": null,
+          "round": 1,
+          "message": "Retrieved evidence.",
+          "evidenceIds": [
+            "ev-001-003"
+          ]
+        },
+        {
+          "sequence": 7,
+          "elapsedMs": 4451.777750000001,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_changes",
+          "status": "completed",
+          "round": 1,
+          "message": "query_changes: ok (2 records).",
+          "evidenceIds": [
+            "ev-001-002",
+            "ev-001-011"
+          ]
+        },
+        {
+          "sequence": 8,
+          "elapsedMs": 4451.796042000002,
+          "type": "evidence",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_changes",
+          "status": null,
+          "round": 1,
+          "message": "Retrieved evidence.",
+          "evidenceIds": [
+            "ev-001-002",
+            "ev-001-011"
+          ]
+        },
+        {
+          "sequence": 9,
+          "elapsedMs": 14682.928417000003,
+          "type": "role",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "completed",
+          "round": 1,
+          "message": "Investigator completed.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 10,
+          "elapsedMs": 14683.853209000008,
+          "type": "complete",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "completed",
+          "round": 1,
+          "message": "Investigation concluded: General investigator selected a supported conclusion.",
+          "evidenceIds": []
+        }
+      ],
+      "stats": {
+        "toolAttempts": 2,
+        "modelAttempts": 3,
+        "elapsedMs": 14684.039541999999,
+        "usage": {
+          "input": 8697,
+          "output": 1329,
+          "total": 10026,
+          "visibleOutput": 1329,
+          "thinking": null,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "complete"
+        }
+      },
+      "stopReason": "General investigator selected a supported conclusion.",
+      "report": {
+        "incidentId": "inc-001",
+        "outcome": "concluded",
+        "summary": "Checkout API requests failed with HTTP 500 errors due to a software regression in version 4.2 where CouponMapper threw a TypeError when coupon data was null.",
+        "hypotheses": [
+          {
+            "id": "hyp-1",
+            "causeClass": "software_regression",
+            "component": "checkout-api",
+            "explanation": "A software regression in version 4.2 introduced a TypeError in CouponMapper when processing null coupons, leading to HTTP 500 errors on checkout requests.",
+            "support": [
+              "ev-001-003",
+              "ev-001-002"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Deployment of version 4.2 occurred right before errors started, and logs explicitly show a TypeError in CouponMapper.",
+            "assumptions": [],
+            "unknowns": []
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "Deployment release-42 of checkout-api occurred at 2026-10-01T09:58:00Z.",
+            "evidenceIds": [
+              "ev-001-002"
+            ]
+          },
+          {
+            "statement": "Logs showed POST /checkout returning status 500 with a TypeError in CouponMapper at 2026-10-01T10:01:00Z.",
+            "evidenceIds": [
+              "ev-001-003"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unknowns": [],
+        "actions": [
+          {
+            "action": "Rollback version 4.2 or patch CouponMapper to safely handle null coupon objects.",
+            "evidenceIds": [
+              "ev-001-002",
+              "ev-001-003"
+            ],
+            "rationale": "Mitigates the Null reference exception introduced in release-42."
+          }
+        ],
+        "limitations": [],
+        "failures": [],
+        "stopReason": "General investigator selected a supported conclusion.",
+        "stats": {
+          "toolAttempts": 2,
+          "modelAttempts": 3,
+          "elapsedMs": 14684.039541999999,
+          "usage": {
+            "input": 8697,
+            "output": 1329,
+            "total": 10026,
+            "visibleOutput": 1329,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "complete"
+          }
+        }
+      }
+    },
+    "tracePath": "/Users/shivam/Desktop/Code/IncidentLens/results/live-2026-11-12-v3/traces/inc-001-eea2454f-b9e6-42bf-87b1-562783aa3f1c.json",
+    "toolHistory": [
+      {
+        "tool": "query_logs",
+        "args": {
+          "service": "checkout-api",
+          "start": "2026-10-01T09:50:00Z",
+          "limit": 50,
+          "end": "2026-10-01T10:15:00Z",
+          "search": "error"
+        },
+        "attempt": 1,
+        "result": {
+          "tool": "query_logs",
+          "status": "ok",
+          "evidence": [
+            {
+              "id": "ev-001-003",
+              "timestamp": "2026-10-01T10:01:00Z",
+              "service": "checkout-api",
+              "source": "logs",
+              "raw": {
+                "severity": "error",
+                "message": "POST /checkout status=500 version=4.2 TypeError: coupon.code on null at CouponMapper.map",
+                "region": "eu-west",
+                "traceId": null
+              }
+            }
+          ],
+          "completeness": "complete",
+          "matched": 1,
+          "warnings": [],
+          "error": null
+        }
+      },
+      {
+        "tool": "query_changes",
+        "args": {
+          "start": "2026-10-01T09:50:00Z",
+          "service": "checkout-api",
+          "end": "2026-10-01T10:15:00Z",
+          "limit": 50
+        },
+        "attempt": 1,
+        "result": {
+          "tool": "query_changes",
+          "status": "ok",
+          "evidence": [
+            {
+              "id": "ev-001-002",
+              "timestamp": "2026-10-01T09:58:00Z",
+              "service": "checkout-api",
+              "source": "changes",
+              "raw": {
+                "kind": "deployment",
+                "revision": "release-42",
+                "key": null,
+                "before": "4.1",
+                "after": "4.2; added coupon response mapper",
+                "actor": "release-automation"
+              }
+            },
+            {
+              "id": "ev-001-011",
+              "timestamp": "2026-10-01T10:09:00Z",
+              "service": "checkout-api",
+              "source": "changes",
+              "raw": {
+                "kind": "deployment",
+                "revision": "release-43",
+                "key": null,
+                "before": "4.2",
+                "after": "4.1",
+                "actor": "release-automation"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "matched": 2,
+          "warnings": [],
+          "error": null
+        }
+      }
+    ]
+  }
+}

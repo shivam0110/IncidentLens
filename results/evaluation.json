@@ -1,0 +1,3674 @@
+{
+  "version": 1,
+  "fingerprint": "1bcabdcde796e6dd81678a4051435db35d3f425fe0062e53e04c55834b08d017",
+  "manifest": {
+    "version": 1,
+    "identity": {
+      "data/evidence.json": "2b44a28479512ae197f404f45e69c88a5b3c030112ef1f27306ca41389526fed",
+      "data/incidents.json": "a171cd09e30f262ae7658899ebdf4efeaade5d37f81d4014dd322dfc27940f98",
+      "evaluation/labels.json": "a80ffd48e55287b9d31fc6b925884d02cc2586a0949a226cfee5245bf484a354",
+      "evaluation/run.ts": "6111f86b2a5d0c4be607d658dccf15bdffbc133e4d5fc6d1ca222d3256d11b53",
+      "evaluation/scenarios.json": "4c6e3ae89752ce4ee985b9dc55b47302e37bf06b60e685006fc63603334960e2",
+      "evaluation/scoring.ts": "202a4c8041fd002ea7c6415b7601e31ddfaa1d4e0880d849ba2953c68e971558",
+      "lib/agents.ts": "659af969d6bc2ffd5275b979d0cc6d880a3b72cc414a48eff2a6e3c42d006cb0",
+      "lib/baseline.ts": "f9512fa409302819decceb95e120e8e00acd333db43ca12ec9aaaa47ab21ca1d",
+      "lib/budget.ts": "2857264f825d3406d2911a4b592bb045e7c290f74186e1bc80e55ca4e7d095b1",
+      "lib/investigation.ts": "b921b82886de42806a5d1960f74486b43531316d7366bdbe1697260dfd9f1b98",
+      "lib/model.ts": "939feb58c8990da2cacdb5b59e1407e07fe6ca7c931940ad05afb5a99bd90af1",
+      "lib/run.ts": "a20214183368e798ce452040f6bbb62aeb50ac5b3c9790c165542ccd69556f70",
+      "lib/schemas.ts": "5109218cbe045ce52b860e93dba7cab060b394b160d598d6321faaff8323f3e8",
+      "lib/tools.ts": "03e3ed34522d00c235e59a4c4308a099380e2a2d713ec2ca3934572b890d9a9c",
+      "package-lock.json": "e5e51ffe7ffce918d2b7fc04ae9fbd2689544da8e79139e88d80f467ec34014c",
+      "package.json": "ba1ef09327902fb97ce97401a416750cd1014144efa20ab3a948fc6d2a65a985"
+    },
+    "provider": "gemini-developer-api",
+    "model": "gemini-3.5-flash-lite",
+    "thinkingLevel": "low",
+    "sampling": "provider defaults",
+    "limits": {
+      "maxOutputTokens": 2048,
+      "maxRunTokens": 64000,
+      "maxRounds": 2,
+      "maxModelAttempts": 20,
+      "maxToolAttempts": 20,
+      "deadlineMs": 120000,
+      "requestTimeoutMs": 20000,
+      "reportReserveMs": 25000,
+      "reportReserveTokens": 12288,
+      "reportReserveModelAttempts": 3,
+      "modelIntervalMs": 4500,
+      "retryDelayMs": 1000,
+      "recursionLimit": 11
+    },
+    "tier": "free",
+    "quotaPolicy": "AI Studio free tier verified 2026-11-12: 15 RPM, 250000 input TPM, 500 RPD, midnight Pacific reset; 3 daily requests displayed before testing, UI may lag 15 min. Synthetic assignment data only; no billing changes or paid fallback.",
+    "cases": [
+      "inc-001",
+      "inc-002",
+      "inc-003",
+      "inc-004",
+      "inc-005",
+      "inc-006",
+      "inc-007",
+      "inc-008",
+      "inc-009",
+      "inc-010"
+    ],
+    "modes": [
+      "multi-agent",
+      "single-agent"
+    ],
+    "tools": [
+      "query_logs",
+      "query_metrics",
+      "query_changes",
+      "query_dependencies",
+      "search_incidents"
+    ],
+    "failureProfiles": [
+      {
+        "incidentId": "inc-001",
+        "toolFailures": [],
+        "agentFailures": []
+      },
+      {
+        "incidentId": "inc-002",
+        "toolFailures": [],
+        "agentFailures": []
+      },
+      {
+        "incidentId": "inc-003",
+        "toolFailures": [],
+        "agentFailures": []
+      },
+      {
+        "incidentId": "inc-004",
+        "toolFailures": [],
+        "agentFailures": []
+      },
+      {
+        "incidentId": "inc-005",
+        "toolFailures": [],
+        "agentFailures": []
+      },
+      {
+        "incidentId": "inc-006",
+        "toolFailures": [],
+        "agentFailures": []
+      },
+      {
+        "incidentId": "inc-007",
+        "toolFailures": [],
+        "agentFailures": []
+      },
+      {
+        "incidentId": "inc-008",
+        "toolFailures": [
+          {
+            "tool": "query_logs",
+            "mode": "first_timeout"
+          }
+        ],
+        "agentFailures": []
+      },
+      {
+        "incidentId": "inc-009",
+        "toolFailures": [
+          {
+            "tool": "query_metrics",
+            "mode": "persistent_error"
+          },
+          {
+            "tool": "query_logs",
+            "mode": "truncate",
+            "maxRecords": 2
+          }
+        ],
+        "agentFailures": [
+          {
+            "role": "Reasoning",
+            "attempt": 1
+          }
+        ]
+      },
+      {
+        "incidentId": "inc-010",
+        "toolFailures": [],
+        "agentFailures": []
+      }
+    ],
+    "pauseBetweenRunsMs": 1000,
+    "failureReset": "Fresh tools, budget, state and injector per case/mode. Baseline collapses role schedules to Investigator admission ordinals, deduplicating identical ordinals.",
+    "judge": {
+      "batchSize": 6,
+      "model": "same Gemini model/settings",
+      "policy": "One bounded request per batch, no automatic retry; separate budget and usage, shared quota pacer."
+    },
+    "grounding": "All sentences in facts, known-cause explanations and action rationales; compound sentences require support for every factual clause. Other prose excluded. Missing citations are unsupported. Failed/missing judgments stay in denominators; no claims => score 0/1. Automated judgment is imperfect.",
+    "accounting": "Reported tokens only; unknown counts remain null. Known totals are subtotals if availability is partial. UTF-8/3 input estimates cannot guarantee strict token caps. Pauses between runs are outside investigation latency; pacing inside a run is included."
+  },
+  "createdAt": "2026-11-12T10:39:31.008Z",
+  "updatedAt": "2026-11-12T11:19:51.621Z",
+  "rows": [
+    {
+      "incidentId": "inc-001",
+      "mode": "multi-agent",
+      "status": "completed",
+      "artifact": "runs/inc-001.multi-agent.json",
+      "report": {
+        "incidentId": "inc-001",
+        "outcome": "inconclusive",
+        "summary": "Checkout-api experienced intermittent HTTP 500 errors caused by a TypeError in CouponMapper.",
+        "hypotheses": [
+          {
+            "id": "hyp-1",
+            "causeClass": "software_regression",
+            "component": "checkout-api",
+            "explanation": "A null reference exception occurs in CouponMapper when processing checkout requests.",
+            "support": [
+              "ev-001-003"
+            ],
+            "contradictions": [],
+            "confidence": "low",
+            "rationale": "Logs show a TypeError in CouponMapper.map, but only a single support record is available.",
+            "assumptions": [
+              "Version 4.2 introduced this null handling issue."
+            ],
+            "unknowns": [
+              "Whether all requests or only specific payloads are affected."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "Checkout-api produced error logs indicating a TypeError: coupon.code on null at CouponMapper.map during a POST /checkout request returning status 500.",
+            "evidenceIds": [
+              "ev-001-003"
+            ]
+          }
+        ],
+        "assumptions": [
+          "The error log ev-001-003 is representative of the reported intermittent HTTP 500 responses."
+        ],
+        "unknowns": [
+          "The precise upstream input payload that resulted in the null coupon object."
+        ],
+        "actions": [
+          {
+            "action": "Inspect the code implementation of CouponMapper.map in checkout-api version 4.2 to handle null coupon objects.",
+            "evidenceIds": [
+              "ev-001-003"
+            ],
+            "rationale": "To prevent null reference exceptions during coupon mapping."
+          }
+        ],
+        "limitations": [
+          "Only a single log snippet was retrieved, lacking breadth of incident scope.",
+          "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+          "The precise upstream input payload that resulted in the null coupon object."
+        ],
+        "failures": [],
+        "stopReason": "Evidence conclusively points to a software regression in checkout-api due to a null reference exception in CouponMapper.map during checkout requests.",
+        "stats": {
+          "toolAttempts": 1,
+          "modelAttempts": 9,
+          "elapsedMs": 53590.091792,
+          "usage": {
+            "input": 12999,
+            "output": 1536,
+            "total": 14535,
+            "visibleOutput": 1306,
+            "thinking": 230,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "partial"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The log clearly shows a POST /checkout request resulting in status 500 with a TypeError: coupon.code on null at CouponMapper.map from checkout-api."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "supported",
+                "reason": "The log explicitly records a TypeError related to null during coupon mapping in CouponMapper."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "supported",
+                "reason": "The evidence shows a null reference error occurring during coupon mapping, supporting the context of the action."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 3112.1137090000047,
+              "usage": {
+                "input": 518,
+                "output": 123,
+                "total": 641,
+                "visibleOutput": 123,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-001",
+      "mode": "single-agent",
+      "status": "completed",
+      "artifact": "runs/inc-001.single-agent.json",
+      "report": {
+        "incidentId": "inc-001",
+        "outcome": "concluded",
+        "summary": "Checkout API requests failed with HTTP 500 errors due to a software regression in version 4.2 where CouponMapper threw a TypeError when coupon data was null.",
+        "hypotheses": [
+          {
+            "id": "hyp-1",
+            "causeClass": "software_regression",
+            "component": "checkout-api",
+            "explanation": "A software regression in version 4.2 introduced a TypeError in CouponMapper when processing null coupons, leading to HTTP 500 errors on checkout requests.",
+            "support": [
+              "ev-001-003",
+              "ev-001-002"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Deployment of version 4.2 occurred right before errors started, and logs explicitly show a TypeError in CouponMapper.",
+            "assumptions": [],
+            "unknowns": []
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "Deployment release-42 of checkout-api occurred at 2026-10-01T09:58:00Z.",
+            "evidenceIds": [
+              "ev-001-002"
+            ]
+          },
+          {
+            "statement": "Logs showed POST /checkout returning status 500 with a TypeError in CouponMapper at 2026-10-01T10:01:00Z.",
+            "evidenceIds": [
+              "ev-001-003"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unknowns": [],
+        "actions": [
+          {
+            "action": "Rollback version 4.2 or patch CouponMapper to safely handle null coupon objects.",
+            "evidenceIds": [
+              "ev-001-002",
+              "ev-001-003"
+            ],
+            "rationale": "Mitigates the Null reference exception introduced in release-42."
+          }
+        ],
+        "limitations": [],
+        "failures": [],
+        "stopReason": "General investigator selected a supported conclusion.",
+        "stats": {
+          "toolAttempts": 2,
+          "modelAttempts": 3,
+          "elapsedMs": 14684.039541999999,
+          "usage": {
+            "input": 8697,
+            "output": 1329,
+            "total": 10026,
+            "visibleOutput": 1329,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "complete"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The evidence ev-001-002 confirms deployment release-42 of checkout-api occurred at the specified timestamp."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The evidence ev-001-003 shows logs with POST /checkout returning 500 and the TypeError at the given time."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "supported",
+                "reason": "The evidence shows version 4.2 added a coupon response mapper and subsequently caused a TypeError on null in CouponMapper leading to 500 errors."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "unsupported",
+                "reason": "The records show the deployment and the error, but do not state any mitigation action."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 4575.114958000006,
+              "usage": {
+                "input": 888,
+                "output": 175,
+                "total": 1063,
+                "visibleOutput": 175,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-002",
+      "mode": "multi-agent",
+      "status": "completed",
+      "artifact": "runs/inc-002.multi-agent.json",
+      "report": {
+        "incidentId": "inc-002",
+        "outcome": "concluded",
+        "summary": "Payment requests failed and timed out due to database connection pool exhaustion in payments-api, where active connections reached the maximum limit of 100 and waiters accumulated.",
+        "hypotheses": [
+          {
+            "id": "h1",
+            "causeClass": "resource_exhaustion",
+            "component": "payments-api",
+            "explanation": "The payments-api service exhausted its database connection pool limits, leading to connection timeouts and failing payment requests.",
+            "support": [
+              "ev-002-001",
+              "ev-002-008"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Logs directly demonstrate AcquireConnectionTimeout with active connections at 100 and increasing waiters.",
+            "assumptions": [
+              "The connection pool limit is configured correctly at 100."
+            ],
+            "unknowns": [
+              "The exact trigger for reaching maximum active connections."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "payments-api logged AcquireConnectionTimeout errors showing active connections at 100 with waiting requests during the incident.",
+            "evidenceIds": [
+              "ev-002-001",
+              "ev-002-008"
+            ]
+          },
+          {
+            "statement": "Revision release-88 was deployed to payments-api changing image-base from 18 to 19 shortly before the incident.",
+            "evidenceIds": [
+              "ev-002-002"
+            ]
+          }
+        ],
+        "assumptions": [
+          "Connection pool exhaustion is the primary driver of request failures."
+        ],
+        "unknowns": [
+          "Exact root cause for why connection pool capacity was fully consumed."
+        ],
+        "actions": [
+          {
+            "action": "Investigate database query performance and connection lifecycle management in payments-api.",
+            "evidenceIds": [
+              "ev-002-001",
+              "ev-002-008"
+            ],
+            "rationale": "Understanding why active connections saturated the pool limit will prevent future resource exhaustion."
+          }
+        ],
+        "limitations": [
+          "No explicit latency metrics were successfully returned for the payments-api service during the specified window.",
+          "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+          "Exact root cause for why connection pool capacity was fully consumed."
+        ],
+        "failures": [],
+        "stopReason": "Evidence clearly shows resource exhaustion via database connection pool saturation in payments-api, confirmed by repeated AcquireConnectionTimeout logs with active connections at the maximum limit of 100 and high waiters. No further queries are needed.",
+        "stats": {
+          "toolAttempts": 4,
+          "modelAttempts": 13,
+          "elapsedMs": 59628.723625,
+          "usage": {
+            "input": 24488,
+            "output": 2214,
+            "total": 26702,
+            "visibleOutput": 1942,
+            "thinking": 272,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "partial"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "Logs show AcquireConnectionTimeout with active=100 and waiters during the incident."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "Deployment record shows release-88 changed image-base from 18 to 19."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "supported",
+                "reason": "Logs confirm connection pool limits were reached with active connections at 100 and waiters."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "supported",
+                "reason": "Logs show active connections saturated the pool limit."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 9959.334457999998,
+              "usage": {
+                "input": 964,
+                "output": 133,
+                "total": 1097,
+                "visibleOutput": 133,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-002",
+      "mode": "single-agent",
+      "status": "completed",
+      "artifact": "runs/inc-002.single-agent.json",
+      "report": {
+        "incidentId": "inc-002",
+        "outcome": "concluded",
+        "summary": "payments-api experienced connection pool exhaustion resulting in 503 errors and waiting requests due to database lock contention caused by a long-running batch worker transaction in payments-db.",
+        "hypotheses": [
+          {
+            "id": "hyp-01",
+            "causeClass": "resource_exhaustion",
+            "component": "payments-db",
+            "explanation": "Long-running batch worker transaction on payments-db caused lock contention and held database connections, leading to connection pool exhaustion and request timeouts in payments-api.",
+            "support": [
+              "ev-002-001",
+              "ev-002-007",
+              "ev-002-008"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Connection pool timeout logs on payments-api correspond directly with database lock waiter logs on payments-db.",
+            "assumptions": [],
+            "unknowns": []
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "payments-api experienced connection pool timeout errors with active connections reaching the limit of 100.",
+            "evidenceIds": [
+              "ev-002-001",
+              "ev-002-008"
+            ]
+          },
+          {
+            "statement": "payments-db logged long transaction age and lock waiters.",
+            "evidenceIds": [
+              "ev-002-007"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unknowns": [],
+        "actions": [
+          {
+            "action": "Investigate and terminate the long-running batch worker transaction on payments-db.",
+            "evidenceIds": [
+              "ev-002-007"
+            ],
+            "rationale": "Resolving database locks will free up connections and alleviate the connection pool exhaustion on payments-api."
+          }
+        ],
+        "limitations": [],
+        "failures": [],
+        "stopReason": "General investigator selected a supported conclusion.",
+        "stats": {
+          "toolAttempts": 8,
+          "modelAttempts": 4,
+          "elapsedMs": 25377.064790999997,
+          "usage": {
+            "input": 13313,
+            "output": 1067,
+            "total": 14380,
+            "visibleOutput": 1067,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "complete"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The logs show AcquireConnectionTimeout errors with pool=100 and active=100."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The log from payments-db shows transaction_age_seconds=1600 and lock_waiters=38."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "unsupported",
+                "reason": "While connection timeouts and lock waiters are logged, the causal link connecting the batch worker to the API pool exhaustion is inferred rather than directly proven by the evidence."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "unsupported",
+                "reason": "The evidence shows database logs with locks, but the outcome that resolving them will free up payments-api connections is a causal prediction not explicitly stated in the record."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 3559.992167000004,
+              "usage": {
+                "input": 966,
+                "output": 256,
+                "total": 1222,
+                "visibleOutput": 256,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-003",
+      "mode": "multi-agent",
+      "status": "completed",
+      "artifact": "runs/inc-003.multi-agent.json",
+      "report": {
+        "incidentId": "inc-003",
+        "outcome": "concluded",
+        "summary": "Browser clients experienced session refresh failures due to an audience validation mismatch where session-api expected mobile-client tokens but received web-client tokens.",
+        "hypotheses": [
+          {
+            "id": "h1",
+            "causeClass": "configuration",
+            "component": "session-api",
+            "explanation": "The session-api service is misconfigured to expect mobile-client audience tokens for web-client session refreshes, leading to 401 Unauthorized responses.",
+            "support": [
+              "ev-003-003",
+              "ev-003-004"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Logs explicitly state InvalidAudience where expected=mobile-client and received=web-client during session refresh errors.",
+            "assumptions": [
+              "The web-client token configuration was recently changed or deployed."
+            ],
+            "unknowns": [
+              "Whether a recent deployment caused the audience validation mismatch."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "The session-api service returned 401 error logs with InvalidAudience indicating that web-client was received while mobile-client was expected during session refresh.",
+            "evidenceIds": [
+              "ev-003-003"
+            ]
+          },
+          {
+            "statement": "Metrics showed an error rate of 84 percent globally for the session-api service.",
+            "evidenceIds": [
+              "ev-003-004"
+            ]
+          },
+          {
+            "statement": "The session-api service depends synchronously on the identity-api service.",
+            "evidenceIds": [
+              "ev-003-010"
+            ]
+          }
+        ],
+        "assumptions": [
+          "Web clients are supposed to be supported by the session-api endpoint for refreshes."
+        ],
+        "unknowns": [
+          "Exact deployment history or configuration change tickets for session-api."
+        ],
+        "actions": [
+          {
+            "action": "Review session-api configuration settings regarding expected token audience values for web clients.",
+            "evidenceIds": [
+              "ev-003-003"
+            ],
+            "rationale": "Logs indicate an audience mismatch expecting mobile-client instead of web-client."
+          }
+        ],
+        "limitations": [
+          "Deployment history records were sparse regarding the exact origin of the configuration mismatch.",
+          "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+          "Exact deployment history or configuration change tickets for session-api.",
+          "No recent configuration or code changes were found in the deployment records for the session-api service."
+        ],
+        "failures": [],
+        "stopReason": "Evidence clearly points to a configuration issue on session-api expecting mobile-client instead of web-client during session refresh, and dependency changes query has already been executed.",
+        "stats": {
+          "toolAttempts": 5,
+          "modelAttempts": 18,
+          "elapsedMs": 91557.452208,
+          "usage": {
+            "input": 29959,
+            "output": 2748,
+            "total": 32707,
+            "visibleOutput": 2490,
+            "thinking": 258,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "partial"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The log clearly shows a 401 error with InvalidAudience, expected=mobile-client, and received=web-client during refresh."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The metrics record explicitly shows an error rate of 84 percent globally for session-api."
+              },
+              {
+                "id": "fact-2-0",
+                "verdict": "supported",
+                "reason": "The dependencies record explicitly shows a synchronous and critical relationship from session-api to identity-api."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "supported",
+                "reason": "The evidence shows an audience mismatch and high error rates, supporting the hypothesis of misconfiguration leading to 401 responses."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "supported",
+                "reason": "The log record directly indicates an audience mismatch expecting mobile-client instead of web-client."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 3822.2396660000086,
+              "usage": {
+                "input": 844,
+                "output": 196,
+                "total": 1040,
+                "visibleOutput": 196,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-003",
+      "mode": "single-agent",
+      "status": "completed",
+      "artifact": "runs/inc-003.single-agent.json",
+      "report": {
+        "incidentId": "inc-003",
+        "outcome": "concluded",
+        "summary": "Configuration change config-19 altered TOKEN_AUDIENCE to mobile-client, causing session-api to reject web-client session refreshes with 401 errors until reverted by config-20.",
+        "hypotheses": [
+          {
+            "id": "hyp-001",
+            "causeClass": "configuration",
+            "component": "session-api",
+            "explanation": "A configuration change updated TOKEN_AUDIENCE to mobile-client, causing session-api to reject web-client session refreshes.",
+            "support": [
+              "ev-003-002",
+              "ev-003-003",
+              "ev-003-008"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Direct configuration change logs match the timing of 401 InvalidAudience logs for web-client.",
+            "assumptions": [],
+            "unknowns": []
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "TOKEN_AUDIENCE config changed from web-client to mobile-client.",
+            "evidenceIds": [
+              "ev-003-002"
+            ]
+          },
+          {
+            "statement": "session-api logged a 401 InvalidAudience error for web-client.",
+            "evidenceIds": [
+              "ev-003-003"
+            ]
+          },
+          {
+            "statement": "TOKEN_AUDIENCE config changed back from mobile-client to web-client.",
+            "evidenceIds": [
+              "ev-003-008"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unknowns": [],
+        "actions": [
+          {
+            "action": "Implement pre-deployment checks on configuration changes for session-api.",
+            "evidenceIds": [
+              "ev-003-002",
+              "ev-003-008"
+            ],
+            "rationale": "Prevent unauthorized or unintended token audience modifications."
+          }
+        ],
+        "limitations": [],
+        "failures": [],
+        "stopReason": "General investigator selected a supported conclusion.",
+        "stats": {
+          "toolAttempts": 3,
+          "modelAttempts": 3,
+          "elapsedMs": 13247.194958000007,
+          "usage": {
+            "input": 9228,
+            "output": 1317,
+            "total": 10545,
+            "visibleOutput": 1317,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "complete"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The evidence ev-003-002 shows TOKEN_AUDIENCE changed from web-client to mobile-client."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The evidence ev-003-003 shows session-api logged the 401 error with expected=mobile-client received=web-client."
+              },
+              {
+                "id": "fact-2-0",
+                "verdict": "supported",
+                "reason": "The evidence ev-003-008 shows TOKEN_AUDIENCE changed from mobile-client to web-client."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "supported",
+                "reason": "Timing or historical similarity alone does not prove a cause, but here the evidence explicitly shows the config change to mobile-client followed by the error expecting mobile-client and receiving web-client, though causal proof for all elements isn't fully established, wait, timing and logical sequence combined with the error explicitly stating expected=mobile-client directly confirms the config change caused the rejection of web-client."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "unsupported",
+                "reason": "The action statement is a general recommendation or preventive goal, which is not strictly a factual claim derived from the records as a direct logical fact."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 4257.563374999998,
+              "usage": {
+                "input": 1040,
+                "output": 280,
+                "total": 1320,
+                "visibleOutput": 280,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-004",
+      "mode": "multi-agent",
+      "status": "completed",
+      "artifact": "runs/inc-004.multi-agent.json",
+      "report": {
+        "incidentId": "inc-004",
+        "outcome": "concluded",
+        "summary": "Product page requests experienced high latency up to 2840ms due to dependency degradation in the synchronous downstream service pricing-api.",
+        "hypotheses": [
+          {
+            "id": "h1",
+            "causeClass": "dependency_degradation",
+            "component": "pricing-api",
+            "explanation": "Product detail page latency increased because the synchronous downstream dependency pricing-api experienced high latency, taking 2740ms per request.",
+            "support": [
+              "ev-004-001",
+              "ev-004-010"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Logs directly attribute the vast majority of the request time (2740ms out of 2840ms total) to pricing-api calls.",
+            "assumptions": [
+              "pricing-api is experiencing internal bottlenecks or degraded performance."
+            ],
+            "unknowns": [
+              "Exact root cause of pricing-api degradation."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "During the incident, catalog-api requests logged a total duration of 2840ms with 2740ms spent on pricing-api.",
+            "evidenceIds": [
+              "ev-004-001"
+            ]
+          },
+          {
+            "statement": "catalog-api depends synchronously on pricing-api.",
+            "evidenceIds": [
+              "ev-004-010"
+            ]
+          },
+          {
+            "statement": "catalog-api depends on catalog-cache datastore.",
+            "evidenceIds": [
+              "ev-004-011"
+            ]
+          }
+        ],
+        "assumptions": [
+          "The sampled log in ev-004-001 is representative of the general traffic pattern during the incident."
+        ],
+        "unknowns": [
+          "Root cause of pricing-api slowdown."
+        ],
+        "actions": [
+          {
+            "action": "Investigate performance and logs of the pricing-api service to determine the cause of high latency.",
+            "evidenceIds": [
+              "ev-004-001",
+              "ev-004-010"
+            ],
+            "rationale": "pricing-api is identified as the primary bottleneck causing catalog-api latency."
+          }
+        ],
+        "limitations": [
+          "Direct error rate metrics and internal pricing-api telemetry were not directly retrieved in this run state.",
+          "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+          "Direct error rate metrics were not returned by metrics query; only latency and request counts are observed.",
+          "Latencies for pricing-api and catalog-cache during the incident window are unknown",
+          "Root cause of pricing-api slowdown."
+        ],
+        "failures": [],
+        "stopReason": "Evidence definitively shows that catalog-api latency is caused by the downstream pricing-api taking 2740ms out of the 2840ms total request time, confirming dependency_degradation on pricing-api.",
+        "stats": {
+          "toolAttempts": 5,
+          "modelAttempts": 13,
+          "elapsedMs": 57666.51329100001,
+          "usage": {
+            "input": 21714,
+            "output": 1816,
+            "total": 23530,
+            "visibleOutput": 1816,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "partial"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 4031.9112499999756,
+              "usage": {
+                "input": null,
+                "output": null,
+                "total": null,
+                "visibleOutput": null,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "unavailable"
+              }
+            },
+            "error": "Gemini HTTP 503. Provider request failed; check service availability."
+          },
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "reason": "Log shows total_ms=2840 and pricing-api_ms=2740.",
+                "verdict": "supported"
+              },
+              {
+                "id": "fact-1-0",
+                "reason": "Dependency record confirms synchronous relationship with pricing-api.",
+                "verdict": "supported"
+              },
+              {
+                "id": "fact-2-0",
+                "reason": "Dependency record confirms datastore relationship with catalog-cache.",
+                "verdict": "supported"
+              },
+              {
+                "id": "hypothesis-0-0",
+                "reason": "Logs show high pricing-api duration and dependency record shows a synchronous relationship, but causation about product detail page latency increasing because of it is not explicitly proven by the records alone.",
+                "verdict": "unsupported"
+              },
+              {
+                "id": "action-0-0",
+                "reason": "Logs and dependencies show high time spent on pricing-api and a synchronous relationship, supporting its identification as the bottleneck.",
+                "verdict": "supported"
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 5976.298041,
+              "usage": {
+                "input": 925,
+                "output": 280,
+                "total": 1205,
+                "visibleOutput": 280,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-004",
+      "mode": "single-agent",
+      "status": "completed",
+      "artifact": "runs/inc-004.single-agent.json",
+      "report": {
+        "incidentId": "inc-004",
+        "outcome": "concluded",
+        "summary": "Product detail page slowdowns are caused by request queuing inside the synchronous downstream pricing-api dependency.",
+        "hypotheses": [
+          {
+            "id": "hyp-1",
+            "causeClass": "dependency_degradation",
+            "component": "pricing-api",
+            "explanation": "pricing-api is experiencing internal queue delays that slow down requests originating from catalog-api.",
+            "support": [
+              "ev-004-001",
+              "ev-004-008",
+              "ev-004-010"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Logs from both catalog-api and pricing-api demonstrate that pricing-api calls take the vast majority of request time due to internal queue duration.",
+            "assumptions": [
+              "Internal queue buildup in pricing-api stems from thread saturation or downstream limits."
+            ],
+            "unknowns": [
+              "The specific upstream trigger or bottleneck causing pricing-api internal queuing."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "Catalog-api logs show GET /product requests taking 2840ms total, with pricing-api consuming 2740ms.",
+            "evidenceIds": [
+              "ev-004-001"
+            ]
+          },
+          {
+            "statement": "Pricing-api logs show a request duration of 2761ms, with 2690ms spent in internal queue.",
+            "evidenceIds": [
+              "ev-004-008"
+            ]
+          },
+          {
+            "statement": "Catalog-api has a synchronous dependency on pricing-api.",
+            "evidenceIds": [
+              "ev-004-010"
+            ]
+          }
+        ],
+        "assumptions": [
+          "Internal queue buildup in pricing-api stems from thread saturation or downstream limits."
+        ],
+        "unknowns": [
+          "The specific upstream trigger or bottleneck causing pricing-api internal queuing."
+        ],
+        "actions": [
+          {
+            "action": "Inspect concurrency settings, thread pools, and resource utilization for pricing-api.",
+            "evidenceIds": [
+              "ev-004-008",
+              "ev-004-010"
+            ],
+            "rationale": "To mitigate the queuing delay causing catalog-api latency."
+          }
+        ],
+        "limitations": [
+          "No deep trace or database metrics were gathered for pricing-api internals beyond application logs.",
+          "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+          "The specific upstream trigger or bottleneck causing pricing-api internal queuing."
+        ],
+        "failures": [],
+        "stopReason": "General investigator selected a supported conclusion.",
+        "stats": {
+          "toolAttempts": 5,
+          "modelAttempts": 5,
+          "elapsedMs": 36014.198166999995,
+          "usage": {
+            "input": 13857,
+            "output": 1279,
+            "total": 15136,
+            "visibleOutput": 1279,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "partial"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The log message explicitly states total_ms=2840 and pricing-api_ms=2740 for GET /product."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The log message explicitly shows duration_ms=2761 and internal_queue_ms=2690."
+              },
+              {
+                "id": "fact-2-0",
+                "verdict": "supported",
+                "reason": "The dependency record shows pricing-api with a synchronous relationship."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "supported",
+                "reason": "The logs show pricing-api experiencing high internal queue delays and catalog-api having a synchronous dependency on it, accounting for the slow requests."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "supported",
+                "reason": "The records establish the queuing delay in pricing-api and its synchronous impact on catalog-api."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 7057.579709000012,
+              "usage": {
+                "input": 1046,
+                "output": 198,
+                "total": 1244,
+                "visibleOutput": 198,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-005",
+      "mode": "multi-agent",
+      "status": "completed",
+      "artifact": "runs/inc-005.multi-agent.json",
+      "report": {
+        "incidentId": "inc-005",
+        "outcome": "concluded",
+        "summary": "The edge-gateway service experienced gateway timeouts due to traffic saturation from a high-volume autumn traffic campaign that spiked request rates to 4600 req/s, saturating CPU at 99% and hitting maximum replica limits.",
+        "hypotheses": [
+          {
+            "id": "hyp-1",
+            "causeClass": "traffic_saturation",
+            "component": "edge-gateway",
+            "explanation": "An excess of incoming traffic from a traffic campaign spiked the request rate to 4600 requests/s, saturating the CPU utilization to 99% and hitting maximum replica limits, causing queue fullness and gateway timeouts.",
+            "support": [
+              "ev-005-002",
+              "ev-005-004",
+              "ev-005-005",
+              "ev-005-007",
+              "ev-005-008"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Metrics clearly show traffic jumping significantly, CPU hitting 99%, queue depth spiking, and logs indicating autoscaler constraints where desired replicas are 12 but max is 4.",
+            "assumptions": [
+              "The traffic campaign caused the high request rate."
+            ],
+            "unknowns": [
+              "Exact response latency distributions and precise error rates per endpoint."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "Requests per second on the edge-gateway service spiked up to 4600 requests/s with CPU utilization reaching 99% and queue depth at 1800 requests.",
+            "evidenceIds": [
+              "ev-005-002",
+              "ev-005-004",
+              "ev-005-005"
+            ]
+          },
+          {
+            "statement": "Logs indicate admission queue full with replicas at 4 and desired at 12, constrained by max limits.",
+            "evidenceIds": [
+              "ev-005-007"
+            ]
+          },
+          {
+            "statement": "Logs report an autumn traffic campaign with 3600 clients.",
+            "evidenceIds": [
+              "ev-005-008"
+            ]
+          }
+        ],
+        "assumptions": [
+          "High request volume from the autumn traffic campaign directly overwhelmed available replica capacity."
+        ],
+        "unknowns": [
+          "Direct error rate and explicit latency histogram metrics were not found in the queried metrics.",
+          "Downstream performance of catalog-api and accounts-api during the incident."
+        ],
+        "actions": [
+          {
+            "action": "Increase the maximum replica limit for the edge-gateway service beyond 4 replicas to accommodate high traffic campaigns.",
+            "evidenceIds": [
+              "ev-005-007"
+            ],
+            "rationale": "The autoscaler was constrained at max=4 while desiring 12 replicas during high traffic."
+          }
+        ],
+        "limitations": [
+          "Exact per-endpoint error rates and response time distributions were unavailable in the retrieved metrics.",
+          "Direct error rate and explicit latency histogram metrics were not found in the queried metrics.",
+          "No telemetry or error metrics were retrieved directly for catalog-api or accounts-api performance during the incident window.",
+          "Downstream performance of catalog-api and accounts-api during the incident."
+        ],
+        "failures": [],
+        "stopReason": "Evidence definitively shows traffic_saturation on the edge-gateway service caused by an autumn traffic campaign increasing requests to 4600 requests/s, saturating CPU at 99% and hitting max replica limits (desired 12, max 4), leading to admission queue fullness and gateway timeouts.",
+        "stats": {
+          "toolAttempts": 9,
+          "modelAttempts": 13,
+          "elapsedMs": 57010.025041999994,
+          "usage": {
+            "input": 31214,
+            "output": 2559,
+            "total": 33773,
+            "visibleOutput": 2385,
+            "thinking": 174,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "complete"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The cited metrics confirm requests at 4600 requests/s, CPU at 99 percent, and queue depth at 1800 requests."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The log confirms admission queue full, current replicas at 4, desired at 12, and max at 4."
+              },
+              {
+                "id": "fact-2-0",
+                "verdict": "supported",
+                "reason": "The log reports traffic campaign as autumn and client count as 3600."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "unsupported",
+                "reason": "While the traffic campaign, metrics, and queue fullness are supported, the causal chain linking the traffic to gateway timeouts is not explicitly supported by the records."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "supported",
+                "reason": "The log confirms the autoscaler was desired at 12 and current at 4 with max at 4 during high traffic conditions."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 3870.565790999972,
+              "usage": {
+                "input": 1322,
+                "output": 218,
+                "total": 1540,
+                "visibleOutput": 218,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-005",
+      "mode": "single-agent",
+      "status": "completed",
+      "artifact": "runs/inc-005.single-agent.json",
+      "report": {
+        "incidentId": "inc-005",
+        "outcome": "concluded",
+        "summary": "Requests to edge-gateway timed out due to traffic saturation exceeding replica capacity, causing CPU exhaustion and queue saturation.",
+        "hypotheses": [
+          {
+            "id": "hyp-1",
+            "causeClass": "traffic_saturation",
+            "component": "edge-gateway",
+            "explanation": "Traffic surge exceeded capacity limits while autoscaling was constrained at max replicas.",
+            "support": [
+              "ev-005-002",
+              "ev-005-004",
+              "ev-005-007"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "High RPS and 99% CPU utilization along with queue full logs at max replicas explain the gateway timeouts.",
+            "assumptions": [
+              "Traffic campaign generated legitimate client requests."
+            ],
+            "unknowns": [
+              "Whether higher max replica limits would have fully prevented queue saturation."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "Requests per second reached 4600 at 2026-10-05T10:02:00Z.",
+            "evidenceIds": [
+              "ev-005-002"
+            ]
+          },
+          {
+            "statement": "CPU utilization reached 99% at 2026-10-05T10:02:00Z.",
+            "evidenceIds": [
+              "ev-005-004"
+            ]
+          },
+          {
+            "statement": "Queue depth reached 1800 requests at 2026-10-05T10:02:00Z.",
+            "evidenceIds": [
+              "ev-005-005"
+            ]
+          },
+          {
+            "statement": "Autoscaler desired 12 replicas but current and max was capped at 4 replicas.",
+            "evidenceIds": [
+              "ev-005-006",
+              "ev-005-007"
+            ]
+          }
+        ],
+        "assumptions": [
+          "Traffic campaign generated legitimate client requests."
+        ],
+        "unknowns": [
+          "Whether higher max replica limits would have fully prevented queue saturation."
+        ],
+        "actions": [
+          {
+            "action": "Increase the maximum replica limit for edge-gateway to handle higher peak traffic.",
+            "evidenceIds": [
+              "ev-005-007"
+            ],
+            "rationale": "Enables scaling up beyond current limits to absorb traffic spikes."
+          }
+        ],
+        "limitations": [
+          "Analysis limited to metrics and logs available in the provided window.",
+          "Whether higher max replica limits would have fully prevented queue saturation."
+        ],
+        "failures": [],
+        "stopReason": "General investigator selected a supported conclusion.",
+        "stats": {
+          "toolAttempts": 4,
+          "modelAttempts": 4,
+          "elapsedMs": 18431.12849999999,
+          "usage": {
+            "input": 13717,
+            "output": 1449,
+            "total": 15166,
+            "visibleOutput": 1449,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "complete"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The evidence directly shows requests_per_second at 4600 for the given timestamp."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The evidence directly shows cpu_utilization at 99 percent for the given timestamp."
+              },
+              {
+                "id": "fact-2-0",
+                "verdict": "supported",
+                "reason": "The evidence directly shows queue_depth at 1800 requests for the given timestamp."
+              },
+              {
+                "id": "fact-3-0",
+                "verdict": "supported",
+                "reason": "The log message explicitly confirms the autoscaler desired=12 current=4 max=4 state."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "supported",
+                "reason": "The evidence shows high traffic/CPU and log messages about the autoscaler being capped at max replicas."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "unsupported",
+                "reason": "The evidence only reports the warning about the queue and replica limits, it does not state that scaling up is enabled."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 2727.3309589999844,
+              "usage": {
+                "input": 1139,
+                "output": 332,
+                "total": 1471,
+                "visibleOutput": 332,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-006",
+      "mode": "multi-agent",
+      "status": "completed",
+      "artifact": "runs/inc-006.multi-agent.json",
+      "report": {
+        "incidentId": "inc-006",
+        "outcome": "concluded",
+        "summary": "Profile loading failures in the eu-west region were caused by DNS resolution failures (SERVFAIL) at eu-west-dns when resolving profile-store.internal.",
+        "hypotheses": [
+          {
+            "id": "h1",
+            "causeClass": "network",
+            "component": "eu-west-dns",
+            "explanation": "DNS resolution failures (SERVFAIL) when resolving profile-store.internal via eu-west-dns caused requests to fail in the eu-west region.",
+            "support": [
+              "ev-006-005",
+              "ev-006-002"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Logs explicitly show SERVFAIL from eu-west-dns affecting profile-store.internal resolution, directly correlating with the 72 percent error rate spike in eu-west.",
+            "assumptions": [
+              "eu-west-dns is responsible for internal hostname resolution in the eu-west region."
+            ],
+            "unknowns": [
+              "Exact root cause of the DNS SERVFAIL response."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "Profile-api experienced a high error rate of 72% in the eu-west region at 2026-10-06T10:02:00Z.",
+            "evidenceIds": [
+              "ev-006-002"
+            ]
+          },
+          {
+            "statement": "Error logs show GET /profile returning 503 status due to SERVFAIL resolving profile-store.internal via eu-west-dns.",
+            "evidenceIds": [
+              "ev-006-005"
+            ]
+          },
+          {
+            "statement": "The us-east region remains healthy with an error rate of 0.1% and successful requests.",
+            "evidenceIds": [
+              "ev-006-003",
+              "ev-006-006"
+            ]
+          }
+        ],
+        "assumptions": [
+          "eu-west-dns is the primary DNS resolver for the eu-west region."
+        ],
+        "unknowns": [
+          "Whether the DNS failure originated in the DNS infrastructure or downstream network routing."
+        ],
+        "actions": [
+          {
+            "action": "Investigate eu-west-dns infrastructure logs and upstream forwarders for SERVFAIL causes.",
+            "evidenceIds": [
+              "ev-006-005"
+            ],
+            "rationale": "Determine why eu-west-dns is returning SERVFAIL for internal domain resolution."
+          }
+        ],
+        "limitations": [
+          "Investigation is limited to available metrics and logs from the incident window.",
+          "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+          "Whether the DNS failure originated in the DNS infrastructure or downstream network routing."
+        ],
+        "failures": [],
+        "stopReason": "Evidence definitively points to eu-west-dns causing DNS resolution failures (SERVFAIL) for profile-store.internal in the eu-west region, which matches the network cause class and explains the localized errors.",
+        "stats": {
+          "toolAttempts": 2,
+          "modelAttempts": 9,
+          "elapsedMs": 44052.11525000003,
+          "usage": {
+            "input": 12817,
+            "output": 2016,
+            "total": 14833,
+            "visibleOutput": 1878,
+            "thinking": 138,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "partial"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The cited metric record shows error_rate is 72 percent for profile-api in region eu-west."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The cited log explicitly shows GET /profile returning 503 with resolver eu-west-dns and error SERVFAIL for profile-store.internal."
+              },
+              {
+                "id": "fact-2-0",
+                "verdict": "supported",
+                "reason": "The cited metric and log records show an error rate of 0.1 percent and successful 200 status requests in us-east."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "unsupported",
+                "reason": "Timing or historical similarity alone does not prove a cause, and the causal link between the DNS failure and the high error rate is not explicitly established as the sole cause in the evidence."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "supported",
+                "reason": "The cited log shows SERVFAIL from eu-west-dns, making the proposed action to determine why it is returning SERVFAIL supported."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 3418.80700000003,
+              "usage": {
+                "input": 986,
+                "output": 232,
+                "total": 1218,
+                "visibleOutput": 232,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-006",
+      "mode": "single-agent",
+      "status": "completed",
+      "artifact": "runs/inc-006.single-agent.json",
+      "report": {
+        "incidentId": "inc-006",
+        "outcome": "concluded",
+        "summary": "Profile API requests are failing in the eu-west region due to DNS resolution failures for the internal profile store.",
+        "hypotheses": [
+          {
+            "id": "hyp-dns",
+            "causeClass": "network",
+            "component": "eu-west-dns",
+            "explanation": "DNS resolver errors in the eu-west region prevent profile-api from resolving profile-store.internal, causing SERVFAIL errors and request failures for users in that region.",
+            "support": [
+              "ev-006-005",
+              "ev-006-002"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Logs explicitly show SERVFAIL from eu-west-dns for profile-store.internal and metrics confirm high error rates in eu-west.",
+            "assumptions": [],
+            "unknowns": []
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "profile-api in eu-west logged a SERVFAIL error from eu-west-dns when attempting to reach profile-store.internal.",
+            "evidenceIds": [
+              "ev-006-005"
+            ]
+          },
+          {
+            "statement": "The error rate for profile-api reached 72 percent in the eu-west region.",
+            "evidenceIds": [
+              "ev-006-002"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unknowns": [],
+        "actions": [
+          {
+            "action": "Investigate eu-west-dns resolver health and configuration.",
+            "evidenceIds": [
+              "ev-006-005",
+              "ev-006-012"
+            ],
+            "rationale": "Resolving DNS failures will restore connectivity to profile-store.internal."
+          }
+        ],
+        "limitations": [],
+        "failures": [],
+        "stopReason": "General investigator selected a supported conclusion.",
+        "stats": {
+          "toolAttempts": 3,
+          "modelAttempts": 4,
+          "elapsedMs": 31377.43312499998,
+          "usage": {
+            "input": 12284,
+            "output": 647,
+            "total": 12931,
+            "visibleOutput": 647,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "complete"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The log clearly shows profile-api in eu-west logging a SERVFAIL error from eu-west-dns when reaching profile-store.internal."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The metric record shows the error rate for profile-api reached 72 percent in the eu-west region."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "unsupported",
+                "reason": "The evidence shows DNS errors and a high error rate, but does not prove causation that the DNS errors caused the request failures for users."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "unsupported",
+                "reason": "The evidence shows a DNS error and a dependency relationship, but does not prove that resolving DNS failures will restore connectivity."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 3383.101457999961,
+              "usage": {
+                "input": 828,
+                "output": 174,
+                "total": 1002,
+                "visibleOutput": 174,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-007",
+      "mode": "multi-agent",
+      "status": "completed",
+      "artifact": "runs/inc-007.multi-agent.json",
+      "report": {
+        "incidentId": "inc-007",
+        "outcome": "inconclusive",
+        "summary": "Invoice downloads returned 502 errors due to a TLS handshake failure connecting to partner.billing.internal, but the leading hypothesis lacks a second distinct primary support record.",
+        "hypotheses": [
+          {
+            "id": "h1",
+            "causeClass": "dependency_degradation",
+            "component": "partner.billing.internal",
+            "explanation": "The invoice-api service returns 502 errors because the TLS handshake fails due to an expired certificate on the downstream billing connector partner.billing.internal.",
+            "support": [
+              "ev-007-001"
+            ],
+            "contradictions": [],
+            "confidence": "medium",
+            "rationale": "Log evidence states that the TLS handshake failed with CERT_HAS_EXPIRED when contacting the external partner.billing.internal dependency, but lacks corroborating primary records.",
+            "assumptions": [
+              "The external partner.billing.internal service manages its own TLS certificates."
+            ],
+            "unknowns": [
+              "Exact certificate renewal schedule or why rotation failed."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "Invoice-api error logs show a TLS handshake failure with CERT_HAS_EXPIRED for peer partner.billing.internal resulting in a 502 status at 2026-10-07T10:00:00Z.",
+            "evidenceIds": [
+              "ev-007-001"
+            ]
+          },
+          {
+            "statement": "Heap usage and restart metrics for invoice-api remained normal during the incident window.",
+            "evidenceIds": [
+              "ev-007-003",
+              "ev-007-004",
+              "ev-007-005"
+            ]
+          }
+        ],
+        "assumptions": [
+          "The external partner.billing.internal service manages its own TLS certificates."
+        ],
+        "unknowns": [
+          "Exact certificate renewal schedule or why rotation failed for partner.billing.internal.",
+          "A second distinct primary evidence record corroborating the TLS failure."
+        ],
+        "actions": [
+          {
+            "action": "Gather additional network or dependency metrics to corroborate the TLS handshake failure.",
+            "evidenceIds": [
+              "ev-007-001"
+            ],
+            "rationale": "Obtain secondary corroborating evidence to meet the requirement for conclusion."
+          }
+        ],
+        "limitations": [
+          "Only a single primary log record supports the leading hypothesis.",
+          "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+          "No explicit HTTP request rate metrics were found by metric name filtering, though log evidence confirms the 502 errors.",
+          "Exact certificate renewal schedule or why rotation failed."
+        ],
+        "failures": [],
+        "stopReason": "Evidence definitively shows that invoice-api 502 errors are caused by a TLS handshake failure (CERT_HAS_EXPIRED) when connecting to the downstream dependency partner.billing.internal.",
+        "stats": {
+          "toolAttempts": 3,
+          "modelAttempts": 11,
+          "elapsedMs": 62796.93954200001,
+          "usage": {
+            "input": 21282,
+            "output": 2534,
+            "total": 23816,
+            "visibleOutput": 2216,
+            "thinking": 318,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "partial"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The evidence explicitly confirms a TLS handshake failure with CERT_HAS_EXPIRED for partner.billing.internal resulting in 502 status at the specified timestamp."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The evidence shows heap usage metrics and zero restarts, supporting normal heap and restart metrics."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "supported",
+                "reason": "The log shows a 502 error tied directly to the TLS handshake failure due to an expired certificate on the billing connector partner.billing.internal."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "supported",
+                "reason": "The action is a general statement or procedural request, but the cited evidence shows the log record describing the TLS failure."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 2332.302625000011,
+              "usage": {
+                "input": 857,
+                "output": 249,
+                "total": 1106,
+                "visibleOutput": 249,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-007",
+      "mode": "single-agent",
+      "status": "completed",
+      "artifact": "runs/inc-007.single-agent.json",
+      "report": {
+        "incidentId": "inc-007",
+        "outcome": "inconclusive",
+        "summary": "Invoice downloads failed with 502 status due to a TLS handshake error on partner.billing.internal, but corroborating secondary evidence is missing.",
+        "hypotheses": [
+          {
+            "id": "h1",
+            "causeClass": "dependency_degradation",
+            "component": "partner.billing.internal",
+            "explanation": "The TLS certificate for the billing connector peer expired, causing TLS handshakes to fail.",
+            "support": [
+              "ev-007-001"
+            ],
+            "contradictions": [],
+            "confidence": "medium",
+            "rationale": "Log message indicates a CERT_HAS_EXPIRED error, but lacks secondary corroborating primary records.",
+            "assumptions": [],
+            "unknowns": [
+              "Missing corroborating metrics or historical incident reports."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "Invoice API logs show a TLS handshake failure with CERT_HAS_EXPIRED on peer partner.billing.internal.",
+            "evidenceIds": [
+              "ev-007-001"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unknowns": [
+          "Lack of secondary primary evidence or historical matches."
+        ],
+        "actions": [],
+        "limitations": [
+          "Leading hypothesis lacks a second distinct primary support record.",
+          "Lack of secondary primary evidence or historical matches."
+        ],
+        "failures": [],
+        "stopReason": "Evidence round limit reached.",
+        "stats": {
+          "toolAttempts": 5,
+          "modelAttempts": 10,
+          "elapsedMs": 58389.15641599998,
+          "usage": {
+            "input": 27739,
+            "output": 2077,
+            "total": 29816,
+            "visibleOutput": 2077,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "complete"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The log message explicitly states that the TLS handshake failed with CERT_HAS_EXPIRED for peer partner.billing.internal."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "supported",
+                "reason": "The log shows a TLS handshake failure due to CERT_HAS_EXPIRED on the peer, directly supporting the cause of the failure."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 4070.8345829999307,
+              "usage": {
+                "input": 391,
+                "output": 89,
+                "total": 480,
+                "visibleOutput": 89,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-008",
+      "mode": "multi-agent",
+      "status": "completed",
+      "artifact": "runs/inc-008.multi-agent.json",
+      "report": {
+        "incidentId": "inc-008",
+        "outcome": "inconclusive",
+        "summary": "Search requests to search-api returned HTTP 500 errors due to a query parser SyntaxError when using serializer=v3. However, the leading hypothesis lacks two distinct primary support records.",
+        "hypotheses": [
+          {
+            "id": "h1",
+            "causeClass": "software_regression",
+            "component": "search-api",
+            "explanation": "A syntax error occurred in the query parser when processing requests using serializer=v3, leading to HTTP 500 errors.",
+            "support": [
+              "ev-008-003"
+            ],
+            "contradictions": [],
+            "confidence": "medium",
+            "rationale": "Logs directly show a SyntaxError from the query parser when using serializer=v3.",
+            "assumptions": [
+              "Serializer v3 was recently introduced or enabled for queries."
+            ],
+            "unknowns": [
+              "Full scope of affected queries using serializer=v3."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "At 2026-10-08T10:01:00Z, search-api logged an error with status 500 and a SyntaxError when processing query=\"red shoes\" with serializer=v3.",
+            "evidenceIds": [
+              "ev-008-003"
+            ]
+          },
+          {
+            "statement": "search-api has a synchronous and critical downstream dependency on search-index.",
+            "evidenceIds": [
+              "ev-008-010"
+            ]
+          }
+        ],
+        "assumptions": [
+          "Serializer v3 introduced a change in query parsing logic."
+        ],
+        "unknowns": [
+          "query_logs: source data unavailable on attempt 1.",
+          "Exact deployment time of serializer=v3."
+        ],
+        "actions": [
+          {
+            "action": "Inspect deployment history for search-api to determine when serializer=v3 was introduced.",
+            "evidenceIds": [
+              "ev-008-003"
+            ],
+            "rationale": "Confirms whether a recent code change or configuration caused the query parser syntax error."
+          }
+        ],
+        "limitations": [
+          "Leading hypothesis lacks two distinct primary support records.",
+          "query_logs: source data unavailable on attempt 1.",
+          "Exact deployment time of serializer=v3.",
+          "query_logs: Source request timed out."
+        ],
+        "failures": [
+          {
+            "scope": "tool",
+            "name": "query_logs",
+            "message": "Source request timed out.",
+            "retryable": true
+          }
+        ],
+        "stopReason": "Evidence clearly points to a software regression in search-api involving query parser syntax errors with serializer=v3. No further queries are needed.",
+        "stats": {
+          "toolAttempts": 4,
+          "modelAttempts": 11,
+          "elapsedMs": 53230.42391600006,
+          "usage": {
+            "input": 20773,
+            "output": 1822,
+            "total": 22595,
+            "visibleOutput": 1638,
+            "thinking": 184,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "complete"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The log confirms the timestamp, service, status 500, SyntaxError, query, and serializer."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The dependency record explicitly states search-api depends on search-index with a synchronous relationship and critical status."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "supported",
+                "reason": "The log directly shows a syntax error in the query parser with serializer=v3 resulting in a status 500."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "supported",
+                "reason": "The log provides the exact error context regarding the query parser syntax error, supporting the action to confirm its cause."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 5245.60149999999,
+              "usage": {
+                "input": 661,
+                "output": 160,
+                "total": 821,
+                "visibleOutput": 160,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-008",
+      "mode": "single-agent",
+      "status": "completed",
+      "artifact": "runs/inc-008.single-agent.json",
+      "report": {
+        "incidentId": "inc-008",
+        "outcome": "concluded",
+        "summary": "Deployment of search-api release-104 introduced a new serializer that caused syntax errors in the query parser resulting in HTTP 500 errors.",
+        "hypotheses": [
+          {
+            "id": "hyp-1",
+            "causeClass": "software_regression",
+            "component": "search-api",
+            "explanation": "Release-104 changed serializer from v2 to v3, causing syntax errors in query parsing.",
+            "support": [
+              "ev-008-002",
+              "ev-008-003"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Logs confirm SyntaxError with serializer=v3 immediately following the deployment of release-104.",
+            "assumptions": [],
+            "unknowns": []
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "search-api deployed release-104 switching serializer from v2 to v3 at 2026-10-08T09:59:00Z.",
+            "evidenceIds": [
+              "ev-008-002"
+            ]
+          },
+          {
+            "statement": "search-api logged a SyntaxError in query parser with serializer=v3 resulting in status=500.",
+            "evidenceIds": [
+              "ev-008-003"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unknowns": [],
+        "actions": [
+          {
+            "action": "Ensure query parser tests validate serialization changes prior to deployment.",
+            "evidenceIds": [
+              "ev-008-002",
+              "ev-008-003"
+            ],
+            "rationale": "Prevents regressions from faulty query parsers."
+          }
+        ],
+        "limitations": [
+          "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+          "query_logs: source data unavailable on attempt 1.",
+          "query_logs: Source request timed out."
+        ],
+        "failures": [
+          {
+            "scope": "tool",
+            "name": "query_logs",
+            "message": "Source request timed out.",
+            "retryable": true
+          }
+        ],
+        "stopReason": "General investigator selected a supported conclusion.",
+        "stats": {
+          "toolAttempts": 3,
+          "modelAttempts": 5,
+          "elapsedMs": 21511.30841700011,
+          "usage": {
+            "input": 11876,
+            "output": 1059,
+            "total": 12935,
+            "visibleOutput": 1059,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "partial"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The deployment record shows release-104 changing serializer from v2 to v3 at the specified time."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The log record confirms a SyntaxError and status=500 with serializer=v3."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "unsupported",
+                "reason": "Timing and sequence alone do not prove causation between the release and syntax errors without explicit causal evidence."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "unsupported",
+                "reason": "The evidence does not contain any information about preventing regressions."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 2906.8964589999523,
+              "usage": {
+                "input": 851,
+                "output": 142,
+                "total": 993,
+                "visibleOutput": 142,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-009",
+      "mode": "multi-agent",
+      "status": "completed",
+      "artifact": "runs/inc-009.multi-agent.json",
+      "report": {
+        "incidentId": "inc-009",
+        "outcome": "concluded",
+        "summary": "Background job delays and connection refused errors were caused by an incorrect configuration change to the queue endpoint port, which was subsequently reverted.",
+        "hypotheses": [
+          {
+            "id": "h1",
+            "causeClass": "configuration",
+            "component": "queue-worker",
+            "explanation": "A configuration change updated the queue endpoint port incorrectly, causing connection refused errors and queue delays.",
+            "support": [
+              "ev-009-002",
+              "ev-009-003"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Configuration revision config-73 changed QUEUE_ENDPOINT to port 5673 right before the connection refused error occurred on that exact port.",
+            "assumptions": [
+              "The configuration change was applied to the queue-worker service."
+            ],
+            "unknowns": [
+              "Exact queue length metrics during the peak of the incident."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "Queue-worker logs show connection to queue.internal:5672 with 600 jobs per minute at 09:55:00Z.",
+            "evidenceIds": [
+              "ev-009-001"
+            ]
+          },
+          {
+            "statement": "A configuration change updated QUEUE_ENDPOINT from queue.internal:5672 to queue.internal:5673 via config-73 at 09:59:00Z.",
+            "evidenceIds": [
+              "ev-009-002"
+            ]
+          },
+          {
+            "statement": "Queue-worker logs show an ECONNREFUSED error to queue.internal:5673 at 10:00:00Z.",
+            "evidenceIds": [
+              "ev-009-003"
+            ]
+          },
+          {
+            "statement": "A configuration change reverted QUEUE_ENDPOINT back to queue.internal:5672 via config-74 at 10:08:00Z.",
+            "evidenceIds": [
+              "ev-009-007"
+            ]
+          }
+        ],
+        "assumptions": [
+          "The queue endpoint configuration change directly caused the connectivity failures."
+        ],
+        "unknowns": [
+          "Exact queue length and processing rate metrics due to metrics service unavailability."
+        ],
+        "actions": [
+          {
+            "action": "Verify queue-worker connectivity to queue.internal:5672 following the rollback of config-73.",
+            "evidenceIds": [
+              "ev-009-007"
+            ],
+            "rationale": "Ensure service has fully recovered after reverting the incorrect endpoint configuration."
+          }
+        ],
+        "limitations": [
+          "Metrics service was unavailable, preventing direct querying of queue length and processing rate metrics.",
+          "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+          "query_metrics: source data unavailable on attempt 1.",
+          "Results truncated; narrow the query to retrieve omitted records.",
+          "query_metrics: source data unavailable on attempt 2.",
+          "Metrics service is unavailable, so exact queue length and processing rate metrics could not be queried.",
+          "Log results were truncated.",
+          "Lack of direct database log search tool for detailed query error analysis.",
+          "Exact queue length and processing rate metrics.",
+          "query_metrics: Source is unavailable."
+        ],
+        "failures": [
+          {
+            "scope": "tool",
+            "name": "query_metrics",
+            "message": "Source is unavailable.",
+            "retryable": false
+          },
+          {
+            "scope": "tool",
+            "name": "query_metrics",
+            "message": "Source is unavailable.",
+            "retryable": false
+          }
+        ],
+        "stopReason": "Evidence is sufficient to identify that a configuration change (config-73) incorrectly updated the queue endpoint port causing connection refused errors and queue delays, which was subsequently reverted by config-74.",
+        "stats": {
+          "toolAttempts": 6,
+          "modelAttempts": 15,
+          "elapsedMs": 67851.88991700008,
+          "usage": {
+            "input": 25003,
+            "output": 2261,
+            "total": 27264,
+            "visibleOutput": 2109,
+            "thinking": 152,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "partial"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "Logs show connection to queue.internal:5672 with jobs_per_minute=600 at 09:55:00Z."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "Configuration change records QUEUE_ENDPOINT updating from queue.internal:5672 to queue.internal:5673 via config-73 at 09:59:00Z."
+              },
+              {
+                "id": "fact-2-0",
+                "verdict": "supported",
+                "reason": "Logs show ECONNREFUSED error to queue.internal:5673 at 10:00:00Z."
+              },
+              {
+                "id": "fact-3-0",
+                "verdict": "supported",
+                "reason": "Configuration change records QUEUE_ENDPOINT reverting from queue.internal:5673 to queue.internal:5672 via config-74 at 10:08:00Z."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "unsupported",
+                "reason": "Evidence shows the configuration change and the subsequent ECONNREFUSED error, but queue delays are not mentioned in the evidence."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "unsupported",
+                "reason": "The evidence shows the reversion configuration change but does not prove the service has fully recovered."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 3123.449790999992,
+              "usage": {
+                "input": 1088,
+                "output": 292,
+                "total": 1380,
+                "visibleOutput": 292,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-009",
+      "mode": "single-agent",
+      "status": "completed",
+      "artifact": "runs/inc-009.single-agent.json",
+      "report": {
+        "incidentId": "inc-009",
+        "outcome": "concluded",
+        "summary": "Job delays were caused by a configuration change that altered the queue endpoint port, resulting in connection refusals.",
+        "hypotheses": [
+          {
+            "id": "h1",
+            "causeClass": "configuration",
+            "component": "queue-worker",
+            "explanation": "A configuration change modified the queue endpoint port from 5672 to 5673, leading to connection refusals and job processing delays.",
+            "support": [
+              "ev-009-002",
+              "ev-009-003"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Logs showed ECONNREFUSED errors immediately following the configuration revision change.",
+            "assumptions": [],
+            "unknowns": []
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "Configuration revision config-73 changed QUEUE_ENDPOINT to queue.internal:5673.",
+            "evidenceIds": [
+              "ev-009-002"
+            ]
+          },
+          {
+            "statement": "queue-worker logged ECONNREFUSED connecting to queue.internal:5673.",
+            "evidenceIds": [
+              "ev-009-003"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unknowns": [],
+        "actions": [
+          {
+            "action": "Validate endpoint configurations before automated deployment.",
+            "evidenceIds": [
+              "ev-009-007"
+            ],
+            "rationale": "Prevent incorrect port assignments from breaking connectivity."
+          }
+        ],
+        "limitations": [
+          "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+          "Results truncated; narrow the query to retrieve omitted records."
+        ],
+        "failures": [],
+        "stopReason": "General investigator selected a supported conclusion.",
+        "stats": {
+          "toolAttempts": 2,
+          "modelAttempts": 5,
+          "elapsedMs": 21649.58908299997,
+          "usage": {
+            "input": 12095,
+            "output": 808,
+            "total": 12903,
+            "visibleOutput": 808,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "partial"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "Evidence ev-009-002 confirms configuration revision config-73 changed QUEUE_ENDPOINT to queue.internal:5673."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "Evidence ev-009-003 shows queue-worker logged ECONNREFUSED connecting to queue.internal:5673."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "unsupported",
+                "reason": "Evidence shows the port change and subsequent connection refusal, but job processing delays are not mentioned."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "unsupported",
+                "reason": "Evidence ev-009-007 shows reverting the configuration change, but does not provide text for preventing incorrect port assignments."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 4180.746333000017,
+              "usage": {
+                "input": 759,
+                "output": 254,
+                "total": 1013,
+                "visibleOutput": 254,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-010",
+      "mode": "multi-agent",
+      "status": "completed",
+      "artifact": "runs/inc-010.multi-agent.json",
+      "report": {
+        "incidentId": "inc-010",
+        "outcome": "inconclusive",
+        "summary": "Export requests failed with a 504 deadline reached error in export-api, but downstream dependencies export-store and object-storage were not fully queried during the incident window, leaving the root cause undetermined.",
+        "hypotheses": [
+          {
+            "id": "h1",
+            "causeClass": "unknown",
+            "component": "export-api",
+            "explanation": "Export requests failed with a 504 deadline reached error, but downstream spans were not recorded and CPU usage was normal, leaving the exact bottleneck undetermined.",
+            "support": [
+              "ev-010-001"
+            ],
+            "contradictions": [],
+            "confidence": "low",
+            "rationale": "Only a single 504 error and a trace exporter warning were observed without sufficient downstream metrics to identify the failing dependency or component.",
+            "assumptions": [
+              "The timeout was caused by an unresponsive dependency or resource bottleneck not captured in metrics."
+            ],
+            "unknowns": [
+              "What specific downstream service or resource caused the request deadline to be reached."
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "An error log at 10:01:00Z showed a 504 request deadline reached for POST /export with no downstream span recorded.",
+            "evidenceIds": [
+              "ev-010-001"
+            ]
+          },
+          {
+            "statement": "A warning log at 10:02:00Z reported that the trace exporter dropped a batch because no sampled child spans were available.",
+            "evidenceIds": [
+              "ev-010-002"
+            ]
+          },
+          {
+            "statement": "CPU utilization for export-api was 42% at 10:03:00Z.",
+            "evidenceIds": [
+              "ev-010-003"
+            ]
+          },
+          {
+            "statement": "export-api depends on export-store as a critical datastore and object-storage as a critical synchronous dependency.",
+            "evidenceIds": [
+              "ev-010-004",
+              "ev-010-005"
+            ]
+          }
+        ],
+        "assumptions": [
+          "The reported export failures correspond directly to the 504 errors logged in export-api."
+        ],
+        "unknowns": [
+          "Exact root cause of the export-api timeout.",
+          "No logs or metrics were retrieved for the downstream dependencies export-store and object-storage during the incident window."
+        ],
+        "actions": [
+          {
+            "action": "Query error logs and latency metrics for export-store and object-storage between 09:50 and 10:15 UTC on 2026-10-10.",
+            "evidenceIds": [
+              "ev-010-004",
+              "ev-010-005"
+            ],
+            "rationale": "Determine if either critical downstream dependency experienced issues during the export-api timeout."
+          }
+        ],
+        "limitations": [
+          "Evidence round limit reached with critic questions unresolved.",
+          "Critic questions remain unresolved: What are the error logs and latency metrics for export-store and object-storage between 09:50 and 10:15 UTC on 2026-10-10?",
+          "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+          "Exact root cause of the export-api timeout.",
+          "No logs or metrics were retrieved for the downstream dependencies export-store and object-storage during the incident window."
+        ],
+        "failures": [],
+        "stopReason": "Evidence round limit reached with critic questions unresolved.",
+        "stats": {
+          "toolAttempts": 6,
+          "modelAttempts": 17,
+          "elapsedMs": 84997.25083399995,
+          "usage": {
+            "input": 29398,
+            "output": 3084,
+            "total": 32482,
+            "visibleOutput": 3084,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "partial"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The evidence log confirms a 504 request deadline reached error for POST /export and notes that the downstream span was not recorded."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The evidence log at 10:02:00Z states that the trace exporter dropped a batch because no sampled child spans were available."
+              },
+              {
+                "id": "fact-2-0",
+                "verdict": "supported",
+                "reason": "The evidence metric record shows cpu_utilization was 42 percent at 10:03:00Z."
+              },
+              {
+                "id": "fact-3-0",
+                "verdict": "supported",
+                "reason": "The evidence dependency records confirm that export-store is a critical datastore and object-storage is a critical synchronous dependency."
+              },
+              {
+                "id": "action-0-0",
+                "verdict": "supported",
+                "reason": "The evidence lists the critical downstream dependencies as requested to determine their status."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 3697.7133330000797,
+              "usage": {
+                "input": 895,
+                "output": 299,
+                "total": 1194,
+                "visibleOutput": 299,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    },
+    {
+      "incidentId": "inc-010",
+      "mode": "single-agent",
+      "status": "failed",
+      "artifact": "runs/inc-010.single-agent.json",
+      "report": {
+        "incidentId": "inc-010",
+        "outcome": "inconclusive",
+        "summary": "Two users reported failed exports around 10:00 UTC. The failures could not be reproduced immediately.",
+        "hypotheses": [
+          {
+            "id": "hyp-1",
+            "causeClass": "dependency_degradation",
+            "component": "export-store",
+            "explanation": "Downstream dependency degradation or slowness caused the request deadline to be reached on export-api.",
+            "support": [
+              "ev-010-001"
+            ],
+            "contradictions": [],
+            "confidence": "low",
+            "rationale": "Logs show request timeout with downstream span not recorded, pointing to potential dependency issues.",
+            "assumptions": [
+              "Export store is experiencing slowness"
+            ],
+            "unknowns": [
+              "Exact response times and errors from export-store"
+            ]
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "export-api logged POST /export status=504 request deadline reached; downstream span not recorded",
+            "evidenceIds": [
+              "ev-010-001"
+            ]
+          },
+          {
+            "statement": "export-api trace exporter dropped batch; no sampled child spans available for export requests",
+            "evidenceIds": [
+              "ev-010-002"
+            ]
+          },
+          {
+            "statement": "export-api depends on export-store and object-storage",
+            "evidenceIds": [
+              "ev-010-004",
+              "ev-010-005"
+            ]
+          }
+        ],
+        "assumptions": [
+          "Downstream dependencies caused latency leading to timeouts"
+        ],
+        "unknowns": [
+          "Exact health and performance metrics of export-store and object-storage during the incident window"
+        ],
+        "actions": [],
+        "limitations": [
+          "Reporting unavailable; report assembled deterministically from validated state.",
+          "A decision-making agent or the run failed; the investigation is incomplete.",
+          "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+          "Exact health and performance metrics of export-store and object-storage during the incident window",
+          "Investigator: Gemini HTTP 503. Provider request failed; check service availability."
+        ],
+        "failures": [
+          {
+            "scope": "agent",
+            "name": "Investigator",
+            "message": "Gemini HTTP 503. Provider request failed; check service availability.",
+            "retryable": false
+          }
+        ],
+        "stopReason": "General investigator failed.",
+        "stats": {
+          "toolAttempts": 6,
+          "modelAttempts": 12,
+          "elapsedMs": 63366.787625,
+          "usage": {
+            "input": 26448,
+            "output": 1873,
+            "total": 28321,
+            "visibleOutput": 1873,
+            "thinking": null,
+            "cacheRead": 2008,
+            "toolUsePrompt": null,
+            "availability": "partial"
+          }
+        }
+      },
+      "error": null,
+      "judge": {
+        "status": "completed",
+        "batches": [
+          {
+            "verdicts": [
+              {
+                "id": "fact-0-0",
+                "verdict": "supported",
+                "reason": "The log message in ev-010-001 matches the factual claim exactly."
+              },
+              {
+                "id": "fact-1-0",
+                "verdict": "supported",
+                "reason": "The log message in ev-010-002 matches the factual claim exactly."
+              },
+              {
+                "id": "fact-2-0",
+                "verdict": "supported",
+                "reason": "The dependency records in ev-010-004 and ev-010-005 show export-api depends on export-store and object-storage."
+              },
+              {
+                "id": "hypothesis-0-0",
+                "verdict": "unsupported",
+                "reason": "Timing or historical similarity alone does not prove a cause, and the evidence only states the deadline was reached without recording a downstream span."
+              }
+            ],
+            "stats": {
+              "toolAttempts": 0,
+              "modelAttempts": 1,
+              "elapsedMs": 2828.934583000024,
+              "usage": {
+                "input": 673,
+                "output": 171,
+                "total": 844,
+                "visibleOutput": 171,
+                "thinking": null,
+                "cacheRead": null,
+                "toolUsePrompt": null,
+                "availability": "complete"
+              }
+            },
+            "error": null
+          }
+        ],
+        "inFlight": []
+      }
+    }
+  ],
+  "aggregate": {
+    "multi-agent": {
+      "planned": 10,
+      "reports": 10,
+      "statuses": {
+        "pending": 0,
+        "running": 0,
+        "completed": 10,
+        "failed": 0,
+        "interrupted": 0,
+        "quota_blocked": 0
+      },
+      "rootCause": {
+        "correct": 5,
+        "denominator": 9
+      },
+      "topPair": {
+        "matched": 7,
+        "denominator": 9
+      },
+      "correctInconclusive": {
+        "correct": 1,
+        "denominator": 1
+      },
+      "conclusionCoverage": {
+        "concluded": 6,
+        "denominator": 10
+      },
+      "conclusionPrecision": {
+        "correct": 5,
+        "denominator": 6
+      },
+      "grounding": {
+        "supported": 41,
+        "denominator": 46,
+        "macroRate": 0.9066666666666666,
+        "selectedClaims": 46,
+        "judgeFailed": 0
+      },
+      "investigator": {
+        "modelAttemptsKnown": 129,
+        "toolAttemptsKnown": 45,
+        "latencyMsKnown": 632381.4254170001,
+        "observedRuns": 10,
+        "missingRuns": 0,
+        "usage": {
+          "input": 229647,
+          "output": 22590,
+          "total": 252237,
+          "visibleOutput": 20864,
+          "thinking": 1726,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "partial"
+        }
+      },
+      "judge": {
+        "modelAttemptsKnown": 11,
+        "latencyMsKnown": 48590.33716400006,
+        "interruptedBatches": 0,
+        "usage": {
+          "input": 9060,
+          "output": 2182,
+          "total": 11242,
+          "visibleOutput": 2182,
+          "thinking": null,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "partial"
+        }
+      },
+      "citations": {
+        "valid": 65,
+        "denominator": 65,
+        "macroRate": 1
+      },
+      "perCase": [
+        {
+          "key": "inc-001.multi-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": false,
+            "correctInconclusive": false,
+            "concluded": false,
+            "available": true
+          },
+          "citations": {
+            "valid": 3,
+            "denominator": 3,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 3,
+            "denominator": 3,
+            "supported": 3,
+            "rate": 1,
+            "judged": 3,
+            "contradicted": 0,
+            "unsupported": 0,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-002.multi-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": false,
+            "correctCause": false,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 7,
+            "denominator": 7,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 4,
+            "denominator": 4,
+            "supported": 4,
+            "rate": 1,
+            "judged": 4,
+            "contradicted": 0,
+            "unsupported": 0,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-003.multi-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": true,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 6,
+            "denominator": 6,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 5,
+            "denominator": 5,
+            "supported": 5,
+            "rate": 1,
+            "judged": 5,
+            "contradicted": 0,
+            "unsupported": 0,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-004.multi-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": true,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 7,
+            "denominator": 7,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 5,
+            "denominator": 5,
+            "supported": 4,
+            "rate": 0.8,
+            "judged": 5,
+            "contradicted": 0,
+            "unsupported": 1,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-005.multi-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": true,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 11,
+            "denominator": 11,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 5,
+            "denominator": 5,
+            "supported": 4,
+            "rate": 0.8,
+            "judged": 5,
+            "contradicted": 0,
+            "unsupported": 1,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-006.multi-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": true,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 7,
+            "denominator": 7,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 5,
+            "denominator": 5,
+            "supported": 4,
+            "rate": 0.8,
+            "judged": 5,
+            "contradicted": 0,
+            "unsupported": 1,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-007.multi-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": false,
+            "correctCause": false,
+            "correctInconclusive": false,
+            "concluded": false,
+            "available": true
+          },
+          "citations": {
+            "valid": 6,
+            "denominator": 6,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 4,
+            "denominator": 4,
+            "supported": 4,
+            "rate": 1,
+            "judged": 4,
+            "contradicted": 0,
+            "unsupported": 0,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-008.multi-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": false,
+            "correctInconclusive": false,
+            "concluded": false,
+            "available": true
+          },
+          "citations": {
+            "valid": 4,
+            "denominator": 4,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 4,
+            "denominator": 4,
+            "supported": 4,
+            "rate": 1,
+            "judged": 4,
+            "contradicted": 0,
+            "unsupported": 0,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-009.multi-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": true,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 7,
+            "denominator": 7,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 6,
+            "denominator": 6,
+            "supported": 4,
+            "rate": 0.6666666666666666,
+            "judged": 6,
+            "contradicted": 0,
+            "unsupported": 2,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-010.multi-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": true,
+            "topPairMatch": false,
+            "correctCause": false,
+            "correctInconclusive": true,
+            "concluded": false,
+            "available": true
+          },
+          "citations": {
+            "valid": 7,
+            "denominator": 7,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 5,
+            "denominator": 5,
+            "supported": 5,
+            "rate": 1,
+            "judged": 5,
+            "contradicted": 0,
+            "unsupported": 0,
+            "judgeFailed": 0
+          }
+        }
+      ]
+    },
+    "single-agent": {
+      "planned": 10,
+      "reports": 10,
+      "statuses": {
+        "pending": 0,
+        "running": 0,
+        "completed": 9,
+        "failed": 1,
+        "interrupted": 0,
+        "quota_blocked": 0
+      },
+      "rootCause": {
+        "correct": 8,
+        "denominator": 9
+      },
+      "topPair": {
+        "matched": 8,
+        "denominator": 9
+      },
+      "correctInconclusive": {
+        "correct": 0,
+        "denominator": 1
+      },
+      "conclusionCoverage": {
+        "concluded": 8,
+        "denominator": 10
+      },
+      "conclusionPrecision": {
+        "correct": 8,
+        "denominator": 8
+      },
+      "grounding": {
+        "supported": 30,
+        "denominator": 42,
+        "macroRate": 0.7133333333333333,
+        "selectedClaims": 42,
+        "judgeFailed": 0
+      },
+      "investigator": {
+        "modelAttemptsKnown": 55,
+        "toolAttemptsKnown": 41,
+        "latencyMsKnown": 304047.900624,
+        "observedRuns": 10,
+        "missingRuns": 0,
+        "usage": {
+          "input": 149254,
+          "output": 12905,
+          "total": 162159,
+          "visibleOutput": 12905,
+          "thinking": null,
+          "cacheRead": 2008,
+          "toolUsePrompt": null,
+          "availability": "partial"
+        }
+      },
+      "judge": {
+        "modelAttemptsKnown": 10,
+        "latencyMsKnown": 39548.09458399989,
+        "interruptedBatches": 0,
+        "usage": {
+          "input": 8581,
+          "output": 2071,
+          "total": 10652,
+          "visibleOutput": 2071,
+          "thinking": null,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "complete"
+        }
+      },
+      "citations": {
+        "valid": 62,
+        "denominator": 62,
+        "macroRate": 1
+      },
+      "perCase": [
+        {
+          "key": "inc-001.single-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": true,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 6,
+            "denominator": 6,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 4,
+            "denominator": 4,
+            "supported": 3,
+            "rate": 0.75,
+            "judged": 4,
+            "contradicted": 0,
+            "unsupported": 1,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-002.single-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": true,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 7,
+            "denominator": 7,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 4,
+            "denominator": 4,
+            "supported": 2,
+            "rate": 0.5,
+            "judged": 4,
+            "contradicted": 0,
+            "unsupported": 2,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-003.single-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": true,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 8,
+            "denominator": 8,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 5,
+            "denominator": 5,
+            "supported": 4,
+            "rate": 0.8,
+            "judged": 5,
+            "contradicted": 0,
+            "unsupported": 1,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-004.single-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": true,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 8,
+            "denominator": 8,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 5,
+            "denominator": 5,
+            "supported": 5,
+            "rate": 1,
+            "judged": 5,
+            "contradicted": 0,
+            "unsupported": 0,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-005.single-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": true,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 9,
+            "denominator": 9,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 6,
+            "denominator": 6,
+            "supported": 5,
+            "rate": 0.8333333333333334,
+            "judged": 6,
+            "contradicted": 0,
+            "unsupported": 1,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-006.single-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": true,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 6,
+            "denominator": 6,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 4,
+            "denominator": 4,
+            "supported": 2,
+            "rate": 0.5,
+            "judged": 4,
+            "contradicted": 0,
+            "unsupported": 2,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-007.single-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": false,
+            "correctCause": false,
+            "correctInconclusive": false,
+            "concluded": false,
+            "available": true
+          },
+          "citations": {
+            "valid": 2,
+            "denominator": 2,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 2,
+            "denominator": 2,
+            "supported": 2,
+            "rate": 1,
+            "judged": 2,
+            "contradicted": 0,
+            "unsupported": 0,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-008.single-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": true,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 6,
+            "denominator": 6,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 4,
+            "denominator": 4,
+            "supported": 2,
+            "rate": 0.5,
+            "judged": 4,
+            "contradicted": 0,
+            "unsupported": 2,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-009.single-agent",
+          "accuracy": {
+            "executionComplete": true,
+            "expectedInconclusive": false,
+            "topPairMatch": true,
+            "correctCause": true,
+            "correctInconclusive": false,
+            "concluded": true,
+            "available": true
+          },
+          "citations": {
+            "valid": 5,
+            "denominator": 5,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 4,
+            "denominator": 4,
+            "supported": 2,
+            "rate": 0.5,
+            "judged": 4,
+            "contradicted": 0,
+            "unsupported": 2,
+            "judgeFailed": 0
+          }
+        },
+        {
+          "key": "inc-010.single-agent",
+          "accuracy": {
+            "executionComplete": false,
+            "expectedInconclusive": true,
+            "topPairMatch": false,
+            "correctCause": false,
+            "correctInconclusive": false,
+            "concluded": false,
+            "available": true
+          },
+          "citations": {
+            "valid": 5,
+            "denominator": 5,
+            "rate": 1
+          },
+          "grounding": {
+            "selectedClaims": 4,
+            "denominator": 4,
+            "supported": 3,
+            "rate": 0.75,
+            "judged": 4,
+            "contradicted": 0,
+            "unsupported": 1,
+            "judgeFailed": 0
+          }
+        }
+      ]
+    }
+  },
+  "pauses": [
+    {
+      "before": "inc-002.single-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1003.4300420000072,
+      "completed": true
+    },
+    {
+      "before": "inc-001.single-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1001.3719579999961,
+      "completed": true
+    },
+    {
+      "before": "inc-003.multi-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1000.8320410000015,
+      "completed": true
+    },
+    {
+      "before": "inc-003.single-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1001.0840000000026,
+      "completed": true
+    },
+    {
+      "before": "inc-004.multi-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1001.5356670000183,
+      "completed": true
+    },
+    {
+      "before": "inc-004.single-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1001.183457999985,
+      "completed": true
+    },
+    {
+      "before": "inc-005.multi-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1001.756875000021,
+      "completed": true
+    },
+    {
+      "before": "inc-005.single-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1002.0660829999833,
+      "completed": true
+    },
+    {
+      "before": "inc-006.multi-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1001.3294579999638,
+      "completed": true
+    },
+    {
+      "before": "inc-006.single-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1000.2554169999785,
+      "completed": true
+    },
+    {
+      "before": "inc-007.multi-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1001.2622909999918,
+      "completed": true
+    },
+    {
+      "before": "inc-007.single-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1001.53041700006,
+      "completed": true
+    },
+    {
+      "before": "inc-008.multi-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1001.6097500000615,
+      "completed": true
+    },
+    {
+      "before": "inc-008.single-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1001.8661249999423,
+      "completed": true
+    },
+    {
+      "before": "inc-009.multi-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1001.138709000079,
+      "completed": true
+    },
+    {
+      "before": "inc-009.single-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1000.674958000076,
+      "completed": true
+    },
+    {
+      "before": "inc-010.multi-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1001.6113340000156,
+      "completed": true
+    },
+    {
+      "before": "inc-010.single-agent",
+      "requestedMs": 1000,
+      "elapsedMs": 1001.1665420000209,
+      "completed": true
+    }
+  ]
+}

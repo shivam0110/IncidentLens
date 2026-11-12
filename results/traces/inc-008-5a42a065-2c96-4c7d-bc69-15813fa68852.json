@@ -1,0 +1,862 @@
+{
+  "runId": "5a42a065-2c96-4c7d-bc69-15813fa68852",
+  "createdAt": "2026-11-12T10:53:06.390Z",
+  "mode": "multi-agent",
+  "provider": "gemini-developer-api",
+  "configuration": {
+    "model": "gemini-3.5-flash-lite",
+    "thinkingLevel": "low",
+    "limits": {
+      "maxOutputTokens": 2048,
+      "maxRunTokens": 64000,
+      "maxRounds": 2,
+      "maxModelAttempts": 20,
+      "maxToolAttempts": 20,
+      "deadlineMs": 120000,
+      "requestTimeoutMs": 20000,
+      "reportReserveMs": 25000,
+      "reportReserveTokens": 12288,
+      "reportReserveModelAttempts": 3,
+      "modelIntervalMs": 4500,
+      "retryDelayMs": 1000,
+      "recursionLimit": 11
+    },
+    "sampling": "provider defaults",
+    "tier": "free; operator-recorded policy: AI Studio free tier verified 2026-11-12: 15 RPM, 250000 input TPM, 500 RPD, midnight Pacific reset; 3 daily requests displayed before testing, UI may lag 15 min. Synthetic assignment data only; no billing changes or paid fallback.",
+    "inputReservation": "UTF-8 prompt/schema bytes divided by three; estimate, not provider tokenization"
+  },
+  "state": {
+    "incident": {
+      "id": "inc-008",
+      "title": "Search requests returning server errors",
+      "description": "Some text searches return HTTP 500. The error rate increased shortly after 10:00 UTC.",
+      "service": "search-api",
+      "start": "2026-10-08T09:50:00Z",
+      "end": "2026-10-08T10:15:00Z",
+      "reportedAt": "2026-10-08T10:05:00Z"
+    },
+    "round": 1,
+    "plan": {
+      "questions": [
+        "What are the error logs and stack traces for search-api around 10:00 UTC?",
+        "Which downstream dependencies or databases are called by search-api during text searches?"
+      ],
+      "tasks": [
+        {
+          "id": "t1",
+          "role": "Observability",
+          "question": "What are the error logs and stack traces for search-api around 10:00 UTC?",
+          "dependsOn": [],
+          "status": "pending"
+        },
+        {
+          "id": "t2",
+          "role": "Dependency",
+          "question": "Which downstream dependencies or databases are called by search-api during text searches?",
+          "dependsOn": [],
+          "status": "pending"
+        }
+      ],
+      "rationale": "Initial investigation requires gathering error logs from the search-api service to identify the root cause of HTTP 500 errors and checking downstream dependencies to see if a dependent service failure contributed to the spike starting at 10:00 UTC."
+    },
+    "tasks": [
+      {
+        "id": "t1",
+        "role": "Observability",
+        "question": "What are the error logs and stack traces for search-api around 10:00 UTC?",
+        "dependsOn": [],
+        "status": "completed"
+      },
+      {
+        "id": "t2",
+        "role": "Dependency",
+        "question": "Which downstream dependencies or databases are called by search-api during text searches?",
+        "dependsOn": [],
+        "status": "completed"
+      }
+    ],
+    "evidence": {
+      "ev-008-003": {
+        "id": "ev-008-003",
+        "timestamp": "2026-10-08T10:01:00Z",
+        "service": "search-api",
+        "source": "logs",
+        "raw": {
+          "severity": "error",
+          "message": "query=\"red shoes\" serializer=v3 status=500 SyntaxError: unexpected token AND in query parser",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-008-010": {
+        "id": "ev-008-010",
+        "timestamp": "2026-10-08T00:00:00Z",
+        "service": "search-api",
+        "source": "dependencies",
+        "raw": {
+          "dependency": "search-index",
+          "relationship": "synchronous",
+          "critical": true,
+          "validUntil": null
+        }
+      },
+      "ev-008-001": {
+        "id": "ev-008-001",
+        "timestamp": "2026-10-08T09:55:00Z",
+        "service": "search-api",
+        "source": "logs",
+        "raw": {
+          "severity": "info",
+          "message": "query=\"red shoes\" serializer=v2 status=200",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-008-004": {
+        "id": "ev-008-004",
+        "timestamp": "2026-10-08T10:02:00Z",
+        "service": "search-api",
+        "source": "logs",
+        "raw": {
+          "severity": "warn",
+          "message": "cache miss for query=\"red shoes\"",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-008-009": {
+        "id": "ev-008-009",
+        "timestamp": "2026-10-08T10:10:00Z",
+        "service": "search-api",
+        "source": "logs",
+        "raw": {
+          "severity": "info",
+          "message": "query=\"red shoes\" serializer=v2 status=200",
+          "region": "eu-west",
+          "traceId": null
+        }
+      }
+    },
+    "findings": [
+      {
+        "statement": "At 2026-10-08T10:01:00Z, search-api logged an error with status 500 and a SyntaxError ('unexpected token AND in query parser') when processing query=\"red shoes\" with serializer=v3.",
+        "evidenceIds": [
+          "ev-008-003"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      },
+      {
+        "statement": "search-api has a synchronous and critical downstream dependency on search-index during the incident timeframe.",
+        "evidenceIds": [
+          "ev-008-010"
+        ],
+        "contradictions": [],
+        "taskId": "t2",
+        "role": "Dependency"
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "h1",
+        "causeClass": "software_regression",
+        "component": "search-api",
+        "explanation": "A syntax error occurred in the query parser when processing requests using serializer=v3, leading to HTTP 500 errors.",
+        "support": [
+          "ev-008-003"
+        ],
+        "contradictions": [],
+        "confidence": "high",
+        "rationale": "Logs directly show a SyntaxError from the query parser when using serializer=v3.",
+        "assumptions": [
+          "Serializer v3 was recently introduced or enabled for queries."
+        ],
+        "unknowns": [
+          "Full scope of affected queries using serializer=v3."
+        ]
+      }
+    ],
+    "assumptions": [
+      "Serializer v3 introduced a change in query parsing logic."
+    ],
+    "unknowns": [
+      "query_logs: source data unavailable on attempt 1.",
+      "Exact deployment time of serializer=v3."
+    ],
+    "critic": {
+      "recommendation": "stop",
+      "rationale": "Evidence clearly points to a software regression in search-api involving query parser syntax errors with serializer=v3. No further queries are needed.",
+      "requests": []
+    },
+    "errors": [
+      {
+        "scope": "tool",
+        "name": "query_logs",
+        "message": "Source request timed out.",
+        "retryable": true
+      }
+    ],
+    "events": [
+      {
+        "sequence": 1,
+        "elapsedMs": 2.635041000088677,
+        "type": "round",
+        "role": null,
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Evidence round 1.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 2,
+        "elapsedMs": 2.6665000000502914,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Orchestrator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 3,
+        "elapsedMs": 3467.858125000028,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Orchestrator completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 4,
+        "elapsedMs": 3468.0282080000034,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "pending",
+        "round": 1,
+        "message": "What are the error logs and stack traces for search-api around 10:00 UTC?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 5,
+        "elapsedMs": 3468.0979580000276,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "pending",
+        "round": 1,
+        "message": "Which downstream dependencies or databases are called by search-api during text searches?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 6,
+        "elapsedMs": 3471.753708000062,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "What are the error logs and stack traces for search-api around 10:00 UTC?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 7,
+        "elapsedMs": 3471.850582999992,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Observability started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 8,
+        "elapsedMs": 3472.672375000082,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Which downstream dependencies or databases are called by search-api during text searches?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 9,
+        "elapsedMs": 3472.730000000098,
+        "type": "role",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Dependency started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 10,
+        "elapsedMs": 9024.152708000038,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 11,
+        "elapsedMs": 9026.255958000082,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "failed",
+        "round": 1,
+        "message": "query_logs: error (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 12,
+        "elapsedMs": 9026.39312500006,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 13,
+        "elapsedMs": 9026.666708000004,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (1 records).",
+        "evidenceIds": [
+          "ev-008-003"
+        ]
+      },
+      {
+        "sequence": 14,
+        "elapsedMs": 9026.689916000003,
+        "type": "evidence",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-008-003"
+        ]
+      },
+      {
+        "sequence": 15,
+        "elapsedMs": 11910.593083000043,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_dependencies",
+        "status": "running",
+        "round": 1,
+        "message": "query_dependencies started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 16,
+        "elapsedMs": 11911.255416000029,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_dependencies",
+        "status": "completed",
+        "round": 1,
+        "message": "query_dependencies: ok (1 records).",
+        "evidenceIds": [
+          "ev-008-010"
+        ]
+      },
+      {
+        "sequence": 17,
+        "elapsedMs": 11911.278875000076,
+        "type": "evidence",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_dependencies",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-008-010"
+        ]
+      },
+      {
+        "sequence": 18,
+        "elapsedMs": 18538.365749999997,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 19,
+        "elapsedMs": 18538.849958000006,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (4 records).",
+        "evidenceIds": [
+          "ev-008-001",
+          "ev-008-003",
+          "ev-008-004",
+          "ev-008-009"
+        ]
+      },
+      {
+        "sequence": 20,
+        "elapsedMs": 18538.873750000028,
+        "type": "evidence",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-008-001",
+          "ev-008-003",
+          "ev-008-004",
+          "ev-008-009"
+        ]
+      },
+      {
+        "sequence": 21,
+        "elapsedMs": 30295.686041000066,
+        "type": "role",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Dependency completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 22,
+        "elapsedMs": 41075.003000000026,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Observability completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 23,
+        "elapsedMs": 41075.2705000001,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "t1 completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 24,
+        "elapsedMs": 41075.29591600003,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "t2 completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 25,
+        "elapsedMs": 41077.71212500008,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Reasoning started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 26,
+        "elapsedMs": 43471.27162500005,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Reasoning completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 27,
+        "elapsedMs": 43473.254125000094,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Critic started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 28,
+        "elapsedMs": 48283.63929100009,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Critic completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 29,
+        "elapsedMs": 48285.16179100005,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Reporting started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 30,
+        "elapsedMs": 53227.461458000005,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Reporting completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 31,
+        "elapsedMs": 53228.25783300004,
+        "type": "complete",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Investigation inconclusive: Evidence clearly points to a software regression in search-api involving query parser syntax errors with serializer=v3. No further queries are needed.",
+        "evidenceIds": []
+      }
+    ],
+    "stats": {
+      "toolAttempts": 4,
+      "modelAttempts": 11,
+      "elapsedMs": 53230.42391600006,
+      "usage": {
+        "input": 20773,
+        "output": 1822,
+        "total": 22595,
+        "visibleOutput": 1638,
+        "thinking": 184,
+        "cacheRead": null,
+        "toolUsePrompt": null,
+        "availability": "complete"
+      }
+    },
+    "stopReason": "Evidence clearly points to a software regression in search-api involving query parser syntax errors with serializer=v3. No further queries are needed.",
+    "report": {
+      "incidentId": "inc-008",
+      "outcome": "inconclusive",
+      "summary": "Search requests to search-api returned HTTP 500 errors due to a query parser SyntaxError when using serializer=v3. However, the leading hypothesis lacks two distinct primary support records.",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "causeClass": "software_regression",
+          "component": "search-api",
+          "explanation": "A syntax error occurred in the query parser when processing requests using serializer=v3, leading to HTTP 500 errors.",
+          "support": [
+            "ev-008-003"
+          ],
+          "contradictions": [],
+          "confidence": "medium",
+          "rationale": "Logs directly show a SyntaxError from the query parser when using serializer=v3.",
+          "assumptions": [
+            "Serializer v3 was recently introduced or enabled for queries."
+          ],
+          "unknowns": [
+            "Full scope of affected queries using serializer=v3."
+          ]
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "At 2026-10-08T10:01:00Z, search-api logged an error with status 500 and a SyntaxError when processing query=\"red shoes\" with serializer=v3.",
+          "evidenceIds": [
+            "ev-008-003"
+          ]
+        },
+        {
+          "statement": "search-api has a synchronous and critical downstream dependency on search-index.",
+          "evidenceIds": [
+            "ev-008-010"
+          ]
+        }
+      ],
+      "assumptions": [
+        "Serializer v3 introduced a change in query parsing logic."
+      ],
+      "unknowns": [
+        "query_logs: source data unavailable on attempt 1.",
+        "Exact deployment time of serializer=v3."
+      ],
+      "actions": [
+        {
+          "action": "Inspect deployment history for search-api to determine when serializer=v3 was introduced.",
+          "evidenceIds": [
+            "ev-008-003"
+          ],
+          "rationale": "Confirms whether a recent code change or configuration caused the query parser syntax error."
+        }
+      ],
+      "limitations": [
+        "Leading hypothesis lacks two distinct primary support records.",
+        "query_logs: source data unavailable on attempt 1.",
+        "Exact deployment time of serializer=v3.",
+        "query_logs: Source request timed out."
+      ],
+      "failures": [
+        {
+          "scope": "tool",
+          "name": "query_logs",
+          "message": "Source request timed out.",
+          "retryable": true
+        }
+      ],
+      "stopReason": "Evidence clearly points to a software regression in search-api involving query parser syntax errors with serializer=v3. No further queries are needed.",
+      "stats": {
+        "toolAttempts": 4,
+        "modelAttempts": 11,
+        "elapsedMs": 53230.42391600006,
+        "usage": {
+          "input": 20773,
+          "output": 1822,
+          "total": 22595,
+          "visibleOutput": 1638,
+          "thinking": 184,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "complete"
+        }
+      }
+    }
+  },
+  "toolHistory": [
+    {
+      "tool": "query_logs",
+      "args": {
+        "severity": "error",
+        "start": "2026-10-08T09:50:00Z",
+        "limit": 50,
+        "service": "search-api",
+        "end": "2026-10-08T10:15:00Z"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_logs",
+        "status": "error",
+        "evidence": [],
+        "completeness": "unavailable",
+        "matched": null,
+        "warnings": [],
+        "error": {
+          "code": "timeout",
+          "message": "Source request timed out.",
+          "retryable": true
+        }
+      }
+    },
+    {
+      "tool": "query_logs",
+      "args": {
+        "severity": "error",
+        "start": "2026-10-08T09:50:00Z",
+        "limit": 50,
+        "service": "search-api",
+        "end": "2026-10-08T10:15:00Z"
+      },
+      "attempt": 2,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-008-003",
+            "timestamp": "2026-10-08T10:01:00Z",
+            "service": "search-api",
+            "source": "logs",
+            "raw": {
+              "severity": "error",
+              "message": "query=\"red shoes\" serializer=v3 status=500 SyntaxError: unexpected token AND in query parser",
+              "region": "eu-west",
+              "traceId": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 1,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_dependencies",
+      "args": {
+        "limit": 50,
+        "direction": "downstream",
+        "at": "2026-10-08T10:00:00Z",
+        "service": "search-api"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_dependencies",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-008-010",
+            "timestamp": "2026-10-08T00:00:00Z",
+            "service": "search-api",
+            "source": "dependencies",
+            "raw": {
+              "dependency": "search-index",
+              "relationship": "synchronous",
+              "critical": true,
+              "validUntil": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 1,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_logs",
+      "args": {
+        "service": "search-api",
+        "start": "2026-10-08T09:50:00Z",
+        "end": "2026-10-08T10:15:00Z",
+        "limit": 50
+      },
+      "attempt": 3,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-008-001",
+            "timestamp": "2026-10-08T09:55:00Z",
+            "service": "search-api",
+            "source": "logs",
+            "raw": {
+              "severity": "info",
+              "message": "query=\"red shoes\" serializer=v2 status=200",
+              "region": "eu-west",
+              "traceId": null
+            }
+          },
+          {
+            "id": "ev-008-003",
+            "timestamp": "2026-10-08T10:01:00Z",
+            "service": "search-api",
+            "source": "logs",
+            "raw": {
+              "severity": "error",
+              "message": "query=\"red shoes\" serializer=v3 status=500 SyntaxError: unexpected token AND in query parser",
+              "region": "eu-west",
+              "traceId": null
+            }
+          },
+          {
+            "id": "ev-008-004",
+            "timestamp": "2026-10-08T10:02:00Z",
+            "service": "search-api",
+            "source": "logs",
+            "raw": {
+              "severity": "warn",
+              "message": "cache miss for query=\"red shoes\"",
+              "region": "eu-west",
+              "traceId": null
+            }
+          },
+          {
+            "id": "ev-008-009",
+            "timestamp": "2026-10-08T10:10:00Z",
+            "service": "search-api",
+            "source": "logs",
+            "raw": {
+              "severity": "info",
+              "message": "query=\"red shoes\" serializer=v2 status=200",
+              "region": "eu-west",
+              "traceId": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 4,
+        "warnings": [],
+        "error": null
+      }
+    }
+  ],
+  "failureSchedule": {
+    "toolFailures": [
+      {
+        "tool": "query_logs",
+        "mode": "first_timeout"
+      }
+    ],
+    "agentFailures": []
+  }
+}

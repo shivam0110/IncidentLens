@@ -1,0 +1,749 @@
+{
+  "runId": "84a54a06-5a7d-4995-b650-0bbd89ce3bd7",
+  "createdAt": "2026-11-12T10:49:23.297Z",
+  "mode": "multi-agent",
+  "provider": "gemini-developer-api",
+  "configuration": {
+    "model": "gemini-3.5-flash-lite",
+    "thinkingLevel": "low",
+    "limits": {
+      "maxOutputTokens": 2048,
+      "maxRunTokens": 64000,
+      "maxRounds": 2,
+      "maxModelAttempts": 20,
+      "maxToolAttempts": 20,
+      "deadlineMs": 120000,
+      "requestTimeoutMs": 20000,
+      "reportReserveMs": 25000,
+      "reportReserveTokens": 12288,
+      "reportReserveModelAttempts": 3,
+      "modelIntervalMs": 4500,
+      "retryDelayMs": 1000,
+      "recursionLimit": 11
+    },
+    "sampling": "provider defaults",
+    "tier": "free; operator-recorded policy: AI Studio free tier verified 2026-11-12: 15 RPM, 250000 input TPM, 500 RPD, midnight Pacific reset; 3 daily requests displayed before testing, UI may lag 15 min. Synthetic assignment data only; no billing changes or paid fallback.",
+    "inputReservation": "UTF-8 prompt/schema bytes divided by three; estimate, not provider tokenization"
+  },
+  "state": {
+    "incident": {
+      "id": "inc-006",
+      "title": "Some users cannot load profiles",
+      "description": "Support reports repeated profile failures for some users, while the main availability dashboard remains green.",
+      "service": "profile-api",
+      "start": "2026-10-06T09:50:00Z",
+      "end": "2026-10-06T10:15:00Z",
+      "reportedAt": "2026-10-06T10:05:00Z"
+    },
+    "round": 1,
+    "plan": {
+      "questions": [
+        "Are there any error logs or increased latency in the profile-api service during the incident window?"
+      ],
+      "tasks": [
+        {
+          "id": "t1",
+          "role": "Observability",
+          "question": "Query error logs and metrics for profile-api between 2026-10-06T09:50:00Z and 2026-10-06T10:15:00Z.",
+          "dependsOn": [],
+          "status": "pending"
+        }
+      ],
+      "rationale": "Initial investigation requires checking service-level logs and metrics for profile-api to determine the scope and nature of the profile loading failures."
+    },
+    "tasks": [
+      {
+        "id": "t1",
+        "role": "Observability",
+        "question": "Query error logs and metrics for profile-api between 2026-10-06T09:50:00Z and 2026-10-06T10:15:00Z.",
+        "dependsOn": [],
+        "status": "completed"
+      }
+    ],
+    "evidence": {
+      "ev-006-005": {
+        "id": "ev-006-005",
+        "timestamp": "2026-10-06T10:01:00Z",
+        "service": "profile-api",
+        "source": "logs",
+        "raw": {
+          "severity": "error",
+          "message": "GET /profile status=503 resolver=eu-west-dns host=profile-store.internal error=SERVFAIL",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-006-006": {
+        "id": "ev-006-006",
+        "timestamp": "2026-10-06T10:01:00Z",
+        "service": "profile-api",
+        "source": "logs",
+        "raw": {
+          "severity": "info",
+          "message": "GET /profile status=200 host=profile-store.internal",
+          "region": "us-east",
+          "traceId": null
+        }
+      },
+      "ev-006-001": {
+        "id": "ev-006-001",
+        "timestamp": "2026-10-06T10:02:00Z",
+        "service": "profile-api",
+        "source": "metrics",
+        "raw": {
+          "metric": "error_rate",
+          "value": 0.8,
+          "unit": "percent",
+          "region": "global",
+          "windowSeconds": 60
+        }
+      },
+      "ev-006-002": {
+        "id": "ev-006-002",
+        "timestamp": "2026-10-06T10:02:00Z",
+        "service": "profile-api",
+        "source": "metrics",
+        "raw": {
+          "metric": "error_rate",
+          "value": 72,
+          "unit": "percent",
+          "region": "eu-west",
+          "windowSeconds": 60
+        }
+      },
+      "ev-006-003": {
+        "id": "ev-006-003",
+        "timestamp": "2026-10-06T10:02:00Z",
+        "service": "profile-api",
+        "source": "metrics",
+        "raw": {
+          "metric": "error_rate",
+          "value": 0.1,
+          "unit": "percent",
+          "region": "us-east",
+          "windowSeconds": 60
+        }
+      },
+      "ev-006-004": {
+        "id": "ev-006-004",
+        "timestamp": "2026-10-06T10:02:00Z",
+        "service": "profile-api",
+        "source": "metrics",
+        "raw": {
+          "metric": "request_share",
+          "value": 1,
+          "unit": "percent",
+          "region": "eu-west",
+          "windowSeconds": 60
+        }
+      },
+      "ev-006-009": {
+        "id": "ev-006-009",
+        "timestamp": "2026-10-06T10:03:00Z",
+        "service": "profile-api",
+        "source": "metrics",
+        "raw": {
+          "metric": "cpu_utilization",
+          "value": 22,
+          "unit": "percent",
+          "region": "eu-west",
+          "windowSeconds": 60
+        }
+      }
+    },
+    "findings": [
+      {
+        "statement": "Profile-api experienced a high error rate of 72% in the eu-west region at 2026-10-06T10:02:00Z.",
+        "evidenceIds": [
+          "ev-006-002"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      },
+      {
+        "statement": "Error logs show GET /profile returning 503 status due to SERVFAIL resolving profile-store.internal via eu-west-dns.",
+        "evidenceIds": [
+          "ev-006-005"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      },
+      {
+        "statement": "The us-east region remains healthy with an error rate of 0.1% and successful requests.",
+        "evidenceIds": [
+          "ev-006-003",
+          "ev-006-006"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "h1",
+        "causeClass": "network",
+        "component": "eu-west-dns",
+        "explanation": "DNS resolution failures (SERVFAIL) when resolving profile-store.internal via eu-west-dns caused requests to fail in the eu-west region.",
+        "support": [
+          "ev-006-005",
+          "ev-006-002"
+        ],
+        "contradictions": [],
+        "confidence": "high",
+        "rationale": "Logs explicitly show SERVFAIL from eu-west-dns affecting profile-store.internal resolution, directly correlating with the 72 percent error rate spike in eu-west.",
+        "assumptions": [
+          "eu-west-dns is responsible for internal hostname resolution in the eu-west region."
+        ],
+        "unknowns": [
+          "Exact root cause of the DNS SERVFAIL response."
+        ]
+      }
+    ],
+    "assumptions": [
+      "eu-west-dns is the primary DNS resolver for the eu-west region."
+    ],
+    "unknowns": [
+      "Whether the DNS failure originated in the DNS infrastructure or downstream network routing."
+    ],
+    "critic": {
+      "recommendation": "stop",
+      "rationale": "Evidence definitively points to eu-west-dns causing DNS resolution failures (SERVFAIL) for profile-store.internal in the eu-west region, which matches the network cause class and explains the localized errors.",
+      "requests": []
+    },
+    "errors": [],
+    "events": [
+      {
+        "sequence": 1,
+        "elapsedMs": 2.3176250000251457,
+        "type": "round",
+        "role": null,
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Evidence round 1.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 2,
+        "elapsedMs": 2.3702920000068843,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Orchestrator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 3,
+        "elapsedMs": 3457.6381670000264,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Orchestrator completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 4,
+        "elapsedMs": 3457.836917000008,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "pending",
+        "round": 1,
+        "message": "Query error logs and metrics for profile-api between 2026-10-06T09:50:00Z and 2026-10-06T10:15:00Z.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 5,
+        "elapsedMs": 3461.002374999982,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Query error logs and metrics for profile-api between 2026-10-06T09:50:00Z and 2026-10-06T10:15:00Z.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 6,
+        "elapsedMs": 3461.0655840000254,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Observability started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 7,
+        "elapsedMs": 11070.555417000025,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 8,
+        "elapsedMs": 11071.08508400002,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 1,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 9,
+        "elapsedMs": 11071.454833999975,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (2 records).",
+        "evidenceIds": [
+          "ev-006-005",
+          "ev-006-006"
+        ]
+      },
+      {
+        "sequence": 10,
+        "elapsedMs": 11071.473834000004,
+        "type": "evidence",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-006-005",
+          "ev-006-006"
+        ]
+      },
+      {
+        "sequence": 11,
+        "elapsedMs": 11071.482874999987,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "completed",
+        "round": 1,
+        "message": "query_metrics: ok (5 records).",
+        "evidenceIds": [
+          "ev-006-001",
+          "ev-006-002",
+          "ev-006-003",
+          "ev-006-004",
+          "ev-006-009"
+        ]
+      },
+      {
+        "sequence": 12,
+        "elapsedMs": 11071.494166999997,
+        "type": "evidence",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-006-001",
+          "ev-006-002",
+          "ev-006-003",
+          "ev-006-004",
+          "ev-006-009"
+        ]
+      },
+      {
+        "sequence": 13,
+        "elapsedMs": 20059.09841700003,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Observability completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 14,
+        "elapsedMs": 20059.49004200002,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "t1 completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 15,
+        "elapsedMs": 20062.607416999992,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Reasoning started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 16,
+        "elapsedMs": 27828.74895899999,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Reasoning completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 17,
+        "elapsedMs": 27831.053124999977,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Critic started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 18,
+        "elapsedMs": 30815.919166999985,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Critic completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 19,
+        "elapsedMs": 30818.78116700001,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Reporting started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 20,
+        "elapsedMs": 35214.45808399998,
+        "type": "error",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 1,
+        "message": "Reporting attempt failed: Gemini HTTP 503. Provider request failed; check service availability.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 21,
+        "elapsedMs": 38942.46224999998,
+        "type": "error",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 1,
+        "message": "Reporting attempt failed: Gemini HTTP 503. Provider request failed; check service availability.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 22,
+        "elapsedMs": 44049.64500000002,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Reporting completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 23,
+        "elapsedMs": 44050.116500000004,
+        "type": "complete",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Investigation concluded: Evidence definitively points to eu-west-dns causing DNS resolution failures (SERVFAIL) for profile-store.internal in the eu-west region, which matches the network cause class and explains the localized errors.",
+        "evidenceIds": []
+      }
+    ],
+    "stats": {
+      "toolAttempts": 2,
+      "modelAttempts": 9,
+      "elapsedMs": 44052.11525000003,
+      "usage": {
+        "input": 12817,
+        "output": 2016,
+        "total": 14833,
+        "visibleOutput": 1878,
+        "thinking": 138,
+        "cacheRead": null,
+        "toolUsePrompt": null,
+        "availability": "partial"
+      }
+    },
+    "stopReason": "Evidence definitively points to eu-west-dns causing DNS resolution failures (SERVFAIL) for profile-store.internal in the eu-west region, which matches the network cause class and explains the localized errors.",
+    "report": {
+      "incidentId": "inc-006",
+      "outcome": "concluded",
+      "summary": "Profile loading failures in the eu-west region were caused by DNS resolution failures (SERVFAIL) at eu-west-dns when resolving profile-store.internal.",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "causeClass": "network",
+          "component": "eu-west-dns",
+          "explanation": "DNS resolution failures (SERVFAIL) when resolving profile-store.internal via eu-west-dns caused requests to fail in the eu-west region.",
+          "support": [
+            "ev-006-005",
+            "ev-006-002"
+          ],
+          "contradictions": [],
+          "confidence": "high",
+          "rationale": "Logs explicitly show SERVFAIL from eu-west-dns affecting profile-store.internal resolution, directly correlating with the 72 percent error rate spike in eu-west.",
+          "assumptions": [
+            "eu-west-dns is responsible for internal hostname resolution in the eu-west region."
+          ],
+          "unknowns": [
+            "Exact root cause of the DNS SERVFAIL response."
+          ]
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "Profile-api experienced a high error rate of 72% in the eu-west region at 2026-10-06T10:02:00Z.",
+          "evidenceIds": [
+            "ev-006-002"
+          ]
+        },
+        {
+          "statement": "Error logs show GET /profile returning 503 status due to SERVFAIL resolving profile-store.internal via eu-west-dns.",
+          "evidenceIds": [
+            "ev-006-005"
+          ]
+        },
+        {
+          "statement": "The us-east region remains healthy with an error rate of 0.1% and successful requests.",
+          "evidenceIds": [
+            "ev-006-003",
+            "ev-006-006"
+          ]
+        }
+      ],
+      "assumptions": [
+        "eu-west-dns is the primary DNS resolver for the eu-west region."
+      ],
+      "unknowns": [
+        "Whether the DNS failure originated in the DNS infrastructure or downstream network routing."
+      ],
+      "actions": [
+        {
+          "action": "Investigate eu-west-dns infrastructure logs and upstream forwarders for SERVFAIL causes.",
+          "evidenceIds": [
+            "ev-006-005"
+          ],
+          "rationale": "Determine why eu-west-dns is returning SERVFAIL for internal domain resolution."
+        }
+      ],
+      "limitations": [
+        "Investigation is limited to available metrics and logs from the incident window.",
+        "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+        "Whether the DNS failure originated in the DNS infrastructure or downstream network routing."
+      ],
+      "failures": [],
+      "stopReason": "Evidence definitively points to eu-west-dns causing DNS resolution failures (SERVFAIL) for profile-store.internal in the eu-west region, which matches the network cause class and explains the localized errors.",
+      "stats": {
+        "toolAttempts": 2,
+        "modelAttempts": 9,
+        "elapsedMs": 44052.11525000003,
+        "usage": {
+          "input": 12817,
+          "output": 2016,
+          "total": 14833,
+          "visibleOutput": 1878,
+          "thinking": 138,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "partial"
+        }
+      }
+    }
+  },
+  "toolHistory": [
+    {
+      "tool": "query_logs",
+      "args": {
+        "service": "profile-api",
+        "end": "2026-10-06T10:15:00Z",
+        "limit": 50,
+        "start": "2026-10-06T09:50:00Z"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-006-005",
+            "timestamp": "2026-10-06T10:01:00Z",
+            "service": "profile-api",
+            "source": "logs",
+            "raw": {
+              "severity": "error",
+              "message": "GET /profile status=503 resolver=eu-west-dns host=profile-store.internal error=SERVFAIL",
+              "region": "eu-west",
+              "traceId": null
+            }
+          },
+          {
+            "id": "ev-006-006",
+            "timestamp": "2026-10-06T10:01:00Z",
+            "service": "profile-api",
+            "source": "logs",
+            "raw": {
+              "severity": "info",
+              "message": "GET /profile status=200 host=profile-store.internal",
+              "region": "us-east",
+              "traceId": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 2,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "service": "profile-api",
+        "end": "2026-10-06T10:15:00Z",
+        "limit": 50,
+        "start": "2026-10-06T09:50:00Z"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_metrics",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-006-001",
+            "timestamp": "2026-10-06T10:02:00Z",
+            "service": "profile-api",
+            "source": "metrics",
+            "raw": {
+              "metric": "error_rate",
+              "value": 0.8,
+              "unit": "percent",
+              "region": "global",
+              "windowSeconds": 60
+            }
+          },
+          {
+            "id": "ev-006-002",
+            "timestamp": "2026-10-06T10:02:00Z",
+            "service": "profile-api",
+            "source": "metrics",
+            "raw": {
+              "metric": "error_rate",
+              "value": 72,
+              "unit": "percent",
+              "region": "eu-west",
+              "windowSeconds": 60
+            }
+          },
+          {
+            "id": "ev-006-003",
+            "timestamp": "2026-10-06T10:02:00Z",
+            "service": "profile-api",
+            "source": "metrics",
+            "raw": {
+              "metric": "error_rate",
+              "value": 0.1,
+              "unit": "percent",
+              "region": "us-east",
+              "windowSeconds": 60
+            }
+          },
+          {
+            "id": "ev-006-004",
+            "timestamp": "2026-10-06T10:02:00Z",
+            "service": "profile-api",
+            "source": "metrics",
+            "raw": {
+              "metric": "request_share",
+              "value": 1,
+              "unit": "percent",
+              "region": "eu-west",
+              "windowSeconds": 60
+            }
+          },
+          {
+            "id": "ev-006-009",
+            "timestamp": "2026-10-06T10:03:00Z",
+            "service": "profile-api",
+            "source": "metrics",
+            "raw": {
+              "metric": "cpu_utilization",
+              "value": 22,
+              "unit": "percent",
+              "region": "eu-west",
+              "windowSeconds": 60
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 5,
+        "warnings": [],
+        "error": null
+      }
+    }
+  ],
+  "failureSchedule": {
+    "toolFailures": [],
+    "agentFailures": []
+  }
+}

@@ -1,0 +1,628 @@
+{
+  "version": 1,
+  "fingerprint": "1bcabdcde796e6dd81678a4051435db35d3f425fe0062e53e04c55834b08d017",
+  "key": "inc-003.single-agent",
+  "result": {
+    "runId": "55e8e7b2-c7c4-4202-8f15-c807745d584e",
+    "report": {
+      "incidentId": "inc-003",
+      "outcome": "concluded",
+      "summary": "Configuration change config-19 altered TOKEN_AUDIENCE to mobile-client, causing session-api to reject web-client session refreshes with 401 errors until reverted by config-20.",
+      "hypotheses": [
+        {
+          "id": "hyp-001",
+          "causeClass": "configuration",
+          "component": "session-api",
+          "explanation": "A configuration change updated TOKEN_AUDIENCE to mobile-client, causing session-api to reject web-client session refreshes.",
+          "support": [
+            "ev-003-002",
+            "ev-003-003",
+            "ev-003-008"
+          ],
+          "contradictions": [],
+          "confidence": "high",
+          "rationale": "Direct configuration change logs match the timing of 401 InvalidAudience logs for web-client.",
+          "assumptions": [],
+          "unknowns": []
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "TOKEN_AUDIENCE config changed from web-client to mobile-client.",
+          "evidenceIds": [
+            "ev-003-002"
+          ]
+        },
+        {
+          "statement": "session-api logged a 401 InvalidAudience error for web-client.",
+          "evidenceIds": [
+            "ev-003-003"
+          ]
+        },
+        {
+          "statement": "TOKEN_AUDIENCE config changed back from mobile-client to web-client.",
+          "evidenceIds": [
+            "ev-003-008"
+          ]
+        }
+      ],
+      "assumptions": [],
+      "unknowns": [],
+      "actions": [
+        {
+          "action": "Implement pre-deployment checks on configuration changes for session-api.",
+          "evidenceIds": [
+            "ev-003-002",
+            "ev-003-008"
+          ],
+          "rationale": "Prevent unauthorized or unintended token audience modifications."
+        }
+      ],
+      "limitations": [],
+      "failures": [],
+      "stopReason": "General investigator selected a supported conclusion.",
+      "stats": {
+        "toolAttempts": 3,
+        "modelAttempts": 3,
+        "elapsedMs": 13247.194958000007,
+        "usage": {
+          "input": 9228,
+          "output": 1317,
+          "total": 10545,
+          "visibleOutput": 1317,
+          "thinking": null,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "complete"
+        }
+      }
+    },
+    "state": {
+      "incident": {
+        "id": "inc-003",
+        "title": "Users cannot refresh sessions",
+        "description": "Browser clients report rejected session refreshes. Other API calls still appear healthy.",
+        "service": "session-api",
+        "start": "2026-10-03T09:50:00Z",
+        "end": "2026-10-03T10:15:00Z",
+        "reportedAt": "2026-10-03T10:05:00Z"
+      },
+      "round": 1,
+      "plan": null,
+      "tasks": [],
+      "evidence": {
+        "ev-003-001": {
+          "id": "ev-003-001",
+          "timestamp": "2026-10-03T09:55:00Z",
+          "service": "session-api",
+          "source": "logs",
+          "raw": {
+            "severity": "info",
+            "message": "refresh status=200 token.aud=web-client",
+            "region": "eu-west",
+            "traceId": null
+          }
+        },
+        "ev-003-003": {
+          "id": "ev-003-003",
+          "timestamp": "2026-10-03T10:00:00Z",
+          "service": "session-api",
+          "source": "logs",
+          "raw": {
+            "severity": "error",
+            "message": "refresh status=401 InvalidAudience expected=mobile-client received=web-client signature=valid",
+            "region": "eu-west",
+            "traceId": null
+          }
+        },
+        "ev-003-009": {
+          "id": "ev-003-009",
+          "timestamp": "2026-10-03T10:10:00Z",
+          "service": "session-api",
+          "source": "logs",
+          "raw": {
+            "severity": "info",
+            "message": "refresh status=200 token.aud=web-client",
+            "region": "eu-west",
+            "traceId": null
+          }
+        },
+        "ev-003-002": {
+          "id": "ev-003-002",
+          "timestamp": "2026-10-03T09:59:00Z",
+          "service": "session-api",
+          "source": "changes",
+          "raw": {
+            "kind": "configuration",
+            "revision": "config-19",
+            "key": "TOKEN_AUDIENCE",
+            "before": "web-client",
+            "after": "mobile-client",
+            "actor": "release-automation"
+          }
+        },
+        "ev-003-008": {
+          "id": "ev-003-008",
+          "timestamp": "2026-10-03T10:08:00Z",
+          "service": "session-api",
+          "source": "changes",
+          "raw": {
+            "kind": "configuration",
+            "revision": "config-20",
+            "key": "TOKEN_AUDIENCE",
+            "before": "mobile-client",
+            "after": "web-client",
+            "actor": "release-automation"
+          }
+        },
+        "ev-003-010": {
+          "id": "ev-003-010",
+          "timestamp": "2026-10-03T00:00:00Z",
+          "service": "session-api",
+          "source": "dependencies",
+          "raw": {
+            "dependency": "identity-api",
+            "relationship": "synchronous",
+            "critical": true,
+            "validUntil": null
+          }
+        }
+      },
+      "findings": [
+        {
+          "statement": "TOKEN_AUDIENCE config changed from web-client to mobile-client.",
+          "evidenceIds": [
+            "ev-003-002"
+          ],
+          "contradictions": [],
+          "taskId": "round-1",
+          "role": "Investigator"
+        },
+        {
+          "statement": "session-api logged a 401 InvalidAudience error for web-client.",
+          "evidenceIds": [
+            "ev-003-003"
+          ],
+          "contradictions": [],
+          "taskId": "round-1",
+          "role": "Investigator"
+        },
+        {
+          "statement": "TOKEN_AUDIENCE config changed back from mobile-client to web-client.",
+          "evidenceIds": [
+            "ev-003-008"
+          ],
+          "contradictions": [],
+          "taskId": "round-1",
+          "role": "Investigator"
+        }
+      ],
+      "hypotheses": [
+        {
+          "id": "hyp-001",
+          "causeClass": "configuration",
+          "component": "session-api",
+          "explanation": "A configuration change updated TOKEN_AUDIENCE to mobile-client, causing session-api to reject web-client session refreshes.",
+          "support": [
+            "ev-003-002",
+            "ev-003-003",
+            "ev-003-008"
+          ],
+          "contradictions": [],
+          "confidence": "high",
+          "rationale": "Direct configuration change logs match the timing of 401 InvalidAudience logs for web-client.",
+          "assumptions": [],
+          "unknowns": []
+        }
+      ],
+      "assumptions": [],
+      "unknowns": [],
+      "critic": null,
+      "errors": [],
+      "events": [
+        {
+          "sequence": 1,
+          "elapsedMs": 0.9430419999989681,
+          "type": "round",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "running",
+          "round": 1,
+          "message": "Evidence round 1.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 2,
+          "elapsedMs": 1.0839170000108425,
+          "type": "role",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "running",
+          "round": 1,
+          "message": "Investigator started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 3,
+          "elapsedMs": 3665.58041699999,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": "running",
+          "round": 1,
+          "message": "query_logs started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 4,
+          "elapsedMs": 3666.2322080000013,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_changes",
+          "status": "running",
+          "round": 1,
+          "message": "query_changes started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 5,
+          "elapsedMs": 3666.7842079999973,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_dependencies",
+          "status": "running",
+          "round": 1,
+          "message": "query_dependencies started.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 6,
+          "elapsedMs": 3667.0074580000073,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": "completed",
+          "round": 1,
+          "message": "query_logs: ok (3 records).",
+          "evidenceIds": [
+            "ev-003-001",
+            "ev-003-003",
+            "ev-003-009"
+          ]
+        },
+        {
+          "sequence": 7,
+          "elapsedMs": 3667.040042000008,
+          "type": "evidence",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_logs",
+          "status": null,
+          "round": 1,
+          "message": "Retrieved evidence.",
+          "evidenceIds": [
+            "ev-003-001",
+            "ev-003-003",
+            "ev-003-009"
+          ]
+        },
+        {
+          "sequence": 8,
+          "elapsedMs": 3667.0655419999966,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_changes",
+          "status": "completed",
+          "round": 1,
+          "message": "query_changes: ok (2 records).",
+          "evidenceIds": [
+            "ev-003-002",
+            "ev-003-008"
+          ]
+        },
+        {
+          "sequence": 9,
+          "elapsedMs": 3667.0947079999896,
+          "type": "evidence",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_changes",
+          "status": null,
+          "round": 1,
+          "message": "Retrieved evidence.",
+          "evidenceIds": [
+            "ev-003-002",
+            "ev-003-008"
+          ]
+        },
+        {
+          "sequence": 10,
+          "elapsedMs": 3667.122875000001,
+          "type": "tool",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_dependencies",
+          "status": "completed",
+          "round": 1,
+          "message": "query_dependencies: ok (1 records).",
+          "evidenceIds": [
+            "ev-003-010"
+          ]
+        },
+        {
+          "sequence": 11,
+          "elapsedMs": 3667.1334999999963,
+          "type": "evidence",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": "query_dependencies",
+          "status": null,
+          "round": 1,
+          "message": "Retrieved evidence.",
+          "evidenceIds": [
+            "ev-003-010"
+          ]
+        },
+        {
+          "sequence": 12,
+          "elapsedMs": 13246.56687499999,
+          "type": "role",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "completed",
+          "round": 1,
+          "message": "Investigator completed.",
+          "evidenceIds": []
+        },
+        {
+          "sequence": 13,
+          "elapsedMs": 13246.988167000003,
+          "type": "complete",
+          "role": "Investigator",
+          "taskId": null,
+          "tool": null,
+          "status": "completed",
+          "round": 1,
+          "message": "Investigation concluded: General investigator selected a supported conclusion.",
+          "evidenceIds": []
+        }
+      ],
+      "stats": {
+        "toolAttempts": 3,
+        "modelAttempts": 3,
+        "elapsedMs": 13247.194958000007,
+        "usage": {
+          "input": 9228,
+          "output": 1317,
+          "total": 10545,
+          "visibleOutput": 1317,
+          "thinking": null,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "complete"
+        }
+      },
+      "stopReason": "General investigator selected a supported conclusion.",
+      "report": {
+        "incidentId": "inc-003",
+        "outcome": "concluded",
+        "summary": "Configuration change config-19 altered TOKEN_AUDIENCE to mobile-client, causing session-api to reject web-client session refreshes with 401 errors until reverted by config-20.",
+        "hypotheses": [
+          {
+            "id": "hyp-001",
+            "causeClass": "configuration",
+            "component": "session-api",
+            "explanation": "A configuration change updated TOKEN_AUDIENCE to mobile-client, causing session-api to reject web-client session refreshes.",
+            "support": [
+              "ev-003-002",
+              "ev-003-003",
+              "ev-003-008"
+            ],
+            "contradictions": [],
+            "confidence": "high",
+            "rationale": "Direct configuration change logs match the timing of 401 InvalidAudience logs for web-client.",
+            "assumptions": [],
+            "unknowns": []
+          }
+        ],
+        "observedFacts": [
+          {
+            "statement": "TOKEN_AUDIENCE config changed from web-client to mobile-client.",
+            "evidenceIds": [
+              "ev-003-002"
+            ]
+          },
+          {
+            "statement": "session-api logged a 401 InvalidAudience error for web-client.",
+            "evidenceIds": [
+              "ev-003-003"
+            ]
+          },
+          {
+            "statement": "TOKEN_AUDIENCE config changed back from mobile-client to web-client.",
+            "evidenceIds": [
+              "ev-003-008"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unknowns": [],
+        "actions": [
+          {
+            "action": "Implement pre-deployment checks on configuration changes for session-api.",
+            "evidenceIds": [
+              "ev-003-002",
+              "ev-003-008"
+            ],
+            "rationale": "Prevent unauthorized or unintended token audience modifications."
+          }
+        ],
+        "limitations": [],
+        "failures": [],
+        "stopReason": "General investigator selected a supported conclusion.",
+        "stats": {
+          "toolAttempts": 3,
+          "modelAttempts": 3,
+          "elapsedMs": 13247.194958000007,
+          "usage": {
+            "input": 9228,
+            "output": 1317,
+            "total": 10545,
+            "visibleOutput": 1317,
+            "thinking": null,
+            "cacheRead": null,
+            "toolUsePrompt": null,
+            "availability": "complete"
+          }
+        }
+      }
+    },
+    "tracePath": "/Users/shivam/Desktop/Code/IncidentLens/results/live-2026-11-12-v3/traces/inc-003-55e8e7b2-c7c4-4202-8f15-c807745d584e.json",
+    "toolHistory": [
+      {
+        "tool": "query_logs",
+        "args": {
+          "end": "2026-10-03T10:15:00Z",
+          "service": "session-api",
+          "limit": 50,
+          "start": "2026-10-03T09:50:00Z"
+        },
+        "attempt": 1,
+        "result": {
+          "tool": "query_logs",
+          "status": "ok",
+          "evidence": [
+            {
+              "id": "ev-003-001",
+              "timestamp": "2026-10-03T09:55:00Z",
+              "service": "session-api",
+              "source": "logs",
+              "raw": {
+                "severity": "info",
+                "message": "refresh status=200 token.aud=web-client",
+                "region": "eu-west",
+                "traceId": null
+              }
+            },
+            {
+              "id": "ev-003-003",
+              "timestamp": "2026-10-03T10:00:00Z",
+              "service": "session-api",
+              "source": "logs",
+              "raw": {
+                "severity": "error",
+                "message": "refresh status=401 InvalidAudience expected=mobile-client received=web-client signature=valid",
+                "region": "eu-west",
+                "traceId": null
+              }
+            },
+            {
+              "id": "ev-003-009",
+              "timestamp": "2026-10-03T10:10:00Z",
+              "service": "session-api",
+              "source": "logs",
+              "raw": {
+                "severity": "info",
+                "message": "refresh status=200 token.aud=web-client",
+                "region": "eu-west",
+                "traceId": null
+              }
+            }
+          ],
+          "completeness": "complete",
+          "matched": 3,
+          "warnings": [],
+          "error": null
+        }
+      },
+      {
+        "tool": "query_changes",
+        "args": {
+          "end": "2026-10-03T10:15:00Z",
+          "start": "2026-10-03T09:00:00Z",
+          "limit": 20,
+          "service": "session-api"
+        },
+        "attempt": 1,
+        "result": {
+          "tool": "query_changes",
+          "status": "ok",
+          "evidence": [
+            {
+              "id": "ev-003-002",
+              "timestamp": "2026-10-03T09:59:00Z",
+              "service": "session-api",
+              "source": "changes",
+              "raw": {
+                "kind": "configuration",
+                "revision": "config-19",
+                "key": "TOKEN_AUDIENCE",
+                "before": "web-client",
+                "after": "mobile-client",
+                "actor": "release-automation"
+              }
+            },
+            {
+              "id": "ev-003-008",
+              "timestamp": "2026-10-03T10:08:00Z",
+              "service": "session-api",
+              "source": "changes",
+              "raw": {
+                "kind": "configuration",
+                "revision": "config-20",
+                "key": "TOKEN_AUDIENCE",
+                "before": "mobile-client",
+                "after": "web-client",
+                "actor": "release-automation"
+              }
+            }
+          ],
+          "completeness": "complete",
+          "matched": 2,
+          "warnings": [],
+          "error": null
+        }
+      },
+      {
+        "tool": "query_dependencies",
+        "args": {
+          "limit": 20,
+          "direction": "downstream",
+          "at": "2026-10-03T10:00:00Z",
+          "service": "session-api"
+        },
+        "attempt": 1,
+        "result": {
+          "tool": "query_dependencies",
+          "status": "ok",
+          "evidence": [
+            {
+              "id": "ev-003-010",
+              "timestamp": "2026-10-03T00:00:00Z",
+              "service": "session-api",
+              "source": "dependencies",
+              "raw": {
+                "dependency": "identity-api",
+                "relationship": "synchronous",
+                "critical": true,
+                "validUntil": null
+              }
+            }
+          ],
+          "completeness": "complete",
+          "matched": 1,
+          "warnings": [],
+          "error": null
+        }
+      }
+    ]
+  }
+}

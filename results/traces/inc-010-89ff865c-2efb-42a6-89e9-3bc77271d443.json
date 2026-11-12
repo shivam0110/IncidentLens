@@ -1,0 +1,1073 @@
+{
+  "runId": "89ff865c-2efb-42a6-89e9-3bc77271d443",
+  "createdAt": "2026-11-12T10:56:41.978Z",
+  "mode": "multi-agent",
+  "provider": "gemini-developer-api",
+  "configuration": {
+    "model": "gemini-3.5-flash-lite",
+    "thinkingLevel": "low",
+    "limits": {
+      "maxOutputTokens": 2048,
+      "maxRunTokens": 64000,
+      "maxRounds": 2,
+      "maxModelAttempts": 20,
+      "maxToolAttempts": 20,
+      "deadlineMs": 120000,
+      "requestTimeoutMs": 20000,
+      "reportReserveMs": 25000,
+      "reportReserveTokens": 12288,
+      "reportReserveModelAttempts": 3,
+      "modelIntervalMs": 4500,
+      "retryDelayMs": 1000,
+      "recursionLimit": 11
+    },
+    "sampling": "provider defaults",
+    "tier": "free; operator-recorded policy: AI Studio free tier verified 2026-11-12: 15 RPM, 250000 input TPM, 500 RPD, midnight Pacific reset; 3 daily requests displayed before testing, UI may lag 15 min. Synthetic assignment data only; no billing changes or paid fallback.",
+    "inputReservation": "UTF-8 prompt/schema bytes divided by three; estimate, not provider tokenization"
+  },
+  "state": {
+    "incident": {
+      "id": "inc-010",
+      "title": "Occasional export request failures",
+      "description": "Two users reported failed exports around 10:00 UTC. The failures could not be reproduced immediately.",
+      "service": "export-api",
+      "start": "2026-10-10T09:50:00Z",
+      "end": "2026-10-10T10:15:00Z",
+      "reportedAt": "2026-10-10T10:05:00Z"
+    },
+    "round": 2,
+    "plan": {
+      "questions": [
+        "What downstream services does export-api call, and were there any recent changes or errors in those dependencies around 10:00 UTC on 2026-10-10?"
+      ],
+      "tasks": [
+        {
+          "id": "req-01",
+          "role": "Dependency",
+          "question": "What downstream services does export-api call, and were there any recent changes or errors in those dependencies around 10:00 UTC on 2026-10-10?",
+          "dependsOn": [
+            "t1"
+          ],
+          "status": "pending"
+        }
+      ],
+      "rationale": "Following up on the critic recommendation to investigate downstream services and dependencies to identify the root cause of the 504 timeout error in export-api."
+    },
+    "tasks": [
+      {
+        "id": "t1",
+        "role": "Observability",
+        "question": "Fetch error logs and request metrics for export-api between 09:50 and 10:15 UTC on 2026-10-10.",
+        "dependsOn": [],
+        "status": "completed"
+      },
+      {
+        "id": "req-01",
+        "role": "Dependency",
+        "question": "What downstream services does export-api call, and were there any recent changes or errors in those dependencies around 10:00 UTC on 2026-10-10?",
+        "dependsOn": [
+          "t1"
+        ],
+        "status": "completed"
+      }
+    ],
+    "evidence": {
+      "ev-010-001": {
+        "id": "ev-010-001",
+        "timestamp": "2026-10-10T10:01:00Z",
+        "service": "export-api",
+        "source": "logs",
+        "raw": {
+          "severity": "error",
+          "message": "POST /export status=504 request deadline reached; downstream span not recorded",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-010-002": {
+        "id": "ev-010-002",
+        "timestamp": "2026-10-10T10:02:00Z",
+        "service": "export-api",
+        "source": "logs",
+        "raw": {
+          "severity": "warn",
+          "message": "trace exporter dropped batch; no sampled child spans available for export requests",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-010-003": {
+        "id": "ev-010-003",
+        "timestamp": "2026-10-10T10:03:00Z",
+        "service": "export-api",
+        "source": "metrics",
+        "raw": {
+          "metric": "cpu_utilization",
+          "value": 42,
+          "unit": "percent",
+          "region": "global",
+          "windowSeconds": 60
+        }
+      },
+      "ev-010-004": {
+        "id": "ev-010-004",
+        "timestamp": "2026-10-10T00:00:00Z",
+        "service": "export-api",
+        "source": "dependencies",
+        "raw": {
+          "dependency": "export-store",
+          "relationship": "datastore",
+          "critical": true,
+          "validUntil": null
+        }
+      },
+      "ev-010-005": {
+        "id": "ev-010-005",
+        "timestamp": "2026-10-10T00:00:00Z",
+        "service": "export-api",
+        "source": "dependencies",
+        "raw": {
+          "dependency": "object-storage",
+          "relationship": "synchronous",
+          "critical": true,
+          "validUntil": null
+        }
+      }
+    },
+    "findings": [
+      {
+        "statement": "An error log at 10:01:00Z showed a 504 request deadline reached for POST /export with no downstream span recorded.",
+        "evidenceIds": [
+          "ev-010-001"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      },
+      {
+        "statement": "A warning log at 10:02:00Z reported that the trace exporter dropped a batch because no sampled child spans were available.",
+        "evidenceIds": [
+          "ev-010-002"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      },
+      {
+        "statement": "CPU utilization for export-api was 42% at 10:03:00Z.",
+        "evidenceIds": [
+          "ev-010-003"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      },
+      {
+        "statement": "export-api depends on export-store as a critical datastore and object-storage as a critical synchronous dependency.",
+        "evidenceIds": [
+          "ev-010-004",
+          "ev-010-005"
+        ],
+        "contradictions": [],
+        "taskId": "req-01",
+        "role": "Dependency"
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "h1",
+        "causeClass": "unknown",
+        "component": "export-api",
+        "explanation": "Export requests failed with a 504 deadline reached error, but downstream spans were not recorded and CPU usage was normal, leaving the exact bottleneck undetermined.",
+        "support": [
+          "ev-010-001"
+        ],
+        "contradictions": [],
+        "confidence": "low",
+        "rationale": "Only a single 504 error and a trace exporter warning were observed without sufficient downstream metrics to identify the failing dependency or component.",
+        "assumptions": [
+          "The timeout was caused by an unresponsive dependency or resource bottleneck not captured in metrics."
+        ],
+        "unknowns": [
+          "What specific downstream service or resource caused the request deadline to be reached."
+        ]
+      }
+    ],
+    "assumptions": [
+      "The reported export failures correspond directly to the 504 errors logged in export-api."
+    ],
+    "unknowns": [
+      "Exact root cause of the export-api timeout.",
+      "No logs or metrics were retrieved for the downstream dependencies export-store and object-storage during the incident window."
+    ],
+    "critic": {
+      "recommendation": "follow_up",
+      "rationale": "We identified downstream dependencies export-store and object-storage, but have not yet queried logs or metrics for them during the incident window to see if they caused the 504 timeout.",
+      "requests": [
+        {
+          "id": "req-02",
+          "role": "Observability",
+          "question": "What are the error logs and latency metrics for export-store and object-storage between 09:50 and 10:15 UTC on 2026-10-10?",
+          "rationale": "Determine if either critical downstream dependency experienced issues during the export-api timeout.",
+          "hypothesisIds": [
+            "h1"
+          ]
+        }
+      ]
+    },
+    "errors": [],
+    "events": [
+      {
+        "sequence": 1,
+        "elapsedMs": 6.2065839999122545,
+        "type": "round",
+        "role": null,
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Evidence round 1.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 2,
+        "elapsedMs": 6.316125000012107,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Orchestrator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 3,
+        "elapsedMs": 3279.272875000024,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Orchestrator completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 4,
+        "elapsedMs": 3279.416916999966,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "pending",
+        "round": 1,
+        "message": "Fetch error logs and request metrics for export-api between 09:50 and 10:15 UTC on 2026-10-10.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 5,
+        "elapsedMs": 3281.711874999921,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Fetch error logs and request metrics for export-api between 09:50 and 10:15 UTC on 2026-10-10.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 6,
+        "elapsedMs": 3281.8037919999333,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Observability started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 7,
+        "elapsedMs": 8398.960583999986,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 8,
+        "elapsedMs": 8399.403166999924,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 1,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 9,
+        "elapsedMs": 8400.782333999989,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (2 records).",
+        "evidenceIds": [
+          "ev-010-001",
+          "ev-010-002"
+        ]
+      },
+      {
+        "sequence": 10,
+        "elapsedMs": 8400.810624999925,
+        "type": "evidence",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-010-001",
+          "ev-010-002"
+        ]
+      },
+      {
+        "sequence": 11,
+        "elapsedMs": 8400.822334000026,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "completed",
+        "round": 1,
+        "message": "query_metrics: ok (1 records).",
+        "evidenceIds": [
+          "ev-010-003"
+        ]
+      },
+      {
+        "sequence": 12,
+        "elapsedMs": 8400.830624999944,
+        "type": "evidence",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-010-003"
+        ]
+      },
+      {
+        "sequence": 13,
+        "elapsedMs": 17101.546417000005,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Observability completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 14,
+        "elapsedMs": 17101.734375,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "t1 completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 15,
+        "elapsedMs": 17103.782000000007,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Reasoning started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 16,
+        "elapsedMs": 22238.267208999954,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Reasoning completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 17,
+        "elapsedMs": 22240.30437499995,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Critic started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 18,
+        "elapsedMs": 26213.861208999995,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Critic completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 19,
+        "elapsedMs": 26214.909916999983,
+        "type": "round",
+        "role": null,
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Evidence round 2.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 20,
+        "elapsedMs": 26214.98454199999,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Orchestrator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 21,
+        "elapsedMs": 30220.066249999916,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Orchestrator completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 22,
+        "elapsedMs": 30220.255333999987,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": null,
+        "status": "pending",
+        "round": 2,
+        "message": "What downstream services does export-api call, and were there any recent changes or errors in those dependencies around 10:00 UTC on 2026-10-10?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 23,
+        "elapsedMs": 30222.094708999968,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "What downstream services does export-api call, and were there any recent changes or errors in those dependencies around 10:00 UTC on 2026-10-10?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 24,
+        "elapsedMs": 30222.279584000004,
+        "type": "role",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Dependency started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 25,
+        "elapsedMs": 34536.48837499996,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": "query_dependencies",
+        "status": "running",
+        "round": 2,
+        "message": "query_dependencies started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 26,
+        "elapsedMs": 34538.57616699999,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": "query_changes",
+        "status": "running",
+        "round": 2,
+        "message": "query_changes started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 27,
+        "elapsedMs": 34538.70229199994,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": "query_dependencies",
+        "status": "completed",
+        "round": 2,
+        "message": "query_dependencies: ok (2 records).",
+        "evidenceIds": [
+          "ev-010-004",
+          "ev-010-005"
+        ]
+      },
+      {
+        "sequence": 28,
+        "elapsedMs": 34538.71837499994,
+        "type": "evidence",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": "query_dependencies",
+        "status": null,
+        "round": 2,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-010-004",
+          "ev-010-005"
+        ]
+      },
+      {
+        "sequence": 29,
+        "elapsedMs": 34538.73362499999,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": "query_changes",
+        "status": "completed",
+        "round": 2,
+        "message": "query_changes: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 30,
+        "elapsedMs": 39732.484834,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": "search_incidents",
+        "status": "running",
+        "round": 2,
+        "message": "search_incidents started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 31,
+        "elapsedMs": 39732.87983400002,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": "search_incidents",
+        "status": "completed",
+        "round": 2,
+        "message": "search_incidents: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 32,
+        "elapsedMs": 46901.591334,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": "query_changes",
+        "status": "running",
+        "round": 2,
+        "message": "query_changes started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 33,
+        "elapsedMs": 46901.718083999935,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": "query_changes",
+        "status": "completed",
+        "round": 2,
+        "message": "query_changes: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 34,
+        "elapsedMs": 49663.36824999994,
+        "type": "error",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": null,
+        "status": "failed",
+        "round": 2,
+        "message": "Dependency attempt failed: Specialist findings require retrieved evidence citations.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 35,
+        "elapsedMs": 53153.96854199993,
+        "type": "role",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Dependency completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 36,
+        "elapsedMs": 53154.241541999974,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "req-01",
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "req-01 completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 37,
+        "elapsedMs": 53156.757584000006,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Reasoning started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 38,
+        "elapsedMs": 57252.488208999974,
+        "type": "error",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 2,
+        "message": "Reasoning attempt failed: Gemini HTTP 503. Provider request failed; check service availability.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 39,
+        "elapsedMs": 67872.38699999999,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Reasoning completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 40,
+        "elapsedMs": 67877.37954200001,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Critic started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 41,
+        "elapsedMs": 76129.01095899998,
+        "type": "error",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 2,
+        "message": "Critic attempt failed: Gemini HTTP 503. Provider request failed; check service availability.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 42,
+        "elapsedMs": 82229.71295900003,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Critic completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 43,
+        "elapsedMs": 82232.75908400002,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Reporting started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 44,
+        "elapsedMs": 84994.25145899993,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Reporting completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 45,
+        "elapsedMs": 84994.81499999994,
+        "type": "complete",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Investigation inconclusive: Evidence round limit reached with critic questions unresolved.",
+        "evidenceIds": []
+      }
+    ],
+    "stats": {
+      "toolAttempts": 6,
+      "modelAttempts": 17,
+      "elapsedMs": 84997.25083399995,
+      "usage": {
+        "input": 29398,
+        "output": 3084,
+        "total": 32482,
+        "visibleOutput": 3084,
+        "thinking": null,
+        "cacheRead": null,
+        "toolUsePrompt": null,
+        "availability": "partial"
+      }
+    },
+    "stopReason": "Evidence round limit reached with critic questions unresolved.",
+    "report": {
+      "incidentId": "inc-010",
+      "outcome": "inconclusive",
+      "summary": "Export requests failed with a 504 deadline reached error in export-api, but downstream dependencies export-store and object-storage were not fully queried during the incident window, leaving the root cause undetermined.",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "causeClass": "unknown",
+          "component": "export-api",
+          "explanation": "Export requests failed with a 504 deadline reached error, but downstream spans were not recorded and CPU usage was normal, leaving the exact bottleneck undetermined.",
+          "support": [
+            "ev-010-001"
+          ],
+          "contradictions": [],
+          "confidence": "low",
+          "rationale": "Only a single 504 error and a trace exporter warning were observed without sufficient downstream metrics to identify the failing dependency or component.",
+          "assumptions": [
+            "The timeout was caused by an unresponsive dependency or resource bottleneck not captured in metrics."
+          ],
+          "unknowns": [
+            "What specific downstream service or resource caused the request deadline to be reached."
+          ]
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "An error log at 10:01:00Z showed a 504 request deadline reached for POST /export with no downstream span recorded.",
+          "evidenceIds": [
+            "ev-010-001"
+          ]
+        },
+        {
+          "statement": "A warning log at 10:02:00Z reported that the trace exporter dropped a batch because no sampled child spans were available.",
+          "evidenceIds": [
+            "ev-010-002"
+          ]
+        },
+        {
+          "statement": "CPU utilization for export-api was 42% at 10:03:00Z.",
+          "evidenceIds": [
+            "ev-010-003"
+          ]
+        },
+        {
+          "statement": "export-api depends on export-store as a critical datastore and object-storage as a critical synchronous dependency.",
+          "evidenceIds": [
+            "ev-010-004",
+            "ev-010-005"
+          ]
+        }
+      ],
+      "assumptions": [
+        "The reported export failures correspond directly to the 504 errors logged in export-api."
+      ],
+      "unknowns": [
+        "Exact root cause of the export-api timeout.",
+        "No logs or metrics were retrieved for the downstream dependencies export-store and object-storage during the incident window."
+      ],
+      "actions": [
+        {
+          "action": "Query error logs and latency metrics for export-store and object-storage between 09:50 and 10:15 UTC on 2026-10-10.",
+          "evidenceIds": [
+            "ev-010-004",
+            "ev-010-005"
+          ],
+          "rationale": "Determine if either critical downstream dependency experienced issues during the export-api timeout."
+        }
+      ],
+      "limitations": [
+        "Evidence round limit reached with critic questions unresolved.",
+        "Critic questions remain unresolved: What are the error logs and latency metrics for export-store and object-storage between 09:50 and 10:15 UTC on 2026-10-10?",
+        "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+        "Exact root cause of the export-api timeout.",
+        "No logs or metrics were retrieved for the downstream dependencies export-store and object-storage during the incident window."
+      ],
+      "failures": [],
+      "stopReason": "Evidence round limit reached with critic questions unresolved.",
+      "stats": {
+        "toolAttempts": 6,
+        "modelAttempts": 17,
+        "elapsedMs": 84997.25083399995,
+        "usage": {
+          "input": 29398,
+          "output": 3084,
+          "total": 32482,
+          "visibleOutput": 3084,
+          "thinking": null,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "partial"
+        }
+      }
+    }
+  },
+  "toolHistory": [
+    {
+      "tool": "query_logs",
+      "args": {
+        "end": "2026-10-10T10:15:00Z",
+        "start": "2026-10-10T09:50:00Z",
+        "limit": 50,
+        "service": "export-api"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-010-001",
+            "timestamp": "2026-10-10T10:01:00Z",
+            "service": "export-api",
+            "source": "logs",
+            "raw": {
+              "severity": "error",
+              "message": "POST /export status=504 request deadline reached; downstream span not recorded",
+              "region": "eu-west",
+              "traceId": null
+            }
+          },
+          {
+            "id": "ev-010-002",
+            "timestamp": "2026-10-10T10:02:00Z",
+            "service": "export-api",
+            "source": "logs",
+            "raw": {
+              "severity": "warn",
+              "message": "trace exporter dropped batch; no sampled child spans available for export requests",
+              "region": "eu-west",
+              "traceId": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 2,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "end": "2026-10-10T10:15:00Z",
+        "service": "export-api",
+        "start": "2026-10-10T09:50:00Z",
+        "limit": 50
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_metrics",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-010-003",
+            "timestamp": "2026-10-10T10:03:00Z",
+            "service": "export-api",
+            "source": "metrics",
+            "raw": {
+              "metric": "cpu_utilization",
+              "value": 42,
+              "unit": "percent",
+              "region": "global",
+              "windowSeconds": 60
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 1,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_dependencies",
+      "args": {
+        "service": "export-api",
+        "at": "2026-10-10T10:00:00Z",
+        "direction": "downstream",
+        "limit": 50
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_dependencies",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-010-004",
+            "timestamp": "2026-10-10T00:00:00Z",
+            "service": "export-api",
+            "source": "dependencies",
+            "raw": {
+              "dependency": "export-store",
+              "relationship": "datastore",
+              "critical": true,
+              "validUntil": null
+            }
+          },
+          {
+            "id": "ev-010-005",
+            "timestamp": "2026-10-10T00:00:00Z",
+            "service": "export-api",
+            "source": "dependencies",
+            "raw": {
+              "dependency": "object-storage",
+              "relationship": "synchronous",
+              "critical": true,
+              "validUntil": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 2,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_changes",
+      "args": {
+        "limit": 50,
+        "start": "2026-10-10T09:00:00Z",
+        "end": "2026-10-10T10:15:00Z"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_changes",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "search_incidents",
+      "args": {
+        "terms": [
+          "timeout",
+          "error"
+        ],
+        "before": "2026-10-10T10:15:00Z",
+        "limit": 5,
+        "service": "export-store"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "search_incidents",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_changes",
+      "args": {
+        "limit": 50,
+        "service": "export-store",
+        "start": "2026-10-10T09:00:00Z",
+        "end": "2026-10-10T10:15:00Z"
+      },
+      "attempt": 2,
+      "result": {
+        "tool": "query_changes",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    }
+  ],
+  "failureSchedule": {
+    "toolFailures": [],
+    "agentFailures": []
+  }
+}

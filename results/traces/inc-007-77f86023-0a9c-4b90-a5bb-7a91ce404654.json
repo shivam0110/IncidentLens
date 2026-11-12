@@ -1,0 +1,531 @@
+{
+  "runId": "77f86023-0a9c-4b90-a5bb-7a91ce404654",
+  "createdAt": "2026-11-12T10:52:08.066Z",
+  "mode": "single-agent",
+  "provider": "gemini-developer-api",
+  "configuration": {
+    "model": "gemini-3.5-flash-lite",
+    "thinkingLevel": "low",
+    "limits": {
+      "maxOutputTokens": 2048,
+      "maxRunTokens": 64000,
+      "maxRounds": 2,
+      "maxModelAttempts": 20,
+      "maxToolAttempts": 20,
+      "deadlineMs": 120000,
+      "requestTimeoutMs": 20000,
+      "reportReserveMs": 25000,
+      "reportReserveTokens": 12288,
+      "reportReserveModelAttempts": 3,
+      "modelIntervalMs": 4500,
+      "retryDelayMs": 1000,
+      "recursionLimit": 11
+    },
+    "sampling": "provider defaults",
+    "tier": "free; operator-recorded policy: AI Studio free tier verified 2026-11-12: 15 RPM, 250000 input TPM, 500 RPD, midnight Pacific reset; 3 daily requests displayed before testing, UI may lag 15 min. Synthetic assignment data only; no billing changes or paid fallback.",
+    "inputReservation": "UTF-8 prompt/schema bytes divided by three; estimate, not provider tokenization"
+  },
+  "state": {
+    "incident": {
+      "id": "inc-007",
+      "title": "Invoice downloads failing again",
+      "description": "Invoice downloads return 502. Operators recall a similar alert from an earlier incident.",
+      "service": "invoice-api",
+      "start": "2026-10-07T09:50:00Z",
+      "end": "2026-10-07T10:15:00Z",
+      "reportedAt": "2026-10-07T10:05:00Z"
+    },
+    "round": 2,
+    "plan": null,
+    "tasks": [],
+    "evidence": {
+      "ev-007-001": {
+        "id": "ev-007-001",
+        "timestamp": "2026-10-07T10:00:00Z",
+        "service": "invoice-api",
+        "source": "logs",
+        "raw": {
+          "severity": "error",
+          "message": "GET /invoice status=502 billing-connector TLS handshake failed: CERT_HAS_EXPIRED peer=partner.billing.internal",
+          "region": "eu-west",
+          "traceId": null
+        }
+      }
+    },
+    "findings": [
+      {
+        "statement": "Invoice API logs show a TLS handshake failure with CERT_HAS_EXPIRED on peer partner.billing.internal.",
+        "evidenceIds": [
+          "ev-007-001"
+        ],
+        "contradictions": [],
+        "taskId": "round-2",
+        "role": "Investigator"
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "h1",
+        "causeClass": "dependency_degradation",
+        "component": "partner.billing.internal",
+        "explanation": "The TLS certificate for the billing connector peer expired, causing TLS handshakes to fail.",
+        "support": [
+          "ev-007-001"
+        ],
+        "contradictions": [],
+        "confidence": "medium",
+        "rationale": "Log message indicates a CERT_HAS_EXPIRED error, but lacks secondary corroborating primary records.",
+        "assumptions": [],
+        "unknowns": [
+          "Missing corroborating metrics or historical incident reports."
+        ]
+      }
+    ],
+    "assumptions": [],
+    "unknowns": [
+      "Lack of secondary primary evidence or historical matches."
+    ],
+    "critic": null,
+    "errors": [],
+    "events": [
+      {
+        "sequence": 1,
+        "elapsedMs": 0.9632500000298023,
+        "type": "round",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Evidence round 1.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 2,
+        "elapsedMs": 1.183458000072278,
+        "type": "role",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Investigator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 3,
+        "elapsedMs": 14355.950124999974,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 4,
+        "elapsedMs": 14356.389333000057,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (1 records).",
+        "evidenceIds": [
+          "ev-007-001"
+        ]
+      },
+      {
+        "sequence": 5,
+        "elapsedMs": 14356.409915999975,
+        "type": "evidence",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_logs",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-007-001"
+        ]
+      },
+      {
+        "sequence": 6,
+        "elapsedMs": 15897.861083000083,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_changes",
+        "status": "running",
+        "round": 1,
+        "message": "query_changes started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 7,
+        "elapsedMs": 15898.104291000054,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_changes",
+        "status": "completed",
+        "round": 1,
+        "message": "query_changes: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 8,
+        "elapsedMs": 27338.989540999988,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "search_incidents",
+        "status": "running",
+        "round": 1,
+        "message": "search_incidents started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 9,
+        "elapsedMs": 27339.24445800006,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "search_incidents",
+        "status": "completed",
+        "round": 1,
+        "message": "search_incidents: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 10,
+        "elapsedMs": 30856.30283300008,
+        "type": "error",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 1,
+        "message": "Investigator attempt failed: A conclusion requires corroborating primary records, the assessed leading hypothesis and resolved critic requests.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 11,
+        "elapsedMs": 37331.40566599998,
+        "type": "role",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Investigator completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 12,
+        "elapsedMs": 37331.79612499999,
+        "type": "round",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Evidence round 2.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 13,
+        "elapsedMs": 37331.999583000084,
+        "type": "role",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Investigator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 14,
+        "elapsedMs": 42483.95683300006,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "search_incidents",
+        "status": "running",
+        "round": 2,
+        "message": "search_incidents started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 15,
+        "elapsedMs": 42484.26650000003,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "search_incidents",
+        "status": "completed",
+        "round": 2,
+        "message": "search_incidents: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 16,
+        "elapsedMs": 44044.055041000014,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 2,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 17,
+        "elapsedMs": 44044.30083299999,
+        "type": "tool",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": "query_metrics",
+        "status": "completed",
+        "round": 2,
+        "message": "query_metrics: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 18,
+        "elapsedMs": 53869.99691600003,
+        "type": "error",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 2,
+        "message": "Investigator attempt failed: A conclusion requires corroborating primary records, the assessed leading hypothesis and resolved critic requests.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 19,
+        "elapsedMs": 58388.48100000003,
+        "type": "role",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Investigator completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 20,
+        "elapsedMs": 58388.958915999974,
+        "type": "complete",
+        "role": "Investigator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Investigation inconclusive: Evidence round limit reached.",
+        "evidenceIds": []
+      }
+    ],
+    "stats": {
+      "toolAttempts": 5,
+      "modelAttempts": 10,
+      "elapsedMs": 58389.15641599998,
+      "usage": {
+        "input": 27739,
+        "output": 2077,
+        "total": 29816,
+        "visibleOutput": 2077,
+        "thinking": null,
+        "cacheRead": null,
+        "toolUsePrompt": null,
+        "availability": "complete"
+      }
+    },
+    "stopReason": "Evidence round limit reached.",
+    "report": {
+      "incidentId": "inc-007",
+      "outcome": "inconclusive",
+      "summary": "Invoice downloads failed with 502 status due to a TLS handshake error on partner.billing.internal, but corroborating secondary evidence is missing.",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "causeClass": "dependency_degradation",
+          "component": "partner.billing.internal",
+          "explanation": "The TLS certificate for the billing connector peer expired, causing TLS handshakes to fail.",
+          "support": [
+            "ev-007-001"
+          ],
+          "contradictions": [],
+          "confidence": "medium",
+          "rationale": "Log message indicates a CERT_HAS_EXPIRED error, but lacks secondary corroborating primary records.",
+          "assumptions": [],
+          "unknowns": [
+            "Missing corroborating metrics or historical incident reports."
+          ]
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "Invoice API logs show a TLS handshake failure with CERT_HAS_EXPIRED on peer partner.billing.internal.",
+          "evidenceIds": [
+            "ev-007-001"
+          ]
+        }
+      ],
+      "assumptions": [],
+      "unknowns": [
+        "Lack of secondary primary evidence or historical matches."
+      ],
+      "actions": [],
+      "limitations": [
+        "Leading hypothesis lacks a second distinct primary support record.",
+        "Lack of secondary primary evidence or historical matches."
+      ],
+      "failures": [],
+      "stopReason": "Evidence round limit reached.",
+      "stats": {
+        "toolAttempts": 5,
+        "modelAttempts": 10,
+        "elapsedMs": 58389.15641599998,
+        "usage": {
+          "input": 27739,
+          "output": 2077,
+          "total": 29816,
+          "visibleOutput": 2077,
+          "thinking": null,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "complete"
+        }
+      }
+    }
+  },
+  "toolHistory": [
+    {
+      "tool": "query_logs",
+      "args": {
+        "start": "2026-10-07T09:50:00Z",
+        "service": "invoice-api",
+        "end": "2026-10-07T10:15:00Z",
+        "limit": 50
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-007-001",
+            "timestamp": "2026-10-07T10:00:00Z",
+            "service": "invoice-api",
+            "source": "logs",
+            "raw": {
+              "severity": "error",
+              "message": "GET /invoice status=502 billing-connector TLS handshake failed: CERT_HAS_EXPIRED peer=partner.billing.internal",
+              "region": "eu-west",
+              "traceId": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 1,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_changes",
+      "args": {
+        "limit": 10,
+        "end": "2026-10-07T10:15:00Z",
+        "start": "2026-10-07T09:00:00Z",
+        "service": "invoice-api"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_changes",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "search_incidents",
+      "args": {
+        "service": "invoice-api",
+        "terms": [
+          "invoice",
+          "cert"
+        ],
+        "limit": 5,
+        "before": "2026-10-07T10:15:00Z"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "search_incidents",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "search_incidents",
+      "args": {
+        "terms": [
+          "certificate"
+        ],
+        "before": "2026-10-07T10:15:00Z",
+        "limit": 5,
+        "service": "invoice-api"
+      },
+      "attempt": 2,
+      "result": {
+        "tool": "search_incidents",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "start": "2026-10-07T09:50:00Z",
+        "limit": 50,
+        "region": "eu-west",
+        "metric": "http_requests_total",
+        "service": "invoice-api",
+        "end": "2026-10-07T10:15:00Z"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_metrics",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    }
+  ],
+  "failureSchedule": {
+    "toolFailures": [],
+    "agentFailures": []
+  }
+}

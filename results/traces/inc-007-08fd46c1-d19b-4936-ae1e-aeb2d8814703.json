@@ -1,0 +1,712 @@
+{
+  "runId": "08fd46c1-d19b-4936-ae1e-aeb2d8814703",
+  "createdAt": "2026-11-12T10:51:06.316Z",
+  "mode": "multi-agent",
+  "provider": "gemini-developer-api",
+  "configuration": {
+    "model": "gemini-3.5-flash-lite",
+    "thinkingLevel": "low",
+    "limits": {
+      "maxOutputTokens": 2048,
+      "maxRunTokens": 64000,
+      "maxRounds": 2,
+      "maxModelAttempts": 20,
+      "maxToolAttempts": 20,
+      "deadlineMs": 120000,
+      "requestTimeoutMs": 20000,
+      "reportReserveMs": 25000,
+      "reportReserveTokens": 12288,
+      "reportReserveModelAttempts": 3,
+      "modelIntervalMs": 4500,
+      "retryDelayMs": 1000,
+      "recursionLimit": 11
+    },
+    "sampling": "provider defaults",
+    "tier": "free; operator-recorded policy: AI Studio free tier verified 2026-11-12: 15 RPM, 250000 input TPM, 500 RPD, midnight Pacific reset; 3 daily requests displayed before testing, UI may lag 15 min. Synthetic assignment data only; no billing changes or paid fallback.",
+    "inputReservation": "UTF-8 prompt/schema bytes divided by three; estimate, not provider tokenization"
+  },
+  "state": {
+    "incident": {
+      "id": "inc-007",
+      "title": "Invoice downloads failing again",
+      "description": "Invoice downloads return 502. Operators recall a similar alert from an earlier incident.",
+      "service": "invoice-api",
+      "start": "2026-10-07T09:50:00Z",
+      "end": "2026-10-07T10:15:00Z",
+      "reportedAt": "2026-10-07T10:05:00Z"
+    },
+    "round": 1,
+    "plan": {
+      "questions": [
+        "What are the error logs and metrics for the invoice-api service during the incident window?"
+      ],
+      "tasks": [
+        {
+          "id": "t1",
+          "role": "Observability",
+          "question": "Retrieve error logs and HTTP 502 occurrences for the invoice-api service between 2026-10-07T09:50:00Z and 2026-10-07T10:15:00Z.",
+          "dependsOn": [],
+          "status": "pending"
+        }
+      ],
+      "rationale": "Initial investigation requires checking the logs and metrics of the invoice-api service to identify the root cause of the 502 errors during the reported timeframe."
+    },
+    "tasks": [
+      {
+        "id": "t1",
+        "role": "Observability",
+        "question": "Retrieve error logs and HTTP 502 occurrences for the invoice-api service between 2026-10-07T09:50:00Z and 2026-10-07T10:15:00Z.",
+        "dependsOn": [],
+        "status": "completed"
+      }
+    ],
+    "evidence": {
+      "ev-007-001": {
+        "id": "ev-007-001",
+        "timestamp": "2026-10-07T10:00:00Z",
+        "service": "invoice-api",
+        "source": "logs",
+        "raw": {
+          "severity": "error",
+          "message": "GET /invoice status=502 billing-connector TLS handshake failed: CERT_HAS_EXPIRED peer=partner.billing.internal",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-007-003": {
+        "id": "ev-007-003",
+        "timestamp": "2026-10-07T10:02:00Z",
+        "service": "invoice-api",
+        "source": "metrics",
+        "raw": {
+          "metric": "heap_used",
+          "value": 210,
+          "unit": "MiB",
+          "region": "global",
+          "windowSeconds": 60
+        }
+      },
+      "ev-007-004": {
+        "id": "ev-007-004",
+        "timestamp": "2026-10-07T10:02:00Z",
+        "service": "invoice-api",
+        "source": "metrics",
+        "raw": {
+          "metric": "heap_limit",
+          "value": 1024,
+          "unit": "MiB",
+          "region": "global",
+          "windowSeconds": 60
+        }
+      },
+      "ev-007-005": {
+        "id": "ev-007-005",
+        "timestamp": "2026-10-07T10:02:00Z",
+        "service": "invoice-api",
+        "source": "metrics",
+        "raw": {
+          "metric": "restarts",
+          "value": 0,
+          "unit": "count",
+          "region": "global",
+          "windowSeconds": 60
+        }
+      }
+    },
+    "findings": [
+      {
+        "statement": "Error logs for invoice-api retrieved showing TLS handshake failure due to an expired certificate (CERT_HAS_EXPIRED) contacting partner.billing.internal at 2026-10-07T10:00:00Z resulting in a 502 status.",
+        "evidenceIds": [
+          "ev-007-001"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      },
+      {
+        "statement": "Metrics retrieved for invoice-api show normal heap usage and zero restarts during the incident window.",
+        "evidenceIds": [
+          "ev-007-003",
+          "ev-007-004",
+          "ev-007-005"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "h1",
+        "causeClass": "dependency_degradation",
+        "component": "partner.billing.internal",
+        "explanation": "The invoice-api service returns 502 errors because the TLS handshake fails due to an expired certificate on the downstream billing connector partner.billing.internal.",
+        "support": [
+          "ev-007-001"
+        ],
+        "contradictions": [],
+        "confidence": "high",
+        "rationale": "Log evidence explicitly states that the TLS handshake failed with CERT_HAS_EXPIRED when contacting the external partner.billing.internal dependency.",
+        "assumptions": [
+          "The external partner.billing.internal service manages its own TLS certificates."
+        ],
+        "unknowns": [
+          "Exact certificate renewal schedule or why rotation failed."
+        ]
+      }
+    ],
+    "assumptions": [
+      "The external partner.billing.internal service manages its own TLS certificates."
+    ],
+    "unknowns": [
+      "No explicit HTTP request rate metrics were found by metric name filtering, though log evidence confirms the 502 errors.",
+      "Exact certificate renewal schedule or why rotation failed."
+    ],
+    "critic": {
+      "recommendation": "stop",
+      "rationale": "Evidence definitively shows that invoice-api 502 errors are caused by a TLS handshake failure (CERT_HAS_EXPIRED) when connecting to the downstream dependency partner.billing.internal.",
+      "requests": []
+    },
+    "errors": [],
+    "events": [
+      {
+        "sequence": 1,
+        "elapsedMs": 6.323291999986395,
+        "type": "round",
+        "role": null,
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Evidence round 1.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 2,
+        "elapsedMs": 6.418249999987893,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Orchestrator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 3,
+        "elapsedMs": 5112.431875000009,
+        "type": "error",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 1,
+        "message": "Orchestrator attempt failed: Gemini HTTP 503. Provider request failed; check service availability.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 4,
+        "elapsedMs": 8077.5533339999965,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Orchestrator completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 5,
+        "elapsedMs": 8077.693250000011,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "pending",
+        "round": 1,
+        "message": "Retrieve error logs and HTTP 502 occurrences for the invoice-api service between 2026-10-07T09:50:00Z and 2026-10-07T10:15:00Z.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 6,
+        "elapsedMs": 8079.826624999987,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Retrieve error logs and HTTP 502 occurrences for the invoice-api service between 2026-10-07T09:50:00Z and 2026-10-07T10:15:00Z.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 7,
+        "elapsedMs": 8079.922375000024,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Observability started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 8,
+        "elapsedMs": 11892.994750000013,
+        "type": "error",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "failed",
+        "round": 1,
+        "message": "Observability attempt failed: query_logs arguments rejected: ✖ Invalid time range\n✖ Invalid ISO datetime\n  → at end. Use this exact schema: {\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"type\":\"object\",\"properties\":{\"service\":{\"type\":\"string\",\"minLength\":1},\"start\":{\"type\":\"string\",\"format\":\"date-time\",\"pattern\":\"^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z|([+-](?:[01]\\\\d|2[0-3]):[0-5]\\\\d)))$\"},\"end\":{\"type\":\"string\",\"format\":\"date-time\",\"pattern\":\"^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z|([+-](?:[01]\\\\d|2[0-3]):[0-5]\\\\d)))$\"},\"limit\":{\"default\":50,\"type\":\"integer\",\"minimum\":1,\"maximum\":100},\"severity\":{\"type\":\"string\",\"enum\":[\"debug\",\"info\",\"warn\",\"error\"]},\"search\":{\"type\":\"string\",\"minLength\":1},\"region\":{\"type\":\"string\",\"minLength\":1}},\"required\":[\"start\",\"end\",\"limit\"],\"additionalProperties\":false}",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 9,
+        "elapsedMs": 25720.659042000014,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 10,
+        "elapsedMs": 25721.238834000018,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (1 records).",
+        "evidenceIds": [
+          "ev-007-001"
+        ]
+      },
+      {
+        "sequence": 11,
+        "elapsedMs": 25721.259375000023,
+        "type": "evidence",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-007-001"
+        ]
+      },
+      {
+        "sequence": 12,
+        "elapsedMs": 28547.323459000036,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 1,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 13,
+        "elapsedMs": 28547.449542000017,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "completed",
+        "round": 1,
+        "message": "query_metrics: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 14,
+        "elapsedMs": 40619.60162500001,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 1,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 15,
+        "elapsedMs": 40619.96566700004,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "completed",
+        "round": 1,
+        "message": "query_metrics: ok (3 records).",
+        "evidenceIds": [
+          "ev-007-003",
+          "ev-007-004",
+          "ev-007-005"
+        ]
+      },
+      {
+        "sequence": 16,
+        "elapsedMs": 40619.980209,
+        "type": "evidence",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-007-003",
+          "ev-007-004",
+          "ev-007-005"
+        ]
+      },
+      {
+        "sequence": 17,
+        "elapsedMs": 43050.20454200002,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Observability completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 18,
+        "elapsedMs": 43050.456125000026,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "t1 completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 19,
+        "elapsedMs": 43052.96762499999,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Reasoning started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 20,
+        "elapsedMs": 47426.07741700002,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Reasoning completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 21,
+        "elapsedMs": 47428.76216700004,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Critic started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 22,
+        "elapsedMs": 51174.32512500003,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Critic completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 23,
+        "elapsedMs": 51176.353292000014,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Reporting started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 24,
+        "elapsedMs": 56768.39149999997,
+        "type": "error",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 1,
+        "message": "Reporting attempt failed: A conclusion requires corroborating primary records, the assessed leading hypothesis and resolved critic requests.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 25,
+        "elapsedMs": 62793.27945900004,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Reporting completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 26,
+        "elapsedMs": 62793.68583400006,
+        "type": "complete",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Investigation inconclusive: Evidence definitively shows that invoice-api 502 errors are caused by a TLS handshake failure (CERT_HAS_EXPIRED) when connecting to the downstream dependency partner.billing.internal.",
+        "evidenceIds": []
+      }
+    ],
+    "stats": {
+      "toolAttempts": 3,
+      "modelAttempts": 11,
+      "elapsedMs": 62796.93954200001,
+      "usage": {
+        "input": 21282,
+        "output": 2534,
+        "total": 23816,
+        "visibleOutput": 2216,
+        "thinking": 318,
+        "cacheRead": null,
+        "toolUsePrompt": null,
+        "availability": "partial"
+      }
+    },
+    "stopReason": "Evidence definitively shows that invoice-api 502 errors are caused by a TLS handshake failure (CERT_HAS_EXPIRED) when connecting to the downstream dependency partner.billing.internal.",
+    "report": {
+      "incidentId": "inc-007",
+      "outcome": "inconclusive",
+      "summary": "Invoice downloads returned 502 errors due to a TLS handshake failure connecting to partner.billing.internal, but the leading hypothesis lacks a second distinct primary support record.",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "causeClass": "dependency_degradation",
+          "component": "partner.billing.internal",
+          "explanation": "The invoice-api service returns 502 errors because the TLS handshake fails due to an expired certificate on the downstream billing connector partner.billing.internal.",
+          "support": [
+            "ev-007-001"
+          ],
+          "contradictions": [],
+          "confidence": "medium",
+          "rationale": "Log evidence states that the TLS handshake failed with CERT_HAS_EXPIRED when contacting the external partner.billing.internal dependency, but lacks corroborating primary records.",
+          "assumptions": [
+            "The external partner.billing.internal service manages its own TLS certificates."
+          ],
+          "unknowns": [
+            "Exact certificate renewal schedule or why rotation failed."
+          ]
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "Invoice-api error logs show a TLS handshake failure with CERT_HAS_EXPIRED for peer partner.billing.internal resulting in a 502 status at 2026-10-07T10:00:00Z.",
+          "evidenceIds": [
+            "ev-007-001"
+          ]
+        },
+        {
+          "statement": "Heap usage and restart metrics for invoice-api remained normal during the incident window.",
+          "evidenceIds": [
+            "ev-007-003",
+            "ev-007-004",
+            "ev-007-005"
+          ]
+        }
+      ],
+      "assumptions": [
+        "The external partner.billing.internal service manages its own TLS certificates."
+      ],
+      "unknowns": [
+        "Exact certificate renewal schedule or why rotation failed for partner.billing.internal.",
+        "A second distinct primary evidence record corroborating the TLS failure."
+      ],
+      "actions": [
+        {
+          "action": "Gather additional network or dependency metrics to corroborate the TLS handshake failure.",
+          "evidenceIds": [
+            "ev-007-001"
+          ],
+          "rationale": "Obtain secondary corroborating evidence to meet the requirement for conclusion."
+        }
+      ],
+      "limitations": [
+        "Only a single primary log record supports the leading hypothesis.",
+        "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+        "No explicit HTTP request rate metrics were found by metric name filtering, though log evidence confirms the 502 errors.",
+        "Exact certificate renewal schedule or why rotation failed."
+      ],
+      "failures": [],
+      "stopReason": "Evidence definitively shows that invoice-api 502 errors are caused by a TLS handshake failure (CERT_HAS_EXPIRED) when connecting to the downstream dependency partner.billing.internal.",
+      "stats": {
+        "toolAttempts": 3,
+        "modelAttempts": 11,
+        "elapsedMs": 62796.93954200001,
+        "usage": {
+          "input": 21282,
+          "output": 2534,
+          "total": 23816,
+          "visibleOutput": 2216,
+          "thinking": 318,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "partial"
+        }
+      }
+    }
+  },
+  "toolHistory": [
+    {
+      "tool": "query_logs",
+      "args": {
+        "start": "2026-10-07T09:50:00Z",
+        "severity": "error",
+        "limit": 50,
+        "end": "2026-10-07T10:15:00Z",
+        "service": "invoice-api"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-007-001",
+            "timestamp": "2026-10-07T10:00:00Z",
+            "service": "invoice-api",
+            "source": "logs",
+            "raw": {
+              "severity": "error",
+              "message": "GET /invoice status=502 billing-connector TLS handshake failed: CERT_HAS_EXPIRED peer=partner.billing.internal",
+              "region": "eu-west",
+              "traceId": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 1,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "limit": 50,
+        "end": "2026-10-07T10:15:00Z",
+        "metric": "http_requests_total",
+        "start": "2026-10-07T09:50:00Z",
+        "service": "invoice-api"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_metrics",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "service": "invoice-api",
+        "limit": 50,
+        "end": "2026-10-07T10:15:00Z",
+        "start": "2026-10-07T09:50:00Z"
+      },
+      "attempt": 2,
+      "result": {
+        "tool": "query_metrics",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-007-003",
+            "timestamp": "2026-10-07T10:02:00Z",
+            "service": "invoice-api",
+            "source": "metrics",
+            "raw": {
+              "metric": "heap_used",
+              "value": 210,
+              "unit": "MiB",
+              "region": "global",
+              "windowSeconds": 60
+            }
+          },
+          {
+            "id": "ev-007-004",
+            "timestamp": "2026-10-07T10:02:00Z",
+            "service": "invoice-api",
+            "source": "metrics",
+            "raw": {
+              "metric": "heap_limit",
+              "value": 1024,
+              "unit": "MiB",
+              "region": "global",
+              "windowSeconds": 60
+            }
+          },
+          {
+            "id": "ev-007-005",
+            "timestamp": "2026-10-07T10:02:00Z",
+            "service": "invoice-api",
+            "source": "metrics",
+            "raw": {
+              "metric": "restarts",
+              "value": 0,
+              "unit": "count",
+              "region": "global",
+              "windowSeconds": 60
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 3,
+        "warnings": [],
+        "error": null
+      }
+    }
+  ],
+  "failureSchedule": {
+    "toolFailures": [],
+    "agentFailures": []
+  }
+}

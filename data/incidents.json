@@ -1,0 +1,92 @@
+[
+  {
+    "id": "inc-001",
+    "title": "Checkout requests returning errors",
+    "description": "Customers report intermittent HTTP 500 responses when submitting baskets beginning around 10:00 UTC.",
+    "service": "checkout-api",
+    "start": "2026-10-01T09:50:00Z",
+    "end": "2026-10-01T10:15:00Z",
+    "reportedAt": "2026-10-01T10:05:00Z"
+  },
+  {
+    "id": "inc-002",
+    "title": "Payment requests waiting and failing",
+    "description": "Payment requests take several seconds and some return 503. A release notification was posted shortly before the alert.",
+    "service": "payments-api",
+    "start": "2026-10-02T09:50:00Z",
+    "end": "2026-10-02T10:15:00Z",
+    "reportedAt": "2026-10-02T10:05:00Z"
+  },
+  {
+    "id": "inc-003",
+    "title": "Users cannot refresh sessions",
+    "description": "Browser clients report rejected session refreshes. Other API calls still appear healthy.",
+    "service": "session-api",
+    "start": "2026-10-03T09:50:00Z",
+    "end": "2026-10-03T10:15:00Z",
+    "reportedAt": "2026-10-03T10:05:00Z"
+  },
+  {
+    "id": "inc-004",
+    "title": "Product pages take longer to load",
+    "description": "Product detail requests have risen from hundreds of milliseconds to several seconds; requests eventually succeed.",
+    "service": "catalog-api",
+    "start": "2026-10-04T09:50:00Z",
+    "end": "2026-10-04T10:15:00Z",
+    "reportedAt": "2026-10-04T10:05:00Z"
+  },
+  {
+    "id": "inc-005",
+    "title": "Intermittent gateway timeouts",
+    "description": "Requests across several endpoints are timing out during a busy period. Failures fluctuate minute to minute.",
+    "service": "edge-gateway",
+    "start": "2026-10-05T09:50:00Z",
+    "end": "2026-10-05T10:15:00Z",
+    "reportedAt": "2026-10-05T10:05:00Z"
+  },
+  {
+    "id": "inc-006",
+    "title": "Some users cannot load profiles",
+    "description": "Support reports repeated profile failures for some users, while the main availability dashboard remains green.",
+    "service": "profile-api",
+    "start": "2026-10-06T09:50:00Z",
+    "end": "2026-10-06T10:15:00Z",
+    "reportedAt": "2026-10-06T10:05:00Z"
+  },
+  {
+    "id": "inc-007",
+    "title": "Invoice downloads failing again",
+    "description": "Invoice downloads return 502. Operators recall a similar alert from an earlier incident.",
+    "service": "invoice-api",
+    "start": "2026-10-07T09:50:00Z",
+    "end": "2026-10-07T10:15:00Z",
+    "reportedAt": "2026-10-07T10:05:00Z"
+  },
+  {
+    "id": "inc-008",
+    "title": "Search requests returning server errors",
+    "description": "Some text searches return HTTP 500. The error rate increased shortly after 10:00 UTC.",
+    "service": "search-api",
+    "start": "2026-10-08T09:50:00Z",
+    "end": "2026-10-08T10:15:00Z",
+    "reportedAt": "2026-10-08T10:05:00Z"
+  },
+  {
+    "id": "inc-009",
+    "title": "Background jobs are delayed",
+    "description": "Job completion has slowed and the queue is growing. Some operational dashboards are not responding.",
+    "service": "queue-worker",
+    "start": "2026-10-09T09:50:00Z",
+    "end": "2026-10-09T10:15:00Z",
+    "reportedAt": "2026-10-09T10:05:00Z"
+  },
+  {
+    "id": "inc-010",
+    "title": "Occasional export request failures",
+    "description": "Two users reported failed exports around 10:00 UTC. The failures could not be reproduced immediately.",
+    "service": "export-api",
+    "start": "2026-10-10T09:50:00Z",
+    "end": "2026-10-10T10:15:00Z",
+    "reportedAt": "2026-10-10T10:05:00Z"
+  }
+]

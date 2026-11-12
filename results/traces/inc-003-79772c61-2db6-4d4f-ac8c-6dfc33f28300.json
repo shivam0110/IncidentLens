@@ -1,0 +1,945 @@
+{
+  "runId": "79772c61-2db6-4d4f-ac8c-6dfc33f28300",
+  "createdAt": "2026-11-12T10:45:04.937Z",
+  "mode": "multi-agent",
+  "provider": "gemini-developer-api",
+  "configuration": {
+    "model": "gemini-3.5-flash-lite",
+    "thinkingLevel": "low",
+    "limits": {
+      "maxOutputTokens": 2048,
+      "maxRunTokens": 64000,
+      "maxRounds": 2,
+      "maxModelAttempts": 20,
+      "maxToolAttempts": 20,
+      "deadlineMs": 120000,
+      "requestTimeoutMs": 20000,
+      "reportReserveMs": 25000,
+      "reportReserveTokens": 12288,
+      "reportReserveModelAttempts": 3,
+      "modelIntervalMs": 4500,
+      "retryDelayMs": 1000,
+      "recursionLimit": 11
+    },
+    "sampling": "provider defaults",
+    "tier": "free; operator-recorded policy: AI Studio free tier verified 2026-11-12: 15 RPM, 250000 input TPM, 500 RPD, midnight Pacific reset; 3 daily requests displayed before testing, UI may lag 15 min. Synthetic assignment data only; no billing changes or paid fallback.",
+    "inputReservation": "UTF-8 prompt/schema bytes divided by three; estimate, not provider tokenization"
+  },
+  "state": {
+    "incident": {
+      "id": "inc-003",
+      "title": "Users cannot refresh sessions",
+      "description": "Browser clients report rejected session refreshes. Other API calls still appear healthy.",
+      "service": "session-api",
+      "start": "2026-10-03T09:50:00Z",
+      "end": "2026-10-03T10:15:00Z",
+      "reportedAt": "2026-10-03T10:05:00Z"
+    },
+    "round": 2,
+    "plan": {
+      "questions": [
+        "What recent configuration or code changes were deployed to the session-api service prior to the incident?"
+      ],
+      "tasks": [
+        {
+          "id": "q1",
+          "role": "Dependency",
+          "question": "What recent configuration or code changes were deployed to the session-api service prior to the incident?",
+          "dependsOn": [],
+          "status": "pending"
+        }
+      ],
+      "rationale": "Following up on the critic recommendation to check recent configuration or code changes that may have caused the audience validation mismatch for web clients in the session-api service."
+    },
+    "tasks": [
+      {
+        "id": "t1",
+        "role": "Observability",
+        "question": "What are the error logs and metrics for the session-api service during the incident window?",
+        "dependsOn": [],
+        "status": "completed"
+      },
+      {
+        "id": "q1",
+        "role": "Dependency",
+        "question": "What recent configuration or code changes were deployed to the session-api service prior to the incident?",
+        "dependsOn": [],
+        "status": "completed"
+      }
+    ],
+    "evidence": {
+      "ev-003-003": {
+        "id": "ev-003-003",
+        "timestamp": "2026-10-03T10:00:00Z",
+        "service": "session-api",
+        "source": "logs",
+        "raw": {
+          "severity": "error",
+          "message": "refresh status=401 InvalidAudience expected=mobile-client received=web-client signature=valid",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-003-004": {
+        "id": "ev-003-004",
+        "timestamp": "2026-10-03T10:02:00Z",
+        "service": "session-api",
+        "source": "metrics",
+        "raw": {
+          "metric": "error_rate",
+          "value": 84,
+          "unit": "percent",
+          "region": "global",
+          "windowSeconds": 60
+        }
+      },
+      "ev-003-010": {
+        "id": "ev-003-010",
+        "timestamp": "2026-10-03T00:00:00Z",
+        "service": "session-api",
+        "source": "dependencies",
+        "raw": {
+          "dependency": "identity-api",
+          "relationship": "synchronous",
+          "critical": true,
+          "validUntil": null
+        }
+      }
+    },
+    "findings": [
+      {
+        "statement": "The session-api service returned 401 error logs with InvalidAudience indicating that web-client was received while mobile-client was expected during session refresh.",
+        "evidenceIds": [
+          "ev-003-003"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      },
+      {
+        "statement": "Metrics showed an error rate of 84 percent globally for the session-api service.",
+        "evidenceIds": [
+          "ev-003-004"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      },
+      {
+        "statement": "The session-api service depends synchronously on the identity-api service.",
+        "evidenceIds": [
+          "ev-003-010"
+        ],
+        "contradictions": [],
+        "taskId": "q1",
+        "role": "Dependency"
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "h1",
+        "causeClass": "configuration",
+        "component": "session-api",
+        "explanation": "The session-api service is misconfigured to expect mobile-client audience tokens for web-client session refreshes, leading to 401 Unauthorized responses.",
+        "support": [
+          "ev-003-003",
+          "ev-003-004"
+        ],
+        "contradictions": [],
+        "confidence": "high",
+        "rationale": "Logs explicitly state InvalidAudience where expected=mobile-client and received=web-client during session refresh errors.",
+        "assumptions": [
+          "The web-client token configuration was recently changed or deployed."
+        ],
+        "unknowns": [
+          "Whether a recent deployment caused the audience validation mismatch."
+        ]
+      }
+    ],
+    "assumptions": [
+      "Web clients are supposed to be supported by the session-api endpoint for refreshes."
+    ],
+    "unknowns": [
+      "Exact deployment history or configuration change tickets for session-api.",
+      "No recent configuration or code changes were found in the deployment records for the session-api service."
+    ],
+    "critic": {
+      "recommendation": "stop",
+      "rationale": "Evidence clearly points to a configuration issue on session-api expecting mobile-client instead of web-client during session refresh, and dependency changes query has already been executed.",
+      "requests": []
+    },
+    "errors": [],
+    "events": [
+      {
+        "sequence": 1,
+        "elapsedMs": 6.656166999993729,
+        "type": "round",
+        "role": null,
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Evidence round 1.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 2,
+        "elapsedMs": 6.815707999994629,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Orchestrator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 3,
+        "elapsedMs": 6080.295542000007,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Orchestrator completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 4,
+        "elapsedMs": 6080.454666999998,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "pending",
+        "round": 1,
+        "message": "What are the error logs and metrics for the session-api service during the incident window?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 5,
+        "elapsedMs": 6083.667625000002,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "What are the error logs and metrics for the session-api service during the incident window?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 6,
+        "elapsedMs": 6083.808625000005,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Observability started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 7,
+        "elapsedMs": 10854.497499999998,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 8,
+        "elapsedMs": 10854.831875000003,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (1 records).",
+        "evidenceIds": [
+          "ev-003-003"
+        ]
+      },
+      {
+        "sequence": 9,
+        "elapsedMs": 10854.853082999995,
+        "type": "evidence",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-003-003"
+        ]
+      },
+      {
+        "sequence": 10,
+        "elapsedMs": 22721.634458,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 1,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 11,
+        "elapsedMs": 22722.805582999994,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "completed",
+        "round": 1,
+        "message": "query_metrics: ok (1 records).",
+        "evidenceIds": [
+          "ev-003-004"
+        ]
+      },
+      {
+        "sequence": 12,
+        "elapsedMs": 22722.879333000004,
+        "type": "evidence",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-003-004"
+        ]
+      },
+      {
+        "sequence": 13,
+        "elapsedMs": 28555.081749999998,
+        "type": "error",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "failed",
+        "round": 1,
+        "message": "Observability attempt failed: Gemini HTTP 503. Provider request failed; check service availability.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 14,
+        "elapsedMs": 33290.620333,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Observability completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 15,
+        "elapsedMs": 33290.91725,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "t1 completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 16,
+        "elapsedMs": 33294.460416999995,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Reasoning started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 17,
+        "elapsedMs": 38498.344083,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Reasoning completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 18,
+        "elapsedMs": 38501.53470800001,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Critic started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 19,
+        "elapsedMs": 43314.97958299999,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Critic completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 20,
+        "elapsedMs": 43317.592042000004,
+        "type": "round",
+        "role": null,
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Evidence round 2.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 21,
+        "elapsedMs": 43317.778917,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Orchestrator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 22,
+        "elapsedMs": 46517.48075,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Orchestrator completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 23,
+        "elapsedMs": 46517.649957999995,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "q1",
+        "tool": null,
+        "status": "pending",
+        "round": 2,
+        "message": "What recent configuration or code changes were deployed to the session-api service prior to the incident?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 24,
+        "elapsedMs": 46519.465625,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "q1",
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "What recent configuration or code changes were deployed to the session-api service prior to the incident?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 25,
+        "elapsedMs": 46519.607458,
+        "type": "role",
+        "role": "Dependency",
+        "taskId": "q1",
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Dependency started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 26,
+        "elapsedMs": 52396.594958,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "q1",
+        "tool": "query_changes",
+        "status": "running",
+        "round": 2,
+        "message": "query_changes started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 27,
+        "elapsedMs": 52396.940375000006,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "q1",
+        "tool": "query_changes",
+        "status": "completed",
+        "round": 2,
+        "message": "query_changes: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 28,
+        "elapsedMs": 57051.05374999999,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "q1",
+        "tool": "query_changes",
+        "status": "running",
+        "round": 2,
+        "message": "query_changes started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 29,
+        "elapsedMs": 57051.322125000006,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "q1",
+        "tool": "query_changes",
+        "status": "completed",
+        "round": 2,
+        "message": "query_changes: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 30,
+        "elapsedMs": 61723.911416999996,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "q1",
+        "tool": "query_dependencies",
+        "status": "running",
+        "round": 2,
+        "message": "query_dependencies started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 31,
+        "elapsedMs": 61724.492583000014,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "q1",
+        "tool": "query_dependencies",
+        "status": "completed",
+        "round": 2,
+        "message": "query_dependencies: ok (1 records).",
+        "evidenceIds": [
+          "ev-003-010"
+        ]
+      },
+      {
+        "sequence": 32,
+        "elapsedMs": 61724.519042,
+        "type": "evidence",
+        "role": "Dependency",
+        "taskId": "q1",
+        "tool": "query_dependencies",
+        "status": null,
+        "round": 2,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-003-010"
+        ]
+      },
+      {
+        "sequence": 33,
+        "elapsedMs": 65252.875417,
+        "type": "error",
+        "role": "Dependency",
+        "taskId": "q1",
+        "tool": null,
+        "status": "failed",
+        "round": 2,
+        "message": "Dependency attempt failed: Specialist findings require retrieved evidence citations.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 34,
+        "elapsedMs": 69604.67304200001,
+        "type": "role",
+        "role": "Dependency",
+        "taskId": "q1",
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Dependency completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 35,
+        "elapsedMs": 69604.86162499999,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "q1",
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "q1 completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 36,
+        "elapsedMs": 69607.19925,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Reasoning started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 37,
+        "elapsedMs": 79930.88658300001,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Reasoning completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 38,
+        "elapsedMs": 79933.98920800001,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Critic started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 39,
+        "elapsedMs": 81931.87383299999,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Critic completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 40,
+        "elapsedMs": 81934.996083,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 2,
+        "message": "Reporting started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 41,
+        "elapsedMs": 86949.726,
+        "type": "error",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "failed",
+        "round": 2,
+        "message": "Reporting attempt failed: Gemini HTTP 503. Provider request failed; check service availability.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 42,
+        "elapsedMs": 91555.3425,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Reporting completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 43,
+        "elapsedMs": 91555.720333,
+        "type": "complete",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 2,
+        "message": "Investigation concluded: Evidence clearly points to a configuration issue on session-api expecting mobile-client instead of web-client during session refresh, and dependency changes query has already been executed.",
+        "evidenceIds": []
+      }
+    ],
+    "stats": {
+      "toolAttempts": 5,
+      "modelAttempts": 18,
+      "elapsedMs": 91557.452208,
+      "usage": {
+        "input": 29959,
+        "output": 2748,
+        "total": 32707,
+        "visibleOutput": 2490,
+        "thinking": 258,
+        "cacheRead": null,
+        "toolUsePrompt": null,
+        "availability": "partial"
+      }
+    },
+    "stopReason": "Evidence clearly points to a configuration issue on session-api expecting mobile-client instead of web-client during session refresh, and dependency changes query has already been executed.",
+    "report": {
+      "incidentId": "inc-003",
+      "outcome": "concluded",
+      "summary": "Browser clients experienced session refresh failures due to an audience validation mismatch where session-api expected mobile-client tokens but received web-client tokens.",
+      "hypotheses": [
+        {
+          "id": "h1",
+          "causeClass": "configuration",
+          "component": "session-api",
+          "explanation": "The session-api service is misconfigured to expect mobile-client audience tokens for web-client session refreshes, leading to 401 Unauthorized responses.",
+          "support": [
+            "ev-003-003",
+            "ev-003-004"
+          ],
+          "contradictions": [],
+          "confidence": "high",
+          "rationale": "Logs explicitly state InvalidAudience where expected=mobile-client and received=web-client during session refresh errors.",
+          "assumptions": [
+            "The web-client token configuration was recently changed or deployed."
+          ],
+          "unknowns": [
+            "Whether a recent deployment caused the audience validation mismatch."
+          ]
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "The session-api service returned 401 error logs with InvalidAudience indicating that web-client was received while mobile-client was expected during session refresh.",
+          "evidenceIds": [
+            "ev-003-003"
+          ]
+        },
+        {
+          "statement": "Metrics showed an error rate of 84 percent globally for the session-api service.",
+          "evidenceIds": [
+            "ev-003-004"
+          ]
+        },
+        {
+          "statement": "The session-api service depends synchronously on the identity-api service.",
+          "evidenceIds": [
+            "ev-003-010"
+          ]
+        }
+      ],
+      "assumptions": [
+        "Web clients are supposed to be supported by the session-api endpoint for refreshes."
+      ],
+      "unknowns": [
+        "Exact deployment history or configuration change tickets for session-api."
+      ],
+      "actions": [
+        {
+          "action": "Review session-api configuration settings regarding expected token audience values for web clients.",
+          "evidenceIds": [
+            "ev-003-003"
+          ],
+          "rationale": "Logs indicate an audience mismatch expecting mobile-client instead of web-client."
+        }
+      ],
+      "limitations": [
+        "Deployment history records were sparse regarding the exact origin of the configuration mismatch.",
+        "Provider usage is incomplete; the total-token cap cannot be fully verified.",
+        "Exact deployment history or configuration change tickets for session-api.",
+        "No recent configuration or code changes were found in the deployment records for the session-api service."
+      ],
+      "failures": [],
+      "stopReason": "Evidence clearly points to a configuration issue on session-api expecting mobile-client instead of web-client during session refresh, and dependency changes query has already been executed.",
+      "stats": {
+        "toolAttempts": 5,
+        "modelAttempts": 18,
+        "elapsedMs": 91557.452208,
+        "usage": {
+          "input": 29959,
+          "output": 2748,
+          "total": 32707,
+          "visibleOutput": 2490,
+          "thinking": 258,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "partial"
+        }
+      }
+    }
+  },
+  "toolHistory": [
+    {
+      "tool": "query_logs",
+      "args": {
+        "severity": "error",
+        "limit": 50,
+        "service": "session-api",
+        "start": "2026-10-03T09:50:00Z",
+        "end": "2026-10-03T10:15:00Z"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-003-003",
+            "timestamp": "2026-10-03T10:00:00Z",
+            "service": "session-api",
+            "source": "logs",
+            "raw": {
+              "severity": "error",
+              "message": "refresh status=401 InvalidAudience expected=mobile-client received=web-client signature=valid",
+              "region": "eu-west",
+              "traceId": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 1,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "start": "2026-10-03T09:50:00Z",
+        "end": "2026-10-03T10:15:00Z",
+        "service": "session-api",
+        "limit": 50
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_metrics",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-003-004",
+            "timestamp": "2026-10-03T10:02:00Z",
+            "service": "session-api",
+            "source": "metrics",
+            "raw": {
+              "metric": "error_rate",
+              "value": 84,
+              "unit": "percent",
+              "region": "global",
+              "windowSeconds": 60
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 1,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_changes",
+      "args": {
+        "service": "session-api",
+        "end": "2026-10-03T09:50:00Z",
+        "start": "2026-10-03T00:00:00Z",
+        "limit": 50
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_changes",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_changes",
+      "args": {
+        "end": "2026-10-03T09:50:00Z",
+        "start": "2026-10-01T00:00:00Z",
+        "service": "session-api",
+        "limit": 50
+      },
+      "attempt": 2,
+      "result": {
+        "tool": "query_changes",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_dependencies",
+      "args": {
+        "direction": "both",
+        "at": "2026-10-03T09:50:00Z",
+        "service": "session-api",
+        "limit": 50
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_dependencies",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-003-010",
+            "timestamp": "2026-10-03T00:00:00Z",
+            "service": "session-api",
+            "source": "dependencies",
+            "raw": {
+              "dependency": "identity-api",
+              "relationship": "synchronous",
+              "critical": true,
+              "validUntil": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 1,
+        "warnings": [],
+        "error": null
+      }
+    }
+  ],
+  "failureSchedule": {
+    "toolFailures": [],
+    "agentFailures": []
+  }
+}

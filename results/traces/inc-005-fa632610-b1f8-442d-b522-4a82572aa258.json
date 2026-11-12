@@ -1,0 +1,1223 @@
+{
+  "runId": "fa632610-b1f8-442d-b522-4a82572aa258",
+  "createdAt": "2026-11-12T10:48:12.168Z",
+  "mode": "multi-agent",
+  "provider": "gemini-developer-api",
+  "configuration": {
+    "model": "gemini-3.5-flash-lite",
+    "thinkingLevel": "low",
+    "limits": {
+      "maxOutputTokens": 2048,
+      "maxRunTokens": 64000,
+      "maxRounds": 2,
+      "maxModelAttempts": 20,
+      "maxToolAttempts": 20,
+      "deadlineMs": 120000,
+      "requestTimeoutMs": 20000,
+      "reportReserveMs": 25000,
+      "reportReserveTokens": 12288,
+      "reportReserveModelAttempts": 3,
+      "modelIntervalMs": 4500,
+      "retryDelayMs": 1000,
+      "recursionLimit": 11
+    },
+    "sampling": "provider defaults",
+    "tier": "free; operator-recorded policy: AI Studio free tier verified 2026-11-12: 15 RPM, 250000 input TPM, 500 RPD, midnight Pacific reset; 3 daily requests displayed before testing, UI may lag 15 min. Synthetic assignment data only; no billing changes or paid fallback.",
+    "inputReservation": "UTF-8 prompt/schema bytes divided by three; estimate, not provider tokenization"
+  },
+  "state": {
+    "incident": {
+      "id": "inc-005",
+      "title": "Intermittent gateway timeouts",
+      "description": "Requests across several endpoints are timing out during a busy period. Failures fluctuate minute to minute.",
+      "service": "edge-gateway",
+      "start": "2026-10-05T09:50:00Z",
+      "end": "2026-10-05T10:15:00Z",
+      "reportedAt": "2026-10-05T10:05:00Z"
+    },
+    "round": 1,
+    "plan": {
+      "questions": [
+        "What error rates and latency metrics are observed on the edge-gateway service during the incident window?",
+        "Which downstream services exhibit high latency or failure rates called by edge-gateway?"
+      ],
+      "tasks": [
+        {
+          "id": "t1",
+          "role": "Observability",
+          "question": "What error rates and latency metrics are observed on the edge-gateway service during the incident window?",
+          "dependsOn": [],
+          "status": "pending"
+        },
+        {
+          "id": "t2",
+          "role": "Dependency",
+          "question": "Which downstream services exhibit high latency or failure rates called by edge-gateway?",
+          "dependsOn": [],
+          "status": "pending"
+        }
+      ],
+      "rationale": "Initial investigation requires checking service-level metrics and downstream dependencies of the edge-gateway during the reported incident window."
+    },
+    "tasks": [
+      {
+        "id": "t1",
+        "role": "Observability",
+        "question": "What error rates and latency metrics are observed on the edge-gateway service during the incident window?",
+        "dependsOn": [],
+        "status": "completed"
+      },
+      {
+        "id": "t2",
+        "role": "Dependency",
+        "question": "Which downstream services exhibit high latency or failure rates called by edge-gateway?",
+        "dependsOn": [],
+        "status": "completed"
+      }
+    ],
+    "evidence": {
+      "ev-005-012": {
+        "id": "ev-005-012",
+        "timestamp": "2026-10-05T00:00:00Z",
+        "service": "edge-gateway",
+        "source": "dependencies",
+        "raw": {
+          "dependency": "catalog-api",
+          "relationship": "synchronous",
+          "critical": true,
+          "validUntil": null
+        }
+      },
+      "ev-005-013": {
+        "id": "ev-005-013",
+        "timestamp": "2026-10-05T00:00:00Z",
+        "service": "edge-gateway",
+        "source": "dependencies",
+        "raw": {
+          "dependency": "accounts-api",
+          "relationship": "synchronous",
+          "critical": true,
+          "validUntil": null
+        }
+      },
+      "ev-005-001": {
+        "id": "ev-005-001",
+        "timestamp": "2026-10-05T09:54:00Z",
+        "service": "edge-gateway",
+        "source": "metrics",
+        "raw": {
+          "metric": "requests_per_second",
+          "value": 900,
+          "unit": "requests/s",
+          "region": "global",
+          "windowSeconds": 60
+        }
+      },
+      "ev-005-003": {
+        "id": "ev-005-003",
+        "timestamp": "2026-10-05T09:54:00Z",
+        "service": "edge-gateway",
+        "source": "metrics",
+        "raw": {
+          "metric": "cpu_utilization",
+          "value": 35,
+          "unit": "percent",
+          "region": "global",
+          "windowSeconds": 60
+        }
+      },
+      "ev-005-002": {
+        "id": "ev-005-002",
+        "timestamp": "2026-10-05T10:02:00Z",
+        "service": "edge-gateway",
+        "source": "metrics",
+        "raw": {
+          "metric": "requests_per_second",
+          "value": 4600,
+          "unit": "requests/s",
+          "region": "global",
+          "windowSeconds": 60
+        }
+      },
+      "ev-005-004": {
+        "id": "ev-005-004",
+        "timestamp": "2026-10-05T10:02:00Z",
+        "service": "edge-gateway",
+        "source": "metrics",
+        "raw": {
+          "metric": "cpu_utilization",
+          "value": 99,
+          "unit": "percent",
+          "region": "global",
+          "windowSeconds": 60
+        }
+      },
+      "ev-005-005": {
+        "id": "ev-005-005",
+        "timestamp": "2026-10-05T10:02:00Z",
+        "service": "edge-gateway",
+        "source": "metrics",
+        "raw": {
+          "metric": "queue_depth",
+          "value": 1800,
+          "unit": "requests",
+          "region": "global",
+          "windowSeconds": 60
+        }
+      },
+      "ev-005-006": {
+        "id": "ev-005-006",
+        "timestamp": "2026-10-05T10:02:00Z",
+        "service": "edge-gateway",
+        "source": "metrics",
+        "raw": {
+          "metric": "replicas",
+          "value": 4,
+          "unit": "replicas",
+          "region": "global",
+          "windowSeconds": 60
+        }
+      },
+      "ev-005-007": {
+        "id": "ev-005-007",
+        "timestamp": "2026-10-05T10:03:00Z",
+        "service": "edge-gateway",
+        "source": "logs",
+        "raw": {
+          "severity": "warn",
+          "message": "admission queue full; autoscaler desired=12 current=4 max=4",
+          "region": "eu-west",
+          "traceId": null
+        }
+      },
+      "ev-005-008": {
+        "id": "ev-005-008",
+        "timestamp": "2026-10-05T10:03:00Z",
+        "service": "edge-gateway",
+        "source": "logs",
+        "raw": {
+          "severity": "info",
+          "message": "traffic campaign=autumn client_count=3600 cache_hit_ratio=0.91",
+          "region": "eu-west",
+          "traceId": null
+        }
+      }
+    },
+    "findings": [
+      {
+        "statement": "During the incident window, requests_per_second on the edge-gateway service spiked up to 4600 requests/s with CPU utilization reaching 99% and queue depth at 1800 requests.",
+        "evidenceIds": [
+          "ev-005-002",
+          "ev-005-004",
+          "ev-005-005"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      },
+      {
+        "statement": "Logs indicate admission queue full with replicas at 4 and desired at 12, constrained by max limits.",
+        "evidenceIds": [
+          "ev-005-007"
+        ],
+        "contradictions": [],
+        "taskId": "t1",
+        "role": "Observability"
+      },
+      {
+        "statement": "The edge-gateway service synchronously depends on catalog-api and accounts-api as critical downstream services.",
+        "evidenceIds": [
+          "ev-005-012",
+          "ev-005-013"
+        ],
+        "contradictions": [],
+        "taskId": "t2",
+        "role": "Dependency"
+      }
+    ],
+    "hypotheses": [
+      {
+        "id": "hyp-1",
+        "causeClass": "traffic_saturation",
+        "component": "edge-gateway",
+        "explanation": "An excess of incoming traffic (traffic campaign) spiked the request rate to 4600 requests/s, saturating the CPU utilization to 99% and hitting maximum replica limits, causing queue fullness and gateway timeouts.",
+        "support": [
+          "ev-005-002",
+          "ev-005-004",
+          "ev-005-005",
+          "ev-005-007",
+          "ev-005-008"
+        ],
+        "contradictions": [],
+        "confidence": "high",
+        "rationale": "Metrics clearly show traffic jumping significantly, CPU hitting 99%, queue depth spiking, and logs indicating autoscaler constraints where desired replicas are 12 but max is 4.",
+        "assumptions": [
+          "The traffic campaign caused the high request rate."
+        ],
+        "unknowns": [
+          "Exact response latency distributions and precise error rates per endpoint."
+        ]
+      }
+    ],
+    "assumptions": [
+      "High request volume from the autumn traffic campaign directly overwhelmed available replica capacity."
+    ],
+    "unknowns": [
+      "Direct error rate and explicit latency histogram metrics were not found in the queried metrics.",
+      "No telemetry or error metrics were retrieved directly for catalog-api or accounts-api performance during the incident window.",
+      "Downstream performance of catalog-api and accounts-api during the incident."
+    ],
+    "critic": {
+      "recommendation": "stop",
+      "rationale": "Evidence definitively shows traffic_saturation on the edge-gateway service caused by an autumn traffic campaign increasing requests to 4600 requests/s, saturating CPU at 99% and hitting max replica limits (desired 12, max 4), leading to admission queue fullness and gateway timeouts.",
+      "requests": []
+    },
+    "errors": [],
+    "events": [
+      {
+        "sequence": 1,
+        "elapsedMs": 7.844249999965541,
+        "type": "round",
+        "role": null,
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Evidence round 1.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 2,
+        "elapsedMs": 8.09299999999348,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Orchestrator started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 3,
+        "elapsedMs": 1366.0105839999742,
+        "type": "role",
+        "role": "Orchestrator",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Orchestrator completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 4,
+        "elapsedMs": 1366.1684589999495,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "pending",
+        "round": 1,
+        "message": "What error rates and latency metrics are observed on the edge-gateway service during the incident window?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 5,
+        "elapsedMs": 1366.185083999997,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "pending",
+        "round": 1,
+        "message": "Which downstream services exhibit high latency or failure rates called by edge-gateway?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 6,
+        "elapsedMs": 1368.5667499999981,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "What error rates and latency metrics are observed on the edge-gateway service during the incident window?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 7,
+        "elapsedMs": 1368.683624999947,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Observability started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 8,
+        "elapsedMs": 1370.8250419999822,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Which downstream services exhibit high latency or failure rates called by edge-gateway?",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 9,
+        "elapsedMs": 1370.9053339999518,
+        "type": "role",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Dependency started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 10,
+        "elapsedMs": 5871.79804199998,
+        "type": "error",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "failed",
+        "round": 1,
+        "message": "Observability attempt failed: query_metrics arguments rejected: ✖ Invalid time range\n✖ Invalid ISO datetime\n  → at end. Use this exact schema: {\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"type\":\"object\",\"properties\":{\"service\":{\"type\":\"string\",\"minLength\":1},\"start\":{\"type\":\"string\",\"format\":\"date-time\",\"pattern\":\"^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z|([+-](?:[01]\\\\d|2[0-3]):[0-5]\\\\d)))$\"},\"end\":{\"type\":\"string\",\"format\":\"date-time\",\"pattern\":\"^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z|([+-](?:[01]\\\\d|2[0-3]):[0-5]\\\\d)))$\"},\"limit\":{\"default\":50,\"type\":\"integer\",\"minimum\":1,\"maximum\":100},\"metric\":{\"type\":\"string\",\"minLength\":1},\"region\":{\"type\":\"string\",\"minLength\":1}},\"required\":[\"start\",\"end\",\"limit\"],\"additionalProperties\":false}",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 11,
+        "elapsedMs": 9901.17745899997,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_dependencies",
+        "status": "running",
+        "round": 1,
+        "message": "query_dependencies started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 12,
+        "elapsedMs": 9901.355124999944,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_dependencies",
+        "status": "completed",
+        "round": 1,
+        "message": "query_dependencies: ok (2 records).",
+        "evidenceIds": [
+          "ev-005-012",
+          "ev-005-013"
+        ]
+      },
+      {
+        "sequence": 13,
+        "elapsedMs": 9901.361791999952,
+        "type": "evidence",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_dependencies",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-005-012",
+          "ev-005-013"
+        ]
+      },
+      {
+        "sequence": 14,
+        "elapsedMs": 17369.08787499997,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 1,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 15,
+        "elapsedMs": 17369.777249999985,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 16,
+        "elapsedMs": 17369.96304199996,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "completed",
+        "round": 1,
+        "message": "query_metrics: ok (6 records).",
+        "evidenceIds": [
+          "ev-005-001",
+          "ev-005-003",
+          "ev-005-002",
+          "ev-005-004",
+          "ev-005-005",
+          "ev-005-006"
+        ]
+      },
+      {
+        "sequence": 17,
+        "elapsedMs": 17370.011958999967,
+        "type": "evidence",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-005-001",
+          "ev-005-003",
+          "ev-005-002",
+          "ev-005-004",
+          "ev-005-005",
+          "ev-005-006"
+        ]
+      },
+      {
+        "sequence": 18,
+        "elapsedMs": 17370.026458999957,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (2 records).",
+        "evidenceIds": [
+          "ev-005-007",
+          "ev-005-008"
+        ]
+      },
+      {
+        "sequence": 19,
+        "elapsedMs": 17370.037374999956,
+        "type": "evidence",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": null,
+        "round": 1,
+        "message": "Retrieved evidence.",
+        "evidenceIds": [
+          "ev-005-007",
+          "ev-005-008"
+        ]
+      },
+      {
+        "sequence": 20,
+        "elapsedMs": 19298.546959,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_changes",
+        "status": "running",
+        "round": 1,
+        "message": "query_changes started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 21,
+        "elapsedMs": 19298.848624999984,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_changes",
+        "status": "completed",
+        "round": 1,
+        "message": "query_changes: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 22,
+        "elapsedMs": 26295.688958999992,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 23,
+        "elapsedMs": 26296.07587499998,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "running",
+        "round": 1,
+        "message": "query_logs started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 24,
+        "elapsedMs": 26296.191166999983,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 25,
+        "elapsedMs": 26296.204791999946,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_logs",
+        "status": "completed",
+        "round": 1,
+        "message": "query_logs: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 26,
+        "elapsedMs": 30817.03774999996,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 1,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 27,
+        "elapsedMs": 30817.351833999972,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "running",
+        "round": 1,
+        "message": "query_metrics started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 28,
+        "elapsedMs": 30817.445624999993,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "completed",
+        "round": 1,
+        "message": "query_metrics: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 29,
+        "elapsedMs": 30817.458999999973,
+        "type": "tool",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": "query_metrics",
+        "status": "completed",
+        "round": 1,
+        "message": "query_metrics: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 30,
+        "elapsedMs": 32813.96970899997,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_changes",
+        "status": "running",
+        "round": 1,
+        "message": "query_changes started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 31,
+        "elapsedMs": 32814.22754199995,
+        "type": "tool",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": "query_changes",
+        "status": "completed",
+        "round": 1,
+        "message": "query_changes: ok (0 records).",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 32,
+        "elapsedMs": 39472.25579199998,
+        "type": "role",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Observability completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 33,
+        "elapsedMs": 42835.529416999954,
+        "type": "role",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Dependency completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 34,
+        "elapsedMs": 42835.930333999975,
+        "type": "task",
+        "role": "Observability",
+        "taskId": "t1",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "t1 completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 35,
+        "elapsedMs": 42835.96654199995,
+        "type": "task",
+        "role": "Dependency",
+        "taskId": "t2",
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "t2 completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 36,
+        "elapsedMs": 42840.16858399997,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Reasoning started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 37,
+        "elapsedMs": 47991.246166999976,
+        "type": "role",
+        "role": "Reasoning",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Reasoning completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 38,
+        "elapsedMs": 47995.594249999966,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Critic started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 39,
+        "elapsedMs": 51179.64316699997,
+        "type": "role",
+        "role": "Critic",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Critic completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 40,
+        "elapsedMs": 51183.54824999999,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "running",
+        "round": 1,
+        "message": "Reporting started.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 41,
+        "elapsedMs": 57005.61520899995,
+        "type": "role",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Reporting completed.",
+        "evidenceIds": []
+      },
+      {
+        "sequence": 42,
+        "elapsedMs": 57006.13491699996,
+        "type": "complete",
+        "role": "Reporting",
+        "taskId": null,
+        "tool": null,
+        "status": "completed",
+        "round": 1,
+        "message": "Investigation concluded: Evidence definitively shows traffic_saturation on the edge-gateway service caused by an autumn traffic campaign increasing requests to 4600 requests/s, saturating CPU at 99% and hitting max replica limits (desired 12, max 4), leading to admission queue fullness and gateway timeouts.",
+        "evidenceIds": []
+      }
+    ],
+    "stats": {
+      "toolAttempts": 9,
+      "modelAttempts": 13,
+      "elapsedMs": 57010.025041999994,
+      "usage": {
+        "input": 31214,
+        "output": 2559,
+        "total": 33773,
+        "visibleOutput": 2385,
+        "thinking": 174,
+        "cacheRead": null,
+        "toolUsePrompt": null,
+        "availability": "complete"
+      }
+    },
+    "stopReason": "Evidence definitively shows traffic_saturation on the edge-gateway service caused by an autumn traffic campaign increasing requests to 4600 requests/s, saturating CPU at 99% and hitting max replica limits (desired 12, max 4), leading to admission queue fullness and gateway timeouts.",
+    "report": {
+      "incidentId": "inc-005",
+      "outcome": "concluded",
+      "summary": "The edge-gateway service experienced gateway timeouts due to traffic saturation from a high-volume autumn traffic campaign that spiked request rates to 4600 req/s, saturating CPU at 99% and hitting maximum replica limits.",
+      "hypotheses": [
+        {
+          "id": "hyp-1",
+          "causeClass": "traffic_saturation",
+          "component": "edge-gateway",
+          "explanation": "An excess of incoming traffic from a traffic campaign spiked the request rate to 4600 requests/s, saturating the CPU utilization to 99% and hitting maximum replica limits, causing queue fullness and gateway timeouts.",
+          "support": [
+            "ev-005-002",
+            "ev-005-004",
+            "ev-005-005",
+            "ev-005-007",
+            "ev-005-008"
+          ],
+          "contradictions": [],
+          "confidence": "high",
+          "rationale": "Metrics clearly show traffic jumping significantly, CPU hitting 99%, queue depth spiking, and logs indicating autoscaler constraints where desired replicas are 12 but max is 4.",
+          "assumptions": [
+            "The traffic campaign caused the high request rate."
+          ],
+          "unknowns": [
+            "Exact response latency distributions and precise error rates per endpoint."
+          ]
+        }
+      ],
+      "observedFacts": [
+        {
+          "statement": "Requests per second on the edge-gateway service spiked up to 4600 requests/s with CPU utilization reaching 99% and queue depth at 1800 requests.",
+          "evidenceIds": [
+            "ev-005-002",
+            "ev-005-004",
+            "ev-005-005"
+          ]
+        },
+        {
+          "statement": "Logs indicate admission queue full with replicas at 4 and desired at 12, constrained by max limits.",
+          "evidenceIds": [
+            "ev-005-007"
+          ]
+        },
+        {
+          "statement": "Logs report an autumn traffic campaign with 3600 clients.",
+          "evidenceIds": [
+            "ev-005-008"
+          ]
+        }
+      ],
+      "assumptions": [
+        "High request volume from the autumn traffic campaign directly overwhelmed available replica capacity."
+      ],
+      "unknowns": [
+        "Direct error rate and explicit latency histogram metrics were not found in the queried metrics.",
+        "Downstream performance of catalog-api and accounts-api during the incident."
+      ],
+      "actions": [
+        {
+          "action": "Increase the maximum replica limit for the edge-gateway service beyond 4 replicas to accommodate high traffic campaigns.",
+          "evidenceIds": [
+            "ev-005-007"
+          ],
+          "rationale": "The autoscaler was constrained at max=4 while desiring 12 replicas during high traffic."
+        }
+      ],
+      "limitations": [
+        "Exact per-endpoint error rates and response time distributions were unavailable in the retrieved metrics.",
+        "Direct error rate and explicit latency histogram metrics were not found in the queried metrics.",
+        "No telemetry or error metrics were retrieved directly for catalog-api or accounts-api performance during the incident window.",
+        "Downstream performance of catalog-api and accounts-api during the incident."
+      ],
+      "failures": [],
+      "stopReason": "Evidence definitively shows traffic_saturation on the edge-gateway service caused by an autumn traffic campaign increasing requests to 4600 requests/s, saturating CPU at 99% and hitting max replica limits (desired 12, max 4), leading to admission queue fullness and gateway timeouts.",
+      "stats": {
+        "toolAttempts": 9,
+        "modelAttempts": 13,
+        "elapsedMs": 57010.025041999994,
+        "usage": {
+          "input": 31214,
+          "output": 2559,
+          "total": 33773,
+          "visibleOutput": 2385,
+          "thinking": 174,
+          "cacheRead": null,
+          "toolUsePrompt": null,
+          "availability": "complete"
+        }
+      }
+    }
+  },
+  "toolHistory": [
+    {
+      "tool": "query_dependencies",
+      "args": {
+        "service": "edge-gateway",
+        "at": "2026-10-05T09:50:00Z",
+        "direction": "downstream",
+        "limit": 50
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_dependencies",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-005-012",
+            "timestamp": "2026-10-05T00:00:00Z",
+            "service": "edge-gateway",
+            "source": "dependencies",
+            "raw": {
+              "dependency": "catalog-api",
+              "relationship": "synchronous",
+              "critical": true,
+              "validUntil": null
+            }
+          },
+          {
+            "id": "ev-005-013",
+            "timestamp": "2026-10-05T00:00:00Z",
+            "service": "edge-gateway",
+            "source": "dependencies",
+            "raw": {
+              "dependency": "accounts-api",
+              "relationship": "synchronous",
+              "critical": true,
+              "validUntil": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 2,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "service": "edge-gateway",
+        "end": "2026-10-05T10:15:00Z",
+        "start": "2026-10-05T09:50:00Z",
+        "limit": 50
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_metrics",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-005-001",
+            "timestamp": "2026-10-05T09:54:00Z",
+            "service": "edge-gateway",
+            "source": "metrics",
+            "raw": {
+              "metric": "requests_per_second",
+              "value": 900,
+              "unit": "requests/s",
+              "region": "global",
+              "windowSeconds": 60
+            }
+          },
+          {
+            "id": "ev-005-003",
+            "timestamp": "2026-10-05T09:54:00Z",
+            "service": "edge-gateway",
+            "source": "metrics",
+            "raw": {
+              "metric": "cpu_utilization",
+              "value": 35,
+              "unit": "percent",
+              "region": "global",
+              "windowSeconds": 60
+            }
+          },
+          {
+            "id": "ev-005-002",
+            "timestamp": "2026-10-05T10:02:00Z",
+            "service": "edge-gateway",
+            "source": "metrics",
+            "raw": {
+              "metric": "requests_per_second",
+              "value": 4600,
+              "unit": "requests/s",
+              "region": "global",
+              "windowSeconds": 60
+            }
+          },
+          {
+            "id": "ev-005-004",
+            "timestamp": "2026-10-05T10:02:00Z",
+            "service": "edge-gateway",
+            "source": "metrics",
+            "raw": {
+              "metric": "cpu_utilization",
+              "value": 99,
+              "unit": "percent",
+              "region": "global",
+              "windowSeconds": 60
+            }
+          },
+          {
+            "id": "ev-005-005",
+            "timestamp": "2026-10-05T10:02:00Z",
+            "service": "edge-gateway",
+            "source": "metrics",
+            "raw": {
+              "metric": "queue_depth",
+              "value": 1800,
+              "unit": "requests",
+              "region": "global",
+              "windowSeconds": 60
+            }
+          },
+          {
+            "id": "ev-005-006",
+            "timestamp": "2026-10-05T10:02:00Z",
+            "service": "edge-gateway",
+            "source": "metrics",
+            "raw": {
+              "metric": "replicas",
+              "value": 4,
+              "unit": "replicas",
+              "region": "global",
+              "windowSeconds": 60
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 6,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_logs",
+      "args": {
+        "service": "edge-gateway",
+        "limit": 50,
+        "start": "2026-10-05T09:50:00Z",
+        "end": "2026-10-05T10:15:00Z"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [
+          {
+            "id": "ev-005-007",
+            "timestamp": "2026-10-05T10:03:00Z",
+            "service": "edge-gateway",
+            "source": "logs",
+            "raw": {
+              "severity": "warn",
+              "message": "admission queue full; autoscaler desired=12 current=4 max=4",
+              "region": "eu-west",
+              "traceId": null
+            }
+          },
+          {
+            "id": "ev-005-008",
+            "timestamp": "2026-10-05T10:03:00Z",
+            "service": "edge-gateway",
+            "source": "logs",
+            "raw": {
+              "severity": "info",
+              "message": "traffic campaign=autumn client_count=3600 cache_hit_ratio=0.91",
+              "region": "eu-west",
+              "traceId": null
+            }
+          }
+        ],
+        "completeness": "complete",
+        "matched": 2,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_changes",
+      "args": {
+        "start": "2026-10-05T09:50:00Z",
+        "limit": 50,
+        "end": "2026-10-05T10:15:00Z",
+        "service": "catalog-api"
+      },
+      "attempt": 1,
+      "result": {
+        "tool": "query_changes",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_logs",
+      "args": {
+        "limit": 50,
+        "end": "2026-10-05T10:15:00Z",
+        "service": "edge-gateway",
+        "search": "timeout",
+        "start": "2026-10-05T09:50:00Z"
+      },
+      "attempt": 2,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_logs",
+      "args": {
+        "service": "edge-gateway",
+        "start": "2026-10-05T09:50:00Z",
+        "severity": "error",
+        "limit": 50,
+        "end": "2026-10-05T10:15:00Z"
+      },
+      "attempt": 3,
+      "result": {
+        "tool": "query_logs",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "limit": 50,
+        "start": "2026-10-05T09:50:00Z",
+        "metric": "latency",
+        "end": "2026-10-05T10:15:00Z"
+      },
+      "attempt": 2,
+      "result": {
+        "tool": "query_metrics",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_metrics",
+      "args": {
+        "start": "2026-10-05T09:50:00Z",
+        "limit": 50,
+        "end": "2026-10-05T10:15:00Z",
+        "metric": "error_rate"
+      },
+      "attempt": 3,
+      "result": {
+        "tool": "query_metrics",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    },
+    {
+      "tool": "query_changes",
+      "args": {
+        "end": "2026-10-05T10:15:00Z",
+        "limit": 50,
+        "service": "accounts-api",
+        "start": "2026-10-05T09:50:00Z"
+      },
+      "attempt": 2,
+      "result": {
+        "tool": "query_changes",
+        "status": "ok",
+        "evidence": [],
+        "completeness": "complete",
+        "matched": 0,
+        "warnings": [],
+        "error": null
+      }
+    }
+  ],
+  "failureSchedule": {
+    "toolFailures": [],
+    "agentFailures": []
+  }
+}
